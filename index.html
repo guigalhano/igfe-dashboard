@@ -604,111 +604,112 @@ function render(year, q) {
   var gs = d.gastoSector || {};
   var tr = TR[key] || {};
 
-  /* ── layout ── */
   var W=900, H=420;
   var SP ={x:448,y:200}, COD={x:160,y:112}, IES={x:165,y:318}, OTH={x:736,y:112}, MUN={x:730,y:318};
-  var R  ={sp:90,  cod:74,  ies:62,  oth:74,  mun:72};
-  var FC ={sp:'#1a2744', cod:'#9aa8bc', ies:'#d9caba', oth:'#e8336e', mun:'#00b4a0'};
-  var SK ={sp:'#0f1a2e', cod:'#607080', ies:'#a09070', oth:'#b0003a', mun:'#007060'};
+  var R  ={sp:90, cod:74, ies:62, oth:74, mun:72};
+  var FC ={sp:'#1a2744',cod:'#9aa8bc',ies:'#d9caba',oth:'#e8336e',mun:'#00b4a0'};
+  var SK ={sp:'#0f1a2e',cod:'#607080',ies:'#a09070',oth:'#b0003a',mun:'#007060'};
 
-  function fv(v){ return v!=null ? '$\u00a0'+parseFloat(v).toFixed(1)+' bill.' : ''; }
+  function fv(v){ return (v!=null && v!==undefined) ? '$\u00a0'+parseFloat(v).toFixed(1)+' bill.' : null; }
 
-  /* circle with outer glow ring */
+  /* draw circle with glow ring */
   function circ(p,r,fc,sk,lines,val,dark){
-    var tc = dark ? '#1a2744' : 'white';
-    var fs1 = r>80?'10':'9', fs2 = r>80?'14':'12', lh = parseFloat(fs1)*1.35;
-    var ny  = p.y - (lines.length*lh)/2 + parseFloat(fs1)*0.5;
-    var nm  = lines.map(function(l,i){
-      return '<text x="'+p.x+'" y="'+(ny+i*lh)+'" text-anchor="middle"'
-           + ' font-family="Arial" font-size="'+fs1+'" font-weight="700" fill="'+tc+'">'+l+'</text>';
+    var tc=dark?'#1a2744':'white';
+    var fs1=r>80?'10':'9', fs2=r>80?'14':'12', lh=parseFloat(fs1)*1.35;
+    var ny=p.y-(lines.length*lh)/2+parseFloat(fs1)*0.5;
+    var nm=lines.map(function(l,i){
+      return '<text x="'+p.x+'" y="'+(ny+i*lh)+'" text-anchor="middle" font-family="Arial" font-size="'+fs1+'" font-weight="700" fill="'+tc+'">'+l+'</text>';
     }).join('');
-    var vy  = p.y + r*0.30;
     return '<circle cx="'+p.x+'" cy="'+p.y+'" r="'+(r+11)+'" fill="'+fc+'" opacity="0.12"/>'
          + '<circle cx="'+p.x+'" cy="'+p.y+'" r="'+r+'" fill="'+fc+'" stroke="'+sk+'" stroke-width="3.5"/>'
          + nm
-         + '<text x="'+p.x+'" y="'+vy+'" text-anchor="middle"'
-         + ' font-family="Arial" font-size="'+fs2+'" font-weight="800" fill="'+tc+'">'+val+'</text>';
+         + '<text x="'+p.x+'" y="'+(p.y+r*0.30)+'" text-anchor="middle" font-family="Arial" font-size="'+fs2+'" font-weight="800" fill="'+tc+'">'+val+'</text>';
   }
 
-  /* single directed arrow from (x1,y1) to (x2,y2) with label */
-  function arrow(x1,y1,x2,y2,lbl,offPx){
-    /* offPx: perpendicular pixel offset to separate paired arrows */
-    var dx=x2-x1, dy=y2-y1, d=Math.sqrt(dx*dx+dy*dy);
-    var nx=dx/d, ny=dy/d, px=-ny, py=nx;
-    /* shift start and end by offPx perpendicular */
-    var ax1=x1+px*offPx, ay1=y1+py*offPx;
-    var ax2=x2+px*offPx, ay2=y2+py*offPx;
-    /* shorten ends to avoid overlap with marker */
-    ax2 -= nx*4; ay2 -= ny*4;
-    /* label at mid, pushed 11px further perpendicular */
-    var mx=(ax1+ax2)/2 + px*12, my=(ay1+ay2)/2 + py*12;
-    return '<line x1="'+ax1+'" y1="'+ay1+'" x2="'+ax2+'" y2="'+ay2+'"'
-         + ' stroke="#999" stroke-width="1.3" marker-end="url(#arr3)"/>'
-         + (lbl ? '<text x="'+mx+'" y="'+my+'" text-anchor="middle"'
-                + ' dominant-baseline="middle" font-family="Arial" font-size="9" fill="#666">'+lbl+'</text>' : '');
-  }
+  /*
+   * biArr: draw two PARALLEL arrows between circle edges
+   *   arrow A (from→to): offset +6px perpendicular (left side)
+   *   arrow B (to→from): offset -6px perpendicular (right side)
+   * This separates them visually so both are visible.
+   */
+  function biArr(frm,rF,to,rT,lblAtoB,lblBtoA){
+    var dx=to.x-frm.x, dy=to.y-frm.y, d=Math.sqrt(dx*dx+dy*dy);
+    var nx=dx/d, ny=dy/d;       /* unit along */
+    var px=-ny,  py=nx;          /* unit perpendicular */
+    /* edge points */
+    var ex1=frm.x+nx*rF, ey1=frm.y+ny*rF;  /* from-circle edge toward to */
+    var ex2=to.x -nx*rT, ey2=to.y -ny*rT;  /* to-circle   edge toward from */
+    var off=6, lblOff=13, out='';
 
-  /* bidirectional pair: two parallel arrows with their own labels */
-  function biArr(from,rFrom,to,rTo, lbl1,lbl2){
-    /* compute edge points on each circle toward the other */
-    var dx=to.x-from.x, dy=to.y-from.y, d=Math.sqrt(dx*dx+dy*dy);
-    var nx=dx/d, ny=dy/d;
-    var x1=from.x+nx*rFrom, y1=from.y+ny*rFrom;  /* from edge */
-    var x2=to.x  -nx*rTo,   y2=to.y  -ny*rTo;    /* to   edge */
-    var out = '';
-    if(lbl1) out += arrow(x1,y1,x2,y2, lbl1, +5); /* from→to, +5px offset */
-    if(lbl2) out += arrow(x2,y2,x1,y1, lbl2, +5); /* to→from, +5px offset (reversed, same side trick) */
+    if(lblAtoB){
+      /* A: from→to, offset LEFT (+px) */
+      var ax1=ex1+px*off,  ay1=ey1+py*off;
+      var ax2=ex2+px*off,  ay2=ey2+py*off;
+      ax2-=nx*3; ay2-=ny*3; /* shorten tip */
+      var mx=(ax1+ax2)/2+px*lblOff, my=(ay1+ay2)/2+py*lblOff;
+      out+='<line x1="'+ax1+'" y1="'+ay1+'" x2="'+ax2+'" y2="'+ay2
+          +'" stroke="#999" stroke-width="1.3" marker-end="url(#arr3)"/>'
+          +'<text x="'+mx+'" y="'+my+'" text-anchor="middle" dominant-baseline="middle"'
+          +' font-family="Arial" font-size="9" fill="#555">'+lblAtoB+'</text>';
+    }
+    if(lblBtoA){
+      /* B: to→from, offset RIGHT (-px) — opposite side */
+      var bx1=ex2-px*off,  by1=ey2-py*off;
+      var bx2=ex1-px*off,  by2=ey1-py*off;
+      bx2-=(-nx)*3; by2-=(-ny)*3; /* shorten tip (direction is reversed) */
+      var mx2=(bx1+bx2)/2-px*lblOff, my2=(by1+by2)/2-py*lblOff;
+      out+='<line x1="'+bx1+'" y1="'+by1+'" x2="'+bx2+'" y2="'+by2
+          +'" stroke="#999" stroke-width="1.3" marker-end="url(#arr3)"/>'
+          +'<text x="'+mx2+'" y="'+my2+'" text-anchor="middle" dominant-baseline="middle"'
+          +' font-family="Arial" font-size="9" fill="#555">'+lblBtoA+'</text>';
+    }
     return out;
   }
 
-  /* sector values: use gastoSector when available, fallback to transfer totals */
-  var spVal  = fv(gs['Sector P\u00fablico'])                              || fv(tr.sp)        || '--';
-  var codVal = fv(tr.codelco)                                              || '--';
-  var othVal = fv(tr.otras)                                                || '--';
-  var munVal = fv(gs['Sector Municipal'])                                  || fv(tr.municipal) || '--';
-  var iesVal = fv(gs['Instituciones de Educaci\u00f3n Superior'])          || fv(tr.ies)       || '--';
+  /* values: gastoSector preferred, TR totals as fallback */
+  var empTotal = gs['Empresas del Estado'];   /* used for both COD and OTH when TR is null */
+  var spVal  = fv(gs['Sector P\u00fablico'])                             || fv(tr.sp)        || '--';
+  var codVal = fv(tr.codelco)                                             || fv(empTotal)     || '--';
+  var othVal = fv(tr.otras)                                               || fv(empTotal)     || '--';
+  var munVal = fv(gs['Sector Municipal'])                                 || fv(tr.municipal) || '--';
+  var iesVal = fv(gs['Instituciones de Educaci\u00f3n Superior'])         || fv(tr.ies)       || '--';
 
   var svg =
     '<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg">'
-  + '<defs>'
-  +   '<marker id="arr3" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">'
-  +     '<path d="M0,0 L7,3.5 L0,7 Z" fill="#999"/>'
-  +   '</marker>'
-  + '</defs>'
+  + '<defs><marker id="arr3" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">'
+  + '<path d="M0,0 L7,3.5 L0,7 Z" fill="#999"/></marker></defs>'
 
   /* COD ↔ SP */
   + biArr(COD,R.cod,SP,R.sp,
-      tr.codelcoToSP ? '$\u00a0'+parseFloat(tr.codelcoToSP).toFixed(1)+' bill.' : null,
-      tr.spToCodelco ? '$\u00a0'+parseFloat(tr.spToCodelco).toFixed(1)+' bill.' : null)
+      fv(tr.codelcoToSP),
+      fv(tr.spToCodelco))
 
   /* OTH ↔ SP */
   + biArr(OTH,R.oth,SP,R.sp,
-      tr.otrasToSP   ? '$\u00a0'+parseFloat(tr.otrasToSP).toFixed(1)+' bill.' : null,
-      tr.spToOtras   ? '$\u00a0'+parseFloat(tr.spToOtras).toFixed(1)+' bill.' : null)
+      fv(tr.otrasToSP),
+      fv(tr.spToOtras))
 
   /* MUN ↔ SP */
   + biArr(MUN,R.mun,SP,R.sp,
-      tr.munToSP     ? '$\u00a0'+parseFloat(tr.munToSP).toFixed(1)+' bill.' : null,
-      tr.spToMun     ? '$\u00a0'+parseFloat(tr.spToMun).toFixed(1)+' bill.' : null)
+      fv(tr.munToSP),
+      fv(tr.spToMun))
 
-  /* IES ↔ SP (only SP→IES has data) */
+  /* IES → SP only (SP→IES shown) */
   + biArr(IES,R.ies,SP,R.sp,
       null,
-      tr.spToIES     ? '$\u00a0'+parseFloat(tr.spToIES).toFixed(1)+' bill.' : null)
+      fv(tr.spToIES))
 
   /* ZOFRI note */
-  + (tr.zofri
-      ? '<text x="'+OTH.x+'" y="'+(OTH.y+R.oth+22)+'" text-anchor="middle"'
-      + ' font-family="Arial" font-size="9" fill="#888">'
-      + '\u2193 $\u00a0'+parseFloat(tr.zofri).toFixed(1)+' miles de millones (ZOFRI)</text>'
-      : '')
+  + (tr.zofri ? '<text x="'+OTH.x+'" y="'+(OTH.y+R.oth+22)+'" text-anchor="middle"'
+              + ' font-family="Arial" font-size="9" fill="#888">'
+              + '\u2193 $\u00a0'+parseFloat(tr.zofri).toFixed(1)+' miles de millones (ZOFRI)</text>' : '')
 
-  /* circles on top of arrows */
-  + circ(COD,R.cod,FC.cod,SK.cod,['CODELCO'],                              codVal, true )
-  + circ(IES,R.ies,FC.ies,SK.ies,['INSTITUCIONES DE','EDUC. SUPERIOR','DEL ESTADO'], iesVal, true )
-  + circ(SP, R.sp, FC.sp, SK.sp, ['SECTOR P\u00daBLICO','(GOBIERNO CENTRAL)'],        spVal,  false)
-  + circ(OTH,R.oth,FC.oth,SK.oth,['OTRAS EMPRESAS','DEL ESTADO'],          othVal, false)
-  + circ(MUN,R.mun,FC.mun,SK.mun,['SECTOR MUNICIPAL'],                     munVal, false)
+  /* circles on top of all arrows */
+  + circ(COD,R.cod,FC.cod,SK.cod,['CODELCO'],                              codVal,true)
+  + circ(IES,R.ies,FC.ies,SK.ies,['INSTITUCIONES DE','EDUC. SUPERIOR','DEL ESTADO'],iesVal,true)
+  + circ(SP, R.sp, FC.sp, SK.sp, ['SECTOR P\u00daBLICO','(GOBIERNO CENTRAL)'],       spVal,false)
+  + circ(OTH,R.oth,FC.oth,SK.oth,['OTRAS EMPRESAS','DEL ESTADO'],          othVal,false)
+  + circ(MUN,R.mun,FC.mun,SK.mun,['SECTOR MUNICIPAL'],                     munVal,false)
   + '</svg>';
 
   document.getElementById('circles-svg').innerHTML = svg;
