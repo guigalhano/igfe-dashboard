@@ -22,15 +22,20 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--te
 .logo h1{font-size:13px;font-weight:600;margin:0}
 .logo p{font-size:10px;color:rgba(255,255,255,.5);margin:0}
 .controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.filter-g{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:8px;padding:5px 10px}
-.lbl{font-size:10px;font-weight:600;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.8px;white-space:nowrap}
-.sel{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 10px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;outline:none;min-width:80px}
-.sel:hover,.sel:focus{background:rgba(255,255,255,.25);border-color:var(--teal)}
-.sel option{background:#1a2744;color:#fff}
-.fsep{width:1px;height:22px;background:rgba(255,255,255,.15)}
-.period-badge{background:var(--teal);color:var(--dark);padding:5px 14px;border-radius:6px;font-size:12px;font-weight:700}
-.upd-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#fff;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit}
+.filter-g{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border:2px solid rgba(0,180,160,.6);border-radius:10px;padding:7px 14px;box-shadow:0 0 12px rgba(0,180,160,.2)}
+.lbl{font-size:11px;font-weight:700;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:1px;white-space:nowrap}
+.sel{background:rgba(255,255,255,.18);border:1.5px solid var(--teal);color:#fff;padding:7px 12px;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;outline:none;min-width:90px}
+.sel:hover,.sel:focus{background:rgba(0,180,160,.25);border-color:#fff}
+.sel option{background:#1a2744;color:#fff;font-weight:600}
+.fsep{width:1px;height:26px;background:rgba(255,255,255,.2)}
+.period-badge{background:var(--teal);color:var(--dark);padding:6px 16px;border-radius:7px;font-size:13px;font-weight:800;letter-spacing:.3px}
+.upd-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#fff;padding:7px 14px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit}
 .upd-btn:hover{background:rgba(255,255,255,.2)}
+/* Period banner above KPIs */
+.period-banner{background:var(--navy);border-bottom:3px solid var(--teal);padding:.6rem 1.5rem;margin-bottom:0}
+.period-banner-in{max-width:1300px;margin:0 auto;display:flex;align-items:center;gap:16px}
+.pb-tag{background:var(--teal);color:var(--dark);font-size:18px;font-weight:900;padding:4px 18px;border-radius:7px;letter-spacing:.5px}
+.pb-txt{color:rgba(255,255,255,.75);font-size:12px}
 
 /* COVER */
 .cover{background:var(--navy);color:#fff;padding:1rem 1.5rem}
@@ -185,13 +190,20 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
 <div class="cover">
   <div class="cover-in">
     <div>
-      <h2>Gestión Financiera del Estado</h2>
+      <h2>Informe de Gestión Financiera del Estado</h2>
       <p id="cover-sub">—</p>
     </div>
     <div class="cover-right">
       <div class="cover-lbl">Total ejecutado · todos los sectores</div>
       <div class="cover-val" id="cover-val">—</div>
     </div>
+  </div>
+</div>
+
+<div class="period-banner">
+  <div class="period-banner-in">
+    <span class="pb-tag" id="cover-title-period">T3 2025</span>
+    <span class="pb-txt" id="cover-sub2"></span>
   </div>
 </div>
 
@@ -538,7 +550,10 @@ function render(year, q) {
 
   const qi = parseInt(q);
   const period = PPERIOD[qi] + ' ' + year;
+  const shortPer = 'T' + qi + ' ' + year;
   document.getElementById('cover-sub').textContent = PFULL[qi].replace('{y}', year);
+  document.getElementById('cover-title-period').textContent = shortPer;
+  document.getElementById('cover-sub2').textContent = PFULL[qi].replace('{y}', year);
   document.getElementById('pbadge').textContent = period;
 
   const km = KPI_MAP[key] || ['—','—','—'];
@@ -681,16 +696,16 @@ function render(year, q) {
   const prevGS = prd ? prd.gastoSector : null;
   const prevV = prevGS ? secK.map(s => prevGS[s] || null) : null;
   const dsSec = [];
-  if (prevV) dsSec.push(ds(prev.replace('-',' T'), prevV, 'rgba(46,95,163,.35)', C1));
-  dsSec.push(ds(period, secV, 'rgba(0,180,160,.65)', C2));
+  if (prevV) dsSec.push(ds('T'+prev.split('-')[1]+' '+prev.split('-')[0], prevV, 'rgba(46,95,163,.35)', C1));
+  dsSec.push(ds(shortPer, secV, 'rgba(0,180,160,.65)', C2));
   bar('c-gsec', secL, dsSec, {fmt: v => '$'+v+'B'});
 
   // Chart: Ingresos SP
   const ispL = ['Impuestos','Endeudam.','Otros Corr.','Vta.Activos','Impos.Prev.','Recup.','Otros'];
   if (d.ingresosSP) {
     const dsISP = [];
-    if (prd && prd.ingresosSP) dsISP.push(ds(prev.replace('-',' T'), prd.ingresosSP, 'rgba(46,95,163,.35)', C1));
-    dsISP.push(ds(period, d.ingresosSP, 'rgba(0,180,160,.65)', C2));
+    if (prd && prd.ingresosSP) dsISP.push(ds('T'+prev.split('-')[1]+' '+prev.split('-')[0], prd.ingresosSP, 'rgba(46,95,163,.35)', C1));
+    dsISP.push(ds(shortPer, d.ingresosSP, 'rgba(0,180,160,.65)', C2));
     bar('c-isp', ispL, dsISP, {fmt: v => '$'+v+'B', rot:40});
   }
 
@@ -698,8 +713,8 @@ function render(year, q) {
   const gspL = ['Transf.','Serv.Deuda','Personal','Seg.Social','Act.Fin.','Bs.Serv.','Otros','Inversion'];
   if (d.gastosSP) {
     const dsGSP = [];
-    if (prd && prd.gastosSP) dsGSP.push(ds(prev.replace('-',' T'), prd.gastosSP, 'rgba(46,95,163,.35)', C1));
-    dsGSP.push(ds(period, d.gastosSP, 'rgba(0,180,160,.65)', C2));
+    if (prd && prd.gastosSP) dsGSP.push(ds('T'+prev.split('-')[1]+' '+prev.split('-')[0], prd.gastosSP, 'rgba(46,95,163,.35)', C1));
+    dsGSP.push(ds(shortPer, d.gastosSP, 'rgba(0,180,160,.65)', C2));
     bar('c-gsp', gspL, dsGSP, {fmt: v => '$'+v+'B', rot:40});
   }
 
@@ -720,8 +735,8 @@ function render(year, q) {
   const miL = ['Ing.Propios','MINSAL','FCM','Transf.','MINEDUC','Ing.Bfo FCM','Otros'];
   if (d.munIng) {
     const dsMI = [];
-    if (prd && prd.munIng) dsMI.push(ds(prev.replace('-',' T'), prd.munIng, 'rgba(46,95,163,.35)', C1));
-    dsMI.push(ds(period, d.munIng, 'rgba(0,180,160,.65)', C2));
+    if (prd && prd.munIng) dsMI.push(ds('T'+prev.split('-')[1]+' '+prev.split('-')[0], prd.munIng, 'rgba(46,95,163,.35)', C1));
+    dsMI.push(ds(shortPer, d.munIng, 'rgba(0,180,160,.65)', C2));
     bar('c-ming', miL, dsMI, {fmt: v => '$'+(v/1000).toFixed(0)+'MM', ytick: v => '$'+(v/1000).toFixed(0)+'MM', rot:40});
   }
 
@@ -729,8 +744,8 @@ function render(year, q) {
   const mgL = ['Personal','Transf.Corr.','Bs.Serv.','Ini.Inv.','Serv.Deuda','Prest.SS','Act.NF','Otros'];
   if (d.munGas) {
     const dsMG = [];
-    if (prd && prd.munGas) dsMG.push(ds(prev.replace('-',' T'), prd.munGas, 'rgba(46,95,163,.35)', C1));
-    dsMG.push(ds(period, d.munGas, 'rgba(0,180,160,.65)', C2));
+    if (prd && prd.munGas) dsMG.push(ds('T'+prev.split('-')[1]+' '+prev.split('-')[0], prd.munGas, 'rgba(46,95,163,.35)', C1));
+    dsMG.push(ds(shortPer, d.munGas, 'rgba(0,180,160,.65)', C2));
     bar('c-mgas', mgL, dsMG, {fmt: v => '$'+(v/1000).toFixed(0)+'MM', ytick: v => '$'+(v/1000).toFixed(0)+'MM', rot:40});
   }
 
@@ -753,8 +768,8 @@ function render(year, q) {
     const empBG = d.empresas.map(v => v >= 0 ? 'rgba(0,180,160,.7)' : 'rgba(232,51,110,.6)');
     const empBC = d.empresas.map(v => v >= 0 ? C2 : CP);
     const dsEmp = [];
-    if (prd && prd.empresas) dsEmp.push(ds(prev.replace('-',' T'), prd.empresas, 'rgba(46,95,163,.35)', C1));
-    dsEmp.push({label:period, data:d.empresas, backgroundColor:empBG, borderColor:empBC, borderWidth:1});
+    if (prd && prd.empresas) dsEmp.push(ds('T'+prev.split('-')[1]+' '+prev.split('-')[0], prd.empresas, 'rgba(46,95,163,.35)', C1));
+    dsEmp.push({label:shortPer, data:d.empresas, backgroundColor:empBG, borderColor:empBC, borderWidth:1});
     bar('c-emp', empL, dsEmp, {fmt: v => '$'+v+'MM', ytick: v => '$'+v+'MM', rot:40, xs:9});
   }
 
@@ -762,8 +777,8 @@ function render(year, q) {
   const eduL = ['Ing.Op.','Transf.','Fin.Fiscal','Otros','Endeud.','Recup.','Vta.'];
   if (d.eduIng) {
     const dsEdu = [];
-    if (prd && prd.eduIng) dsEdu.push(ds(prev.replace('-',' T'), prd.eduIng, 'rgba(46,95,163,.35)', C1));
-    dsEdu.push(ds(period, d.eduIng, 'rgba(0,180,160,.65)', C2));
+    if (prd && prd.eduIng) dsEdu.push(ds('T'+prev.split('-')[1]+' '+prev.split('-')[0], prd.eduIng, 'rgba(46,95,163,.35)', C1));
+    dsEdu.push(ds(shortPer, d.eduIng, 'rgba(0,180,160,.65)', C2));
     bar('c-edu', eduL, dsEdu, {fmt: v => '$'+v+'MM', ytick: v => '$'+v+'MM', rot:35});
   }
 
@@ -833,24 +848,28 @@ function render(year, q) {
   const gIngL = ['Transf.Capital','Transf.Corrientes','Otros'];
   if (d.gobIng) {
     const dsGI = [];
-    if (prd && prd.gobIng) dsGI.push(ds(prev.replace('-',' T'), prd.gobIng, 'rgba(46,95,163,.35)', C1));
-    dsGI.push(ds(period, d.gobIng, 'rgba(0,180,160,.65)', C2));
+    if (prd && prd.gobIng) dsGI.push(ds('T'+prev.split('-')[1]+' '+prev.split('-')[0], prd.gobIng, 'rgba(46,95,163,.35)', C1));
+    dsGI.push(ds(shortPer, d.gobIng, 'rgba(0,180,160,.65)', C2));
     bar('c-ging', gIngL, dsGI, {fmt: v => '$'+(v/1000).toFixed(0)+'MM', ytick: v => '$'+(v/1000).toFixed(0)+'MM'});
   }
 
   const gGasL = ['Ini.Inversion','Transf.Cap.','Adq.Act.','Personal','Transf.Corr.','Serv.Deuda','Otros'];
   if (d.gobGas) {
     const dsGG = [];
-    if (prd && prd.gobGas) dsGG.push(ds(prev.replace('-',' T'), prd.gobGas, 'rgba(46,95,163,.35)', C1));
-    dsGG.push(ds(period, d.gobGas, 'rgba(0,180,160,.65)', C2));
+    if (prd && prd.gobGas) dsGG.push(ds('T'+prev.split('-')[1]+' '+prev.split('-')[0], prd.gobGas, 'rgba(46,95,163,.35)', C1));
+    dsGG.push(ds(shortPer, d.gobGas, 'rgba(0,180,160,.65)', C2));
     bar('c-ggas', gGasL, dsGG, {fmt: v => '$'+(v/1000).toFixed(0)+'MM', ytick: v => '$'+(v/1000).toFixed(0)+'MM', rot:40});
   }
 }
 
 function getPrev(year, q) {
+  // Compare same quarter, previous year (e.g. 2025-T3 vs 2024-T3)
   const y = parseInt(year), qi = parseInt(q);
-  const candidates = qi === 1 ? [(y-1) + '-4', (y-1) + '-3'] : [y + '-' + (qi-1)];
-  return candidates.find(k => DB[k]) || null;
+  const sameQprevY = (y-1) + '-' + qi;
+  if (DB[sameQprevY]) return sameQprevY;
+  // fallback: any available period from previous year
+  const fallback = [(y-1)+'-4',(y-1)+'-3',(y-1)+'-2',(y-1)+'-1'];
+  return fallback.find(k => DB[k]) || null;
 }
 
 /* ====================================================
