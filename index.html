@@ -189,7 +189,7 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
   <div class="cover-in">
     <div>
       <h2>Informe de Gestión Financiera del Estado</h2>
-      <p id="cover-sub">—</p>
+      <p id="cover-sub" style="font-size:11px;color:rgba(255,255,255,.5);margin-top:3px">Contraloría General de la República de Chile</p>
     </div>
     <div class="cover-right">
       <div class="cover-lbl">Total ejecutado · todos los sectores</div>
@@ -207,8 +207,8 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
       <select class="pb-sel" id="sel-q"></select>
     </div>
     <div class="pb-divider"></div>
-    <span class="pb-tag" id="cover-title-period">T3 2025</span>
-    <span class="pb-txt" id="cover-sub2">Al 3er Trimestre 2025 · 1 de Enero al 30 de Septiembre</span>
+    <span class="pb-tag" id="cover-title-period">—</span>
+    <span class="pb-txt" id="cover-sub2">—</span>
   </div>
 </div>
 
@@ -578,7 +578,6 @@ function render(year, q) {
   const qi = parseInt(q);
   const period = PPERIOD[qi] + ' ' + year;
   const shortPer = 'T' + qi + ' ' + year;
-  document.getElementById('cover-sub').textContent = PFULL[qi].replace('{y}', year);
   document.getElementById('cover-title-period').textContent = shortPer;
   document.getElementById('cover-sub2').textContent = PFULL[qi].replace('{y}', year);
   /* pbadge moved to pb-tag */
