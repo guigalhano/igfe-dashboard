@@ -828,7 +828,7 @@ Sustituye con los valores del PDF.`;
   const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:4096,messages:[{role:'user',content:[{type:'document',source:{type:'base64',media_type:'application/pdf',data:pdfB64}},{type:'text',text:prompt}]}]})});
   if(!r.ok){const e=await r.json();throw new Error('Claude: '+(e.error?.message||r.statusText));}
   const resp=await r.json();
-  return JSON.parse(resp.content.find(b=>b.type==='text')?.text.replace(/```json|```/g,'').trim());
+  return JSON.parse(resp.content.find(b=>b.type==='text')?.text||''; const _j=_t.replace(/[\x60]{3}json|[\x60]{3}/g,'').trim(); return JSON.parse(_j);
 }
 
 function injectEntry(html,data,q,yr){
