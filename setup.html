@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IGFE — Setup & Updater</title>
+<style>
+:root {
+  --bg: #0a1628; --mid: #152340; --light: #1e3258;
+  --accent: #00c4a0; --gold: #f0a500; --red: #e8614a;
+  --text: #e8edf5; --muted: #8a9ab8; --border: rgba(255,255,255,0.1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:2rem 1rem}
+.wrap{max-width:680px;margin:0 auto}
+.logo{width:40px;height:40px;background:var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:var(--bg)}
+header{display:flex;align-items:center;gap:12px;margin-bottom:2rem}
+h1{font-size:18px;font-weight:600}
+.sub{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* tabs */
+.tabs{display:flex;gap:4px;background:var(--mid);padding:4px;border-radius:10px;border:1px solid var(--border);margin-bottom:1.5rem}
+.tab{flex:1;padding:8px;font-size:13px;font-weight:500;border:none;cursor:pointer;border-radius:7px;background:transparent;color:var(--muted);transition:all 0.2s;font-family:inherit}
+.tab.active{background:var(--accent);color:var(--bg)}
+.tab:hover:not(.active){background:var(--light);color:var(--text)}
+.panel{display:none}.panel.active{display:block}
+
+/* cards */
+.card{background:rgba(21,35,64,0.8);border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:12px}
+.card-title{font-size:13px;font-weight:600;margin-bottom:8px}
+.card-sub{font-size:11px;color:var(--muted);margin-bottom:1rem;line-height:1.6}
+
+/* steps visual */
+.step-row{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start}
+.step-badge{width:28px;height:28px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--bg);flex-shrink:0;margin-top:2px}
+.step-content{flex:1}
+.step-title-s{font-size:13px;font-weight:600;margin-bottom:4px}
+.step-desc{font-size:12px;color:var(--muted);line-height:1.6}
+.step-desc a{color:var(--accent);text-decoration:none}
+.step-desc code{background:var(--light);padding:2px 6px;border-radius:4px;font-size:11px;font-family:monospace;color:var(--accent)}
+
+/* screenshot mockup of token page */
+.token-mockup{background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:12px;margin:10px 0;font-family:monospace;font-size:11px}
+.tm-row{display:flex;align-items:center;gap:8px;padding:4px 0}
+.tm-cb{width:14px;height:14px;border:1px solid #30363d;border-radius:3px;background:#161b22;flex-shrink:0}
+.tm-cb.checked{background:#238636;border-color:#238636;display:flex;align-items:center;justify-content:center}
+.tm-label{color:#e6edf3}
+.tm-sub{color:#7d8590;font-size:10px;margin-left:22px}
+.tm-section{color:#7d8590;font-size:10px;text-transform:uppercase;letter-spacing:1px;margin:8px 0 4px;padding-bottom:4px;border-bottom:1px solid #21262d}
+.highlight-row{background:rgba(35,134,54,0.15);border-radius:4px;padding:2px 4px}
+
+/* inputs */
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:5px}
+input,select{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:13px;outline:none;transition:border-color 0.2s;font-family:inherit}
+input:focus,select:focus{border-color:var(--accent)}
+input[type=password]{letter-spacing:2px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.col{margin-bottom:12px}
+.hint{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.5}
+.hint a{color:var(--accent);text-decoration:none}
+
+/* token reveal */
+.input-wrap{position:relative}
+.reveal-btn{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;padding:4px 6px}
+.reveal-btn:hover{color:var(--text)}
+
+/* button */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px;border-radius:8px;font-size:13px;font-weight:600;border:none;cursor:pointer;transition:all 0.2s;font-family:inherit;margin-top:4px}
+.btn-primary{background:var(--accent);color:var(--bg)}
+.btn-primary:hover{background:#00a386}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed}
+.btn-danger{background:rgba(232,97,74,0.15);color:var(--red);border:1px solid rgba(232,97,74,0.3)}
+.btn-sm{width:auto;padding:6px 14px;font-size:12px;margin-top:0}
+
+/* status */
+.status{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:8px;font-size:12px;margin-top:10px}
+.status.ok{background:rgba(0,196,160,0.1);border:1px solid rgba(0,196,160,0.3);color:var(--accent)}
+.status.err{background:rgba(232,97,74,0.1);border:1px solid rgba(232,97,74,0.3);color:var(--red)}
+.status.info{background:rgba(240,165,0,0.1);border:1px solid rgba(240,165,0,0.3);color:var(--gold)}
+
+/* progress */
+.prog-wrap{height:4px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;margin:10px 0}
+.prog-bar{height:100%;background:var(--accent);border-radius:99px;width:0;transition:width 0.4s ease}
+.log{background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:8px;padding:12px;font-family:monospace;font-size:11px;line-height:1.8;max-height:220px;overflow-y:auto;margin-top:10px}
+.lok{color:#4ade80}.lerr{color:var(--red)}.linfo{color:var(--muted)}.lacc{color:var(--accent)}.lwarn{color:var(--gold)}
+
+/* file drop */
+.drop{border:2px dashed rgba(255,255,255,0.15);border-radius:10px;padding:2rem;text-align:center;cursor:pointer;transition:all 0.2s;position:relative}
+.drop:hover,.drop.over{border-color:var(--accent);background:rgba(0,196,160,0.05)}
+.drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.drop-icon{font-size:28px;margin-bottom:6px}
+.drop-text{font-size:13px;color:var(--muted)}
+.file-tag{display:none;align-items:center;gap:10px;background:rgba(0,196,160,0.08);border:1px solid rgba(0,196,160,0.3);border-radius:8px;padding:8px 12px;font-size:12px;margin-top:10px}
+.file-tag.show{display:flex}
+
+/* divider */
+hr{border:none;border-top:1px solid var(--border);margin:1rem 0}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{width:14px;height:14px;border:2px solid rgba(10,22,40,0.3);border-top-color:var(--bg);border-radius:50%;animation:spin 0.7s linear infinite}
+
+@media(max-width:600px){.row2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="logo">CG</div>
+  <div>
+    <h1>IGFE Dashboard — Setup &amp; Updater</h1>
+    <div class="sub">Repositório: garrinchashirts-create/igfe-dashboard · GitHub Pages</div>
+  </div>
+</header>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('setup')">🚀 1ª Instalação</button>
+  <button class="tab" onclick="switchTab('update')">🔄 Atualizar Trimestre</button>
+  <button class="tab" onclick="switchTab('how')">❓ Como funciona</button>
+</div>
+
+<!-- ===== TAB: SETUP ===== -->
+<div class="panel active" id="panel-setup">
+
+  <div class="card">
+    <div class="card-title">Credenciais GitHub</div>
+    <div class="card-sub">Guardadas apenas no teu navegador (localStorage). Nunca enviadas a servidores externos.</div>
+
+    <div class="row2">
+      <div>
+        <label>Utilizador GitHub</label>
+        <input id="s-user" value="garrinchashirts-create" placeholder="garrinchashirts-create">
+      </div>
+      <div>
+        <label>Repositório</label>
+        <input id="s-repo" value="igfe-dashboard" placeholder="igfe-dashboard">
+      </div>
+    </div>
+
+    <div class="col">
+      <label>🔑 GitHub Personal Access Token (PAT)</label>
+      <div class="input-wrap">
+        <input type="password" id="s-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+        <button class="reveal-btn" onclick="toggleReveal('s-token',this)">Mostrar</button>
+      </div>
+      <div class="hint">
+        Ainda não tens token? Segue os passos abaixo ↓
+      </div>
+    </div>
+
+    <div class="col">
+      <label>🤖 Anthropic API Key</label>
+      <div class="input-wrap">
+        <input type="password" id="s-claude" placeholder="sk-ant-xxxxxxxxxxxxxxxxxxxx">
+        <button class="reveal-btn" onclick="toggleReveal('s-claude',this)">Mostrar</button>
+      </div>
+      <div class="hint">
+        Cria em <a href="https://console.anthropic.com/keys" target="_blank">console.anthropic.com/keys</a>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="doSetup()">
+      <span>Instalar dashboard no GitHub →</span>
+    </button>
+    <div id="setup-status"></div>
+    <div class="prog-wrap" id="setup-prog-wrap" style="display:none"><div class="prog-bar" id="setup-prog"></div></div>
+    <div class="log" id="setup-log" style="display:none"></div>
+  </div>
+
+  <!-- HOW TO GET TOKEN -->
+  <div class="card">
+    <div class="card-title">Como criar o GitHub Personal Access Token</div>
+    <div class="card-sub">É um passe que permite a esta página escrever ficheiros no teu repositório. Demora 2 minutos.</div>
+
+    <div class="step-row">
+      <div class="step-badge">1</div>
+      <div class="step-content">
+        <div class="step-title-s">Abre as definições de tokens do GitHub</div>
+        <div class="step-desc">
+          Vai a <a href="https://github.com/settings/tokens/new" target="_blank">github.com/settings/tokens/new</a>
+          (ou GitHub → Foto de perfil → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token)
+        </div>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-badge">2</div>
+      <div class="step-content">
+        <div class="step-title-s">Preenche o formulário assim:</div>
+        <div class="step-desc" style="margin-bottom:8px">
+          <strong>Note:</strong> <code>IGFE Dashboard updater</code><br>
+          <strong>Expiration:</strong> No expiration (ou 1 year)<br>
+          <strong>Scopes:</strong> Marca apenas <code>repo</code>
+        </div>
+        <div class="token-mockup">
+          <div class="tm-section">Select scopes</div>
+          <div class="tm-row highlight-row">
+            <div class="tm-cb checked">✓</div>
+            <div>
+              <div class="tm-label"><strong>repo</strong> — Full control of private repositories</div>
+            </div>
+          </div>
+          <div class="tm-row" style="margin-left:20px">
+            <div class="tm-cb checked">✓</div>
+            <div class="tm-label">repo:status</div>
+          </div>
+          <div class="tm-row" style="margin-left:20px">
+            <div class="tm-cb checked">✓</div>
+            <div class="tm-label">repo_deployment</div>
+          </div>
+          <div class="tm-row" style="margin-left:20px">
+            <div class="tm-cb checked">✓</div>
+            <div class="tm-label">public_repo</div>
+          </div>
+          <div class="tm-row" style="margin-left:20px">
+            <div class="tm-cb checked">✓</div>
+            <div class="tm-label">repo:invite</div>
+          </div>
+          <div class="tm-section" style="margin-top:8px">Others (leave unchecked)</div>
+          <div class="tm-row"><div class="tm-cb"></div><div class="tm-label" style="color:#7d8590">workflow</div></div>
+          <div class="tm-row"><div class="tm-cb"></div><div class="tm-label" style="color:#7d8590">write:packages</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-badge">3</div>
+      <div class="step-content">
+        <div class="step-title-s">Clica em "Generate token"</div>
+        <div class="step-desc">Copia o token gerado (começa com <code>ghp_</code>) e cola no campo acima. <strong>Só aparece uma vez!</strong></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== TAB: UPDATE ===== -->
+<div class="panel" id="panel-update">
+
+  <div class="card" id="creds-card">
+    <div class="card-title">Credenciais guardadas</div>
+    <div id="creds-display" style="font-size:12px;color:var(--muted)">A carregar…</div>
+    <button class="btn btn-danger btn-sm" style="margin-top:10px;width:auto" onclick="clearCreds()">Limpar credenciais</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Novo PDF do IGFE</div>
+    <div class="drop" id="drop-zone">
+      <input type="file" accept=".pdf" onchange="handlePDF(this.files[0])">
+      <div class="drop-icon">📄</div>
+      <div class="drop-text">Arrasta o PDF aqui ou clica para selecionar</div>
+    </div>
+    <div class="file-tag" id="file-tag">
+      <span>📎</span>
+      <span id="ftname" style="font-weight:500;color:var(--accent)"></span>
+      <span id="ftsize" style="color:var(--muted);margin-left:auto"></span>
+      <button class="btn btn-sm" style="background:transparent;border:1px solid var(--border);color:var(--muted)" onclick="clearPDF()">✕</button>
+    </div>
+
+    <div class="row2" style="margin-top:14px">
+      <div>
+        <label>Trimestre</label>
+        <select id="u-quarter">
+          <option value="1">1º Trimestre (Jan–Mar)</option>
+          <option value="2">2º Trimestre (Jan–Jun)</option>
+          <option value="3" selected>3º Trimestre (Jan–Set)</option>
+          <option value="4">4º Trimestre (Jan–Dez)</option>
+        </select>
+      </div>
+      <div>
+        <label>Ano</label>
+        <input id="u-year" value="2025">
+      </div>
+    </div>
+
+    <button class="btn btn-primary" id="update-btn" onclick="doUpdate()" disabled>
+      Analisar PDF e publicar dashboard →
+    </button>
+    <div id="update-status"></div>
+    <div class="prog-wrap" id="update-prog-wrap" style="display:none"><div class="prog-bar" id="update-prog"></div></div>
+    <div class="log" id="update-log" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ===== TAB: HOW ===== -->
+<div class="panel" id="panel-how">
+  <div class="card">
+    <div class="card-title">Como funciona o sistema</div>
+    <div class="card-sub">Tudo corre no teu navegador — nenhum servidor intermediário.</div>
+
+    <div class="step-row">
+      <div class="step-badge">1</div>
+      <div class="step-content">
+        <div class="step-title-s">Tu → PDF do IGFE</div>
+        <div class="step-desc">Descarregas o PDF da Contraloría General quando publicam o relatório trimestral.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-badge">2</div>
+      <div class="step-content">
+        <div class="step-title-s">Claude AI extrai os dados</div>
+        <div class="step-desc">O PDF é enviado diretamente para a API da Anthropic (claude-sonnet-4-6). Claude lê todas as tabelas e gráficos e devolve um JSON estruturado com todos os valores numéricos.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-badge">3</div>
+      <div class="step-content">
+        <div class="step-title-s">Dados injetados no dashboard</div>
+        <div class="step-desc">O <code>index.html</code> atual é descarregado do GitHub, os novos dados substituem os antigos em todos os gráficos e KPIs, e o ficheiro atualizado é carregado de volta com um commit automático.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-badge">4</div>
+      <div class="step-content">
+        <div class="step-title-s">GitHub Pages publica em 1–2 min</div>
+        <div class="step-desc">O dashboard em <a href="https://garrinchashirts-create.github.io/igfe-dashboard/" target="_blank">garrinchashirts-create.github.io/igfe-dashboard/</a> fica atualizado automaticamente.</div>
+      </div>
+    </div>
+
+    <hr>
+    <div class="card-title" style="margin-bottom:8px">Segurança</div>
+    <div class="step-desc">
+      • O token GitHub e a chave Anthropic são guardados apenas no <code>localStorage</code> do teu navegador.<br>
+      • Nunca passam por servidores de terceiros — vão diretamente para api.github.com e api.anthropic.com.<br>
+      • Podes limpar a qualquer momento no separador "Atualizar Trimestre".
+    </div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+/* ===== BUNDLED INDEX.HTML (base64) ===== */
+const BUNDLED_INDEX =  + INDEX_B64_PLACEHOLDER + ;
+const BUNDLED_README =  + README_B64_PLACEHOLDER + ;
+
+const CLAUDE_API = 'https://api.anthropic.com/v1/messages';
+const CLAUDE_MODEL = 'claude-sonnet-4-6';
+
+let pdfFile = null, pdfB64 = null;
+let cfg = {};
+
+/* ===== INIT ===== */
+window.addEventListener('DOMContentLoaded', () => {
+  loadCreds();
+  setupDrop();
+  refreshCredsDisplay();
+});
+
+function switchTab(t) {
+  document.querySelectorAll('.tab').forEach((b,i) => {
+    const tabs = ['setup','update','how'];
+    b.classList.toggle('active', tabs[i] === t);
+  });
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + t).classList.add('active');
+  if (t === 'update') refreshCredsDisplay();
+}
+
+/* ===== CREDS ===== */
+function loadCreds() {
+  const s = localStorage.getItem('igfe_cfg');
+  if (!s) return;
+  cfg = JSON.parse(s);
+  if (cfg.user)   document.getElementById('s-user').value   = cfg.user;
+  if (cfg.repo)   document.getElementById('s-repo').value   = cfg.repo;
+  if (cfg.token)  document.getElementById('s-token').value  = cfg.token;
+  if (cfg.claude) document.getElementById('s-claude').value = cfg.claude;
+}
+
+function saveCreds() {
+  cfg = {
+    user:   document.getElementById('s-user').value.trim(),
+    repo:   document.getElementById('s-repo').value.trim(),
+    token:  document.getElementById('s-token').value.trim(),
+    claude: document.getElementById('s-claude').value.trim(),
+  };
+  localStorage.setItem('igfe_cfg', JSON.stringify(cfg));
+}
+
+function clearCreds() {
+  if (!confirm('Limpar todas as credenciais guardadas?')) return;
+  localStorage.removeItem('igfe_cfg');
+  cfg = {};
+  refreshCredsDisplay();
+}
+
+function refreshCredsDisplay() {
+  const s = localStorage.getItem('igfe_cfg');
+  const el = document.getElementById('creds-display');
+  if (!s) {
+    el.innerHTML = '⚠️ Nenhuma credencial guardada. Vai ao separador <strong>1ª Instalação</strong> primeiro.';
+    return;
+  }
+  const c = JSON.parse(s);
+  el.innerHTML = `
+    <span style="color:var(--accent)">✓</span> GitHub: <strong>${c.user}/${c.repo}</strong><br>
+    <span style="color:var(--accent)">✓</span> Token: <strong>${c.token ? c.token.slice(0,8) + '…' : '—'}</strong><br>
+    <span style="color:var(--accent)">✓</span> Anthropic key: <strong>${c.claude ? c.claude.slice(0,12) + '…' : '—'}</strong>
+  `;
+  cfg = c;
+}
+
+function toggleReveal(id, btn) {
+  const el = document.getElementById(id);
+  if (el.type === 'password') { el.type = 'text'; btn.textContent = 'Esconder'; }
+  else { el.type = 'password'; btn.textContent = 'Mostrar'; }
+}
+
+/* ===== DROP ===== */
+function setupDrop() {
+  const z = document.getElementById('drop-zone');
+  if (!z) return;
+  z.addEventListener('dragover', e => { e.preventDefault(); z.classList.add('over'); });
+  z.addEventListener('dragleave', () => z.classList.remove('over'));
+  z.addEventListener('drop', e => {
+    e.preventDefault(); z.classList.remove('over');
+    const f = e.dataTransfer.files[0];
+    if (f?.type === 'application/pdf') handlePDF(f);
+  });
+}
+
+function handlePDF(file) {
+  pdfFile = file;
+  document.getElementById('ftname').textContent = file.name;
+  document.getElementById('ftsize').textContent = (file.size/1024).toFixed(0) + ' KB';
+  document.getElementById('file-tag').classList.add('show');
+  document.getElementById('update-btn').disabled = false;
+  const r = new FileReader();
+  r.onload = e => { pdfB64 = e.target.result.split(',')[1]; };
+  r.readAsDataURL(file);
+}
+
+function clearPDF() {
+  pdfFile = pdfB64 = null;
+  document.getElementById('file-tag').classList.remove('show');
+  document.getElementById('update-btn').disabled = true;
+}
+
+/* ===== GITHUB API ===== */
+async function ghGet(path) {
+  const url = `https://api.github.com/repos/${cfg.user}/${cfg.repo}/contents/${path}`;
+  const r = await fetch(url, { headers: { Authorization: `Bearer ${cfg.token}`, Accept: 'application/vnd.github.v3+json' } });
+  if (r.status === 404) return null;
+  if (!r.ok) { const e = await r.json(); throw new Error(e.message || r.statusText); }
+  const d = await r.json();
+  return { content: atob(d.content.replace(/\n/g,'')), sha: d.sha };
+}
+
+async function ghPut(path, content, sha, message) {
+  const encoded = btoa(unescape(encodeURIComponent(content)));
+  const url = `https://api.github.com/repos/${cfg.user}/${cfg.repo}/contents/${path}`;
+  const body = { message, content: encoded };
+  if (sha) body.sha = sha;
+  const r = await fetch(url, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${cfg.token}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  if (!r.ok) { const e = await r.json(); throw new Error(e.message || r.statusText); }
+  return await r.json();
+}
+
+async function enablePages() {
+  const url = `https://api.github.com/repos/${cfg.user}/${cfg.repo}/pages`;
+  await fetch(url, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${cfg.token}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+    body: JSON.stringify({ source: { branch: 'main', path: '/' } })
+  });
+}
+
+/* ===== SETUP (1st install) ===== */
+async function doSetup() {
+  saveCreds();
+  if (!cfg.user || !cfg.repo || !cfg.token) {
+    setStatus('setup', 'err', 'Preenche utilizador, repositório e token do GitHub.');
+    return;
+  }
+
+  showProg('setup');
+  clearLog('setup');
+  setProg('setup', 5);
+
+  try {
+    log('setup','info','A verificar repositório…');
+    const existing = await ghGet('index.html');
+    setProg('setup', 20);
+
+    if (existing) {
+      log('setup','lok','index.html já existe no repositório');
+      log('setup','info','A atualizar ficheiros…');
+    } else {
+      log('setup','info','Repositório vazio — a fazer upload inicial…');
+    }
+
+    // Decode bundled files
+    const indexHtml = decodeURIComponent(escape(atob(BUNDLED_INDEX)));
+    const readmeMd  = decodeURIComponent(escape(atob(BUNDLED_README)));
+    setProg('setup', 35);
+
+    log('setup','info','A publicar index.html…');
+    await ghPut('index.html', indexHtml, existing?.sha || null, 'Add IGFE dashboard Q3 2025');
+    setProg('setup', 60);
+    log('setup','lok','index.html publicado');
+
+    const existingReadme = await ghGet('README.md');
+    await ghPut('README.md', readmeMd, existingReadme?.sha || null, 'Add README');
+    setProg('setup', 75);
+    log('setup','lok','README.md publicado');
+
+    log('setup','info','A ativar GitHub Pages…');
+    await enablePages();
+    setProg('setup', 90);
+
+    // Also save updater itself
+    log('setup','info','A publicar updater.html…');
+    const selfHtml = document.documentElement.outerHTML;
+    const existingUpdater = await ghGet('updater.html');
+    await ghPut('updater.html', selfHtml, existingUpdater?.sha || null, 'Add updater');
+    setProg('setup', 100);
+    log('setup','lok','updater.html publicado');
+
+    log('setup','lacc', `→ Dashboard em: https://${cfg.user}.github.io/${cfg.repo}/`);
+    log('setup','lacc', `→ Updater em:   https://${cfg.user}.github.io/${cfg.repo}/updater.html`);
+    setStatus('setup', 'ok', `✓ Instalação completa! O dashboard ficará disponível em 1–2 minutos em https://${cfg.user}.github.io/${cfg.repo}/`);
+
+  } catch(e) {
+    log('setup','lerr','Erro: ' + e.message);
+    setStatus('setup','err','Erro: ' + e.message);
+  }
+}
+
+/* ===== UPDATE ===== */
+async function doUpdate() {
+  if (!pdfB64) { alert('Seleciona um PDF primeiro.'); return; }
+  if (!cfg.token || !cfg.claude) {
+    setStatus('update','err','Credenciais em falta. Vai ao separador "1ª Instalação" e guarda as credenciais.');
+    return;
+  }
+
+  const q    = parseInt(document.getElementById('u-quarter').value);
+  const year = document.getElementById('u-year').value.trim();
+
+  showProg('update');
+  clearLog('update');
+  setProg('update', 5);
+
+  try {
+    log('update','info',`A analisar PDF com Claude (${CLAUDE_MODEL})…`);
+    const data = await extractWithClaude(q, year);
+    setProg('update', 40);
+    log('update','lok','Dados extraídos com sucesso');
+
+    log('update','info','A descarregar index.html do GitHub…');
+    const file = await ghGet('index.html');
+    if (!file) throw new Error('index.html não encontrado. Faz primeiro a instalação inicial.');
+    setProg('update', 55);
+
+    log('update','info','A injetar dados…');
+    const updated = injectData(file.content, data, q, year);
+    setProg('update', 70);
+    log('update','lok','Dados injetados em todos os gráficos');
+
+    log('update','info','A publicar no GitHub…');
+    const qTag = ['1T','2T','3T','4T'][q-1];
+    await ghPut('index.html', updated, file.sha, `Update IGFE ${qTag} ${year}`);
+    setProg('update', 100);
+    log('update','lok',`Commit publicado: IGFE ${qTag} ${year}`);
+    log('update','lacc',`→ https://${cfg.user}.github.io/${cfg.repo}/`);
+
+    setStatus('update','ok',`✓ Dashboard atualizado! Ativo em 1–2 min em https://${cfg.user}.github.io/${cfg.repo}/`);
+
+  } catch(e) {
+    log('update','lerr','Erro: ' + e.message);
+    setStatus('update','err','Erro: ' + e.message);
+  }
+}
+
+/* ===== CLAUDE ===== */
+async function extractWithClaude(q, year) {
+  const qNames = ['primeiro','segundo','terceiro','quarto'];
+  const prompt = `Analisa este PDF do IGFE (${qNames[q-1]} trimestre de ${year}) e extrai TODOS os dados numéricos.
+Responde APENAS com JSON válido, sem texto adicional nem markdown:
+
+{"quarter":${q},"year":"${year}","kpis":{"gastoTotal":"124,6","ingresoPublico":"89,0","entidades":"709","deudaPIB":"39,4","inversionesFinancieras":"40,0","utilidadesEmpresas":"967,3","entidadesDetalle":"299 Púb · 345 Mun · 32 Emp · 33 IES"},"cumplimiento":{"sectorPublico":99.0,"municipal":98.8,"empresasEstado":90.6,"educacionSuperior":84.9},"ejecucion":{"sectorPublico":75.1,"municipal":65.0,"empresasEstado":81.7,"educacionSuperior":63.3},"gastoSector":{"publicoActual":79.1,"publicoAnterior":77.8,"municipalActual":10.4,"municipalAnterior":10.2,"empresasActual":33.7,"empresasAnterior":29.8,"educacionActual":1.4,"educacionAnterior":1.4},"ingresosPublicos":{"impuestosActual":55.9,"impuestosAnterior":51.7,"endeudamientoActual":19.0,"endeudamientoAnterior":25.2,"recuperacionActual":3.1,"recuperacionAnterior":3.1,"otrosCorrActual":2.7,"otrosCorrAnterior":2.7,"imposicionesActual":2.7,"imposicionesAnterior":2.5,"ingOpActual":3.1,"ingOpAnterior":3.5,"ventaActual":1.1,"ventaAnterior":1.1,"otrosActual":1.4,"otrosAnterior":1.7},"gastosPublicos":{"transferenciasActual":24.4,"transferenciasAnterior":22.6,"segSocialActual":12.3,"segSocialAnterior":15.2,"servicioDeudaActual":11.7,"servicioDeudaAnterior":18.4,"bienesServiciosActual":11.7,"bienesServiciosAnterior":10.9,"personalActual":12.3,"personalAnterior":11.6,"activosFinActual":5.1,"activosFinAnterior":4.5,"inversionActual":3.5,"inversionAnterior":2.3,"otrosActual":3.2,"otrosAnterior":2.1},"rankingAlto":[{"nombre":"Min. Bienes Nacionales","pct":97.3},{"nombre":"Contraloría General","pct":90.8},{"nombre":"Min. Interior","pct":85.0},{"nombre":"Min. Mujer","pct":84.9},{"nombre":"Min. Hacienda","pct":82.6},{"nombre":"Min. Salud","pct":81.8},{"nombre":"Min. Justicia","pct":81.2},{"nombre":"Presidencia","pct":80.2},{"nombre":"Ministerio Público","pct":78.0},{"nombre":"Poder Judicial","pct":77.1}],"rankingBajo":[{"nombre":"Min. Economía","pct":35.2},{"nombre":"Servicio Electoral","pct":45.4},{"nombre":"Min. Ciencia","pct":58.8},{"nombre":"Min. Medio Ambiente","pct":63.3},{"nombre":"Min. Obras Públicas","pct":65.2},{"nombre":"Min. Des. Social","pct":66.6},{"nombre":"Min. Deporte","pct":68.7},{"nombre":"Min. Vivienda","pct":69.3},{"nombre":"Min. Culturas","pct":69.3},{"nombre":"Min. Educación","pct":71.3}],"ingresosMun":{"propiosActual":2846.9,"propiosAnterior":2704.7,"transferenciasActual":2093.8,"transferenciasAnterior":1891.5,"minsalActual":2218.7,"minsalAnterior":2065.3,"fcmActual":1590.5,"fcmAnterior":1811.1,"minedActual":1088.7,"minedAnterior":1054.7,"ingBfoActual":1032.6,"ingBfoAnterior":943.9,"otrosActual":959.3,"otrosAnterior":928.7},"gastosMun":{"personalActual":4967.5,"personalAnterior":4948.2,"bienesActual":2242.7,"bienesAnterior":2126.3,"transferenciasActual":2155.7,"transferenciasAnterior":2140.0,"inversionActual":427.1,"inversionAnterior":419.3,"deudaActual":276.2,"deudaAnterior":223.9,"segSocialActual":110.4,"segSocialAnterior":110.2,"actNFActual":103.4,"actNFAnterior":110.2,"otrosActual":124.8,"otrosAnterior":109.4},"fcmRegiones":{"Aysén":44.9,"Atacama":27.2,"Arica":26.2,"Ñuble":24.9,"Magallanes":23.9,"Los Ríos":23.5,"O'Higgins":21.5,"Valparaíso":21.4,"Araucanía":21.1,"Coquimbo":21.0,"Biobío":19.1,"Maule":18.7,"Los Lagos":18.4,"Tarapacá":14.8,"Antofagasta":13.4,"Metropolitana":12.3},"empresas":{"enap2025":485148,"enap2024":293874,"codelco2025":109387,"codelco2024":198324,"enami2025":46802,"enami2024":42949,"defensa2025":11485,"defensa2024":-14432,"banco2025":5755,"banco2024":2373,"otras2025":382547,"otras2024":366103,"portuarias2025":42949,"portuarias2024":137942,"metro2025":-45526,"metro2024":-12368,"efe2025":-129552,"efe2024":-75939,"tvn2025":-16292,"tvn2024":-5889},"educacionIng":{"ingOpActual":772883,"ingOpAnterior":700154,"transferenciasActual":364024,"transferenciasAnterior":322460,"financiamientoActual":161621,"financiamientoAnterior":160984,"endeudamientoActual":80854,"endeudamientoAnterior":89572,"ventaActual":33010,"ventaAnterior":24561,"recuperacionActual":11941,"recuperacionAnterior":8119,"otrosActual":1753,"otrosAnterior":3787},"gratuidad":{"2021":{"total":1.9,"pct":62.7},"2022":{"total":2.1,"pct":65.1},"2023":{"total":2.4,"pct":68.4},"2024":{"total":2.8,"pct":71.1},"3T2025":{"total":2.18,"pct":74.6}},"deuda":{"totalBillones":130.3,"internaBillones":85.9,"externaBillones":44.3,"totalPIB":39.4,"internaPIB":26.0,"externaPIB":13.4,"historico":[{"anio":"2021","interna":23.5,"externa":12.3},{"anio":"2022","interna":22.3,"externa":12.7},{"anio":"2023","interna":23.4,"externa":13.0},{"anio":"2024","interna":24.6,"externa":13.6},{"anio":"3T2025","interna":26.0,"externa":13.4}]},"inversiones":{"totalBillones":40.0,"pib":12.1,"historico":[{"anio":"2021","pib":12.1},{"anio":"2022","pib":13.6},{"anio":"2023","pib":12.2},{"anio":"2024","pib":11.7},{"anio":"3T2025","pib":12.1}]},"gobRegionalesIng":{"transfCapActual":1167858,"transfCapAnterior":1052818,"transfCorrActual":124810,"transfCorrAnterior":91510,"otrosActual":23842,"otrosAnterior":23996},"gobRegionalesGas":{"inversionActual":383297,"inversionAnterior":467332,"transfCapActual":219841,"transfCapAnterior":133565,"actNFActual":74496,"actNFAnterior":68861,"personalActual":67192,"personalAnterior":62960,"transfCorrActual":160439,"transfCorrAnterior":19181,"servicioDeudaActual":147888,"servicioDeudaAnterior":16153,"otrosActual":72110,"otrosAnterior":113636}}
+
+Substitui TODOS os valores com os do PDF. Se não encontrares um valor mantém o exemplo.`;
+
+  const r = await fetch(CLAUDE_API, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': cfg.claude,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: CLAUDE_MODEL, max_tokens: 4096,
+      messages: [{ role: 'user', content: [
+        { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: pdfB64 } },
+        { type: 'text', text: prompt }
+      ]}]
+    })
+  });
+
+  if (!r.ok) { const e = await r.json(); throw new Error('Claude API: ' + (e.error?.message || r.statusText)); }
+  const resp = await r.json();
+  const text = resp.content.find(b => b.type==='text')?.text || '';
+  return JSON.parse(text.replace(/```json|```/g,'').trim());
+}
+
+/* ===== DATA INJECTION ===== */
+function injectData(html, d, q, year) {
+  const periods = ['Jan–Mar','Jan–Jun','Jan–Set','Jan–Dez'];
+  const qLabel  = ['1T','2T','3T','4T'][q-1];
+
+  const kpiBlock = `  ${q}: {
+    period: "${periods[q-1]} ${year}",
+    kpis: [
+      { label: "Gasto total estado", value: "${d.kpis.gastoTotal}", unit: "B$", delta: "vs ${year-1}", up: true, accentColor: "var(--accent)" },
+      { label: "Ingreso sector público", value: "${d.kpis.ingresoPublico}", unit: "B$", delta: "${qLabel} ${year}", up: null, accentColor: "var(--coral)" },
+      { label: "Entidades reportando", value: "${d.kpis.entidades}", unit: "", delta: "${d.kpis.entidadesDetalle}", up: null, accentColor: "var(--gold)" },
+      { label: "Deuda pública / PIB", value: "${d.kpis.deudaPIB}", unit: "%", delta: "${qLabel} ${year}", up: false, accentColor: "var(--blue-mid)" },
+      { label: "Inversiones financieras", value: "${d.kpis.inversionesFinancieras}", unit: "B$", delta: "Total", up: true, accentColor: "var(--accent)" },
+      { label: "Utilidades emp. del estado", value: "${d.kpis.utilidadesEmpresas}", unit: "MM$", delta: "${qLabel} ${year}", up: true, accentColor: "var(--gold)" },
+    ]
+  }`;
+
+  const dsStart = html.indexOf('const DATA = {');
+  const dsEnd   = html.indexOf('\n};\n\nlet currentQuarter');
+  let dataSection = html.slice(dsStart, dsEnd);
+
+  const qRx = new RegExp(`  ${q}:\s*\{[\s\S]*?(?=,\n  \d:|\n\};)`, 's');
+  if (qRx.test(dataSection)) dataSection = dataSection.replace(qRx, kpiBlock + ',');
+  else dataSection = dataSection.replace(/\n\};$/, `,\n${kpiBlock}\n};`);
+
+  let result = html.slice(0, dsStart) + dataSection + html.slice(dsEnd);
+
+  const fns = {
+    buildCompliance: () => replaceNumericPct(result, 'buildCompliance', [
+      d.cumplimiento.sectorPublico, d.cumplimiento.municipal, d.cumplimiento.empresasEstado, d.cumplimiento.educacionSuperior,
+      d.ejecucion.sectorPublico, d.ejecucion.municipal, d.ejecucion.empresasEstado, d.ejecucion.educacionSuperior
+    ]),
+    buildGastoSector: () => replaceDatasets(result, 'buildGastoSector', [
+      [d.gastoSector.publicoAnterior, d.gastoSector.municipalAnterior, d.gastoSector.empresasAnterior, d.gastoSector.educacionAnterior],
+      [d.gastoSector.publicoActual,   d.gastoSector.municipalActual,   d.gastoSector.empresasActual,   d.gastoSector.educacionActual]
+    ]),
+    buildIngresosSP: () => {const p=d.ingresosPublicos; return replaceDatasets(result,'buildIngresosSP',[
+      [p.impuestosAnterior,p.endeudamientoAnterior,p.recuperacionAnterior,p.otrosCorrAnterior,p.imposicionesAnterior,p.ingOpAnterior,p.ventaAnterior,p.otrosAnterior],
+      [p.impuestosActual,  p.endeudamientoActual,  p.recuperacionActual,  p.otrosCorrActual,  p.imposicionesActual,  p.ingOpActual,  p.ventaActual,  p.otrosActual]
+    ]);},
+    buildGastosSP: () => {const p=d.gastosPublicos; return replaceDatasets(result,'buildGastosSP',[
+      [p.transferenciasAnterior,p.segSocialAnterior,p.servicioDeudaAnterior,p.bienesServiciosAnterior,p.personalAnterior,p.activosFinAnterior,p.inversionAnterior,p.otrosAnterior],
+      [p.transferenciasActual,  p.segSocialActual,  p.servicioDeudaActual,  p.bienesServiciosActual,  p.personalActual,  p.activosFinActual,  p.inversionActual,  p.otrosActual]
+    ]);},
+    buildDeuda: () => replaceDatasets(result,'buildDeuda',[
+      d.deuda.historico.map(h=>h.interna), d.deuda.historico.map(h=>h.externa)
+    ]),
+    buildInversiones: () => replaceDatasets(result,'buildInversiones',[d.inversiones.historico.map(h=>h.pib)]),
+  };
+
+  for (const [fn, replacer] of Object.entries(fns)) { result = replacer(); }
+
+  result = result.replace(/let currentQuarter = \d;/, `let currentQuarter = ${q};`);
+  result = result.replace(/buildKPIs\(\d\);/, `buildKPIs(${q});`);
+  result = result.replace(/document\.querySelectorAll\('\.q-btn'\)\[\d\]\.classList\.add\('active'\)/, `document.querySelectorAll('.q-btn')[${q-1}].classList.add('active')`);
+  result = result.replace(/if \(q !== \d\) showNotice/, `if (q !== ${q}) showNotice`);
+  result = result.replace(/Datos extraídos en [a-záéíóúñ]+ \d{4}/i, `Datos extraídos en ${['marzo','junio','septiembre','diciembre'][q-1]} ${year}`);
+  return result;
+}
+
+function replaceNumericPct(html, fn, nums) {
+  const s = html.indexOf(`function ${fn}()`);
+  if (s === -1) return html;
+  const e = findFnEnd(html, s);
+  let body = html.slice(s, e);
+  let i = 0;
+  body = body.replace(/pct:\s*([\d.]+)/g, () => `pct: ${nums[i++] ?? 0}`);
+  return html.slice(0, s) + body + html.slice(e);
+}
+
+function replaceDatasets(html, fn, arrays) {
+  const s = html.indexOf(`function ${fn}()`);
+  if (s === -1) return html;
+  const e = findFnEnd(html, s);
+  let body = html.slice(s, e);
+  const rx = /data:\s*\[([^\]]+)\]/g;
+  let m, idx = 0, out = '', last = 0;
+  while ((m = rx.exec(body)) !== null && idx < arrays.length) {
+    out += body.slice(last, m.index) + `data: [${arrays[idx++].map(v=>+v).join(', ')}]`;
+    last = m.index + m[0].length;
+  }
+  out += body.slice(last);
+  return html.slice(0, s) + out + html.slice(e);
+}
+
+function findFnEnd(html, start) {
+  let d = 0, i = start;
+  while (i < html.length) {
+    if (html[i]==='{') d++;
+    else if (html[i]==='}') { d--; if (d===0) return i+1; }
+    i++;
+  }
+  return html.length;
+}
+
+/* ===== UI HELPERS ===== */
+function setStatus(ctx, type, msg) {
+  const el = document.getElementById(ctx + '-status');
+  el.innerHTML = `<div class="status ${type}">${msg}</div>`;
+}
+
+function showProg(ctx) {
+  document.getElementById(ctx + '-prog-wrap').style.display = 'block';
+  document.getElementById(ctx + '-log').style.display = 'block';
+}
+
+function setProg(ctx, pct) {
+  document.getElementById(ctx + '-prog').style.width = pct + '%';
+}
+
+function log(ctx, cls, msg) {
+  const el = document.getElementById(ctx + '-log');
+  const t = new Date().toLocaleTimeString('pt-PT', {hour12:false});
+  el.innerHTML += `<div><span style="color:rgba(138,154,184,0.5)">${t}</span> <span class="${cls}">${msg}</span></div>`;
+  el.scrollTop = el.scrollHeight;
+}
+
+function clearLog(ctx) {
+  document.getElementById(ctx + '-log').innerHTML = '';
+  document.getElementById(ctx + '-status').innerHTML = '';
+  setProg(ctx, 0);
+}
+</script>
+</body>
+</html>
