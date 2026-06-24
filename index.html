@@ -22,15 +22,15 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--te
 .logo h1{font-size:13px;font-weight:600;margin:0}
 .logo p{font-size:10px;color:rgba(255,255,255,.5);margin:0}
 .controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.filter-group{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:5px 10px}
+.filter-g{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:8px;padding:5px 10px}
 .lbl{font-size:10px;font-weight:600;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.8px;white-space:nowrap}
-.sel{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 10px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;outline:none;min-width:80px;transition:all .2s}
+.sel{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 10px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;outline:none;min-width:80px}
 .sel:hover,.sel:focus{background:rgba(255,255,255,.25);border-color:var(--teal)}
-.sel option{background:#1a2744;color:#fff;font-weight:600}
-.filter-sep{width:1px;height:24px;background:rgba(255,255,255,.15);margin:0 2px}
-.period-badge{background:var(--teal);color:var(--dark);padding:5px 14px;border-radius:6px;font-size:12px;font-weight:700;white-space:nowrap;letter-spacing:-.2px}
-.upd-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#fff;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .2s}
-.upd-btn:hover{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.4)}
+.sel option{background:#1a2744;color:#fff}
+.fsep{width:1px;height:22px;background:rgba(255,255,255,.15)}
+.period-badge{background:var(--teal);color:var(--dark);padding:5px 14px;border-radius:6px;font-size:12px;font-weight:700}
+.upd-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#fff;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit}
+.upd-btn:hover{background:rgba(255,255,255,.2)}
 
 /* COVER */
 .cover{background:var(--navy);color:#fff;padding:1rem 1.5rem}
@@ -63,11 +63,24 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
 .kpi-u{font-size:11px;font-weight:400;color:var(--muted)}
 
 /* COB */
-.cob{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
-.cob-c{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:.75rem;text-align:center;position:relative;overflow:hidden}
-.cob-c::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--cc,var(--teal))}
-.cob-n{font-size:28px;font-weight:800;line-height:1;letter-spacing:-1px}
-.cob-l{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-top:3px;line-height:1.3}
+.cob-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px}
+.cob-box{background:#f5f3ef;border-radius:10px;padding:1.25rem 1rem}
+.cob-box-title{font-size:12px;font-weight:700;color:var(--navy);text-align:center;margin-bottom:.75rem;line-height:1.4}
+.cob-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:.75rem}
+.cob-item{display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center}
+.cob-ico{font-size:26px;line-height:1}
+.cob-num{font-size:22px;font-weight:800;color:var(--navy);letter-spacing:-1px;line-height:1}
+.cob-name{font-size:7.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);line-height:1.3}
+.cob-total-row{text-align:center;margin-top:.25rem}
+.cob-total{display:inline-block;background:white;border-radius:6px;padding:5px 14px}
+.cob-total-n{font-size:14px;font-weight:800;color:var(--navy)}
+.cob-total-l{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px}
+.cumpl-wrap{background:white;border:1px solid var(--border);border-radius:10px;padding:1.25rem}
+.cumpl-title{font-size:12px;font-weight:700;color:var(--navy);text-align:center;margin-bottom:1rem;line-height:1.4}
+.cbr{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.cbr-lbl{font-size:8.5px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.5px;width:100px;flex-shrink:0;text-align:right;line-height:1.35}
+.cbr-bar{flex:1;height:30px;border-radius:0 4px 4px 0;display:flex;align-items:center;justify-content:flex-end;padding-right:10px;min-width:40px}
+.cbr-pct{font-size:13px;font-weight:800}
 
 /* BARS */
 .bars{display:flex;flex-direction:column;gap:8px}
@@ -159,15 +172,15 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
       </div>
     </div>
     <div class="controls">
-      <div class="filter-group">
+      <div class="filter-g">
         <span class="lbl">Año</span>
         <select class="sel" id="sel-y"></select>
-        <div class="filter-sep"></div>
+        <div class="fsep"></div>
         <span class="lbl">Trimestre</span>
         <select class="sel" id="sel-q"></select>
       </div>
       <span class="period-badge" id="pbadge">—</span>
-      <button class="upd-btn" onclick="openModal()">⚙️ Actualizar</button>
+      <button class="upd-btn" onclick="openModal()">&#9881;&#65039; Actualizar</button>
     </div>
   </div>
 </div>
@@ -191,18 +204,26 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
 
   <div class="sec">
     <div class="sec-lbl">Cobertura y cumplimiento</div>
-    <div class="cob" id="cob"></div>
-    <div class="g2">
-      <div class="card">
-        <div class="ct">Cumplimiento envío de información</div>
-        <div class="cs">% de entidades que enviaron datos en plazo</div>
-        <div class="bars" id="b-cumpl"></div>
+    <div class="cob-wrap">
+      <div class="cob-box">
+        <div class="cob-box-title" id="cob-title">Cobertura del Informe IGFE<br>2025: 709 Entidades</div>
+        <div class="cob-grid" id="cob-grid"></div>
+        <div class="cob-total-row">
+          <div class="cob-total">
+            <div class="cob-total-n" id="cob-total-n">TOTAL: 709</div>
+            <div class="cob-total-l">ENTIDADES</div>
+          </div>
+        </div>
       </div>
-      <div class="card">
-        <div class="ct">Ejecución presupuestaria por sector</div>
-        <div class="cs">% ejecutado / presupuesto vigente</div>
-        <div class="bars" id="b-ejec"></div>
+      <div class="cumpl-wrap">
+        <div class="cumpl-title" id="cumpl-title">Cumplimiento Envío<br>Información Contable al 2025</div>
+        <div id="b-cumpl"></div>
       </div>
+    </div>
+    <div class="card" style="margin-bottom:10px">
+      <div class="ct">Ejecución presupuestaria por sector</div>
+      <div class="cs">% ejecutado / presupuesto vigente</div>
+      <div class="bars" id="b-ejec"></div>
     </div>
   </div>
 
@@ -477,26 +498,20 @@ function initSelectors() {
   const years = [...new Set(Object.keys(DB).map(k => k.split('-')[0]))].sort((a,b) => b - a);
   const sy = document.getElementById('sel-y');
   sy.innerHTML = years.map(y => '<option value="' + y + '">' + y + '</option>').join('');
-  // Default to 2025 if available, else first year
-  sy.value = years.indexOf('2025') >= 0 ? '2025' : years[0];
-  fillQs(sy.value, true);
+  sy.value = years[0];
+  fillQs(years[0]);
 }
 
-function fillQs(year, defaultQ) {
+function fillQs(year) {
   const qs = [...new Set(Object.keys(DB).filter(k => k.startsWith(year + '-')).map(k => parseInt(k.split('-')[1])))].sort((a,b) => a - b);
   const sq = document.getElementById('sel-q');
-  const qn = ['','1er Trimestre','2do Trimestre','3er Trimestre','4to Trimestre'];
+  const qn = ['','1er T','2do T','3er T','4to T'];
   sq.innerHTML = qs.map(q => '<option value="' + q + '">' + qn[q] + '</option>').join('');
-  // Default to Q3 if available for 2025, else max Q
-  if (defaultQ && year === '2025' && qs.indexOf(3) >= 0) {
-    sq.value = '3';
-  } else {
-    sq.value = Math.max(...qs);
-  }
+  sq.value = Math.max(...qs);
 }
 
 document.getElementById('sel-y').onchange = function() {
-  fillQs(this.value, false);
+  fillQs(this.value);
   render(this.value, document.getElementById('sel-q').value);
 };
 document.getElementById('sel-q').onchange = function() {
@@ -542,30 +557,37 @@ function render(year, q) {
     '<div class="kpi-v">' + k.v + '<span class="kpi-u">' + (k.u ? ' ' + k.u : '') + '</span></div></div>'
   ).join('');
 
-  // Cobertura
-  const cb = COB_MAP[key] || {pub:299,mun:345,emp:32,ies:33};
-  const cbDef = [
-    {n:cb.pub||'—', l:'Sector P\u00fablico', c:'#2e5fa3'},
-    {n:cb.mun||'—', l:'Sector Municipal', c:'#e8336e'},
-    {n:cb.emp||'—', l:'Empresas Estado e ITC', c:'#00b4a0'},
-    {n:cb.ies||'—', l:'Instituciones Educ. Superior', c:'#f0a500'},
+  // Cobertura PDF style
+  var cb = COB_MAP[key] || {pub:299,mun:345,emp:32,ies:33};
+  var totalEnt = (cb.pub||0)+(cb.mun||0)+(cb.emp||0)+(cb.ies||0);
+  document.getElementById('cob-title').innerHTML = 'Cobertura del Informe IGFE<br>' + year + ': ' + totalEnt + ' Entidades';
+  document.getElementById('cob-total-n').textContent = 'TOTAL: ' + totalEnt;
+  document.getElementById('cumpl-title').innerHTML = 'Cumplimiento Envío<br>Información Contable al ' + year;
+  var cobItems = [
+    {ico:'&#127963;', n:cb.pub||'--', l:'SECTOR PÚBLICO'},
+    {ico:'&#127961;', n:cb.mun||'--', l:'SECTOR MUNICIPAL'},
+    {ico:'&#127981;', n:cb.emp||'--', l:'EMPRESAS DEL ESTADO E ITC'},
+    {ico:'&#127979;', n:cb.ies||'--', l:'INSTITUCIONES DE EDUC. SUPERIOR'},
   ];
-  document.getElementById('cob').innerHTML = cbDef.map(c =>
-    '<div class="cob-c" style="--cc:' + c.c + '"><div class="cob-n" style="color:' + c.c + '">' + c.n + '</div>' +
-    '<div class="cob-l">' + c.l + '</div></div>'
-  ).join('');
+  document.getElementById('cob-grid').innerHTML = cobItems.map(function(it) {
+    return '<div class="cob-item"><div class="cob-ico">' + it.ico + '</div>' +
+      '<div class="cob-num">' + it.n + '</div>' +
+      '<div class="cob-name">' + it.l + '</div></div>';
+  }).join('');
+  // Cumplimiento PDF horizontal bars
+  var cm = d.cumplimiento || {};
+  var CBGC = {'Sector Público':'#1a2744','Sector Municipal':'#00b4a0','Empresas del Estado':'#e8336e','Instituciones de Educación Superior':'#d9caba'};
+  var CBTC = {'Instituciones de Educación Superior':'#555'};
+  var CBLBL = {'Sector Público':'SECTOR PÚBLICO','Sector Municipal':'SECTOR MUNICIPAL','Empresas del Estado':'EMPRESAS DEL ESTADO','Instituciones de Educación Superior':'INSTITUCIONES DE<br>EDUCACIÓN SUPERIOR'};
+  var ORD = ['Sector Público','Sector Municipal','Empresas del Estado','Instituciones de Educación Superior'];
+  document.getElementById('b-cumpl').innerHTML = ORD.filter(function(s){return cm[s]!=null;}).map(function(s) {
+    var p=cm[s]; var bg=CBGC[s]||'#1a2744'; var tc=CBTC[s]||'white';
+    return '<div class="cbr"><div class="cbr-lbl">' + (CBLBL[s]||s) + '</div>' +
+      '<div class="cbr-bar" style="width:' + Math.min(p,100) + '%;background:' + bg + '">' +
+      '<span class="cbr-pct" style="color:' + tc + '">' + p.toFixed(1) + '%</span></div></div>';
+  }).join('') || '<div style="color:#aaa;font-size:11px;padding:8px">Sin datos</div>';
 
-  // Barras cumplimiento
-  const cm = d.cumplimiento || {};
-  const CC = {'Sector P\u00fablico':'#2e5fa3','Sector Municipal':'#e8336e','Empresas del Estado':'#00b4a0','Instituciones de Educaci\u00f3n Superior':'#f0a500'};
-  document.getElementById('b-cumpl').innerHTML = Object.entries(cm).length ?
-    Object.entries(cm).map(([s,p]) =>
-      '<div class="br"><div class="br-h"><span class="br-n">' + s + '</span>' +
-      '<span class="br-p" style="color:' + (CC[s]||'#555') + '">' + p + '%</span></div>' +
-      '<div class="bar-t"><div class="bar-f" style="width:' + p + '%;background:' + (CC[s]||'#555') + '"></div></div></div>'
-    ).join('') : '<div style="color:#aaa;font-size:11px">Sin datos disponibles</div>';
-
-  // Barras ejecución
+    // Barras ejecución
   const ej = EJEC_MAP[key];
   document.getElementById('b-ejec').innerHTML = ej ?
     [['Sector P\u00fablico',ej.pub,'#2e5fa3'],['Sector Municipal',ej.mun,'#e8336e'],['Empresas del Estado',ej.emp,'#00b4a0'],['Instituciones de Educ. Superior',ej.ies,'#f0a500']].map(([s,p,c]) =>
@@ -1011,9 +1033,7 @@ function injectData(html, data, q, yr) {
    ==================================================== */
 window.addEventListener('DOMContentLoaded', function() {
   initSelectors();
-  var y = document.getElementById('sel-y').value;
-  var q = document.getElementById('sel-q').value;
-  render(y, q);
+  render('2025', '3');
 });
 </script>
 </body>
