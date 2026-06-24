@@ -88,10 +88,12 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
 .cob-total-l{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px}
 .cumpl-wrap{background:white;border:1px solid var(--border);border-radius:10px;padding:1.25rem}
 .cumpl-title{font-size:12px;font-weight:700;color:var(--navy);text-align:center;margin-bottom:1rem;line-height:1.4}
-.cbr{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.cbr{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .cbr-lbl{font-size:8.5px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.5px;width:100px;flex-shrink:0;text-align:right;line-height:1.35}
-.cbr-bar{flex:1;height:30px;border-radius:0 4px 4px 0;display:flex;align-items:center;justify-content:flex-end;padding-right:10px;min-width:40px}
+.cbr-track{flex:1;background:#f0f0f0;border-radius:4px;overflow:hidden;height:32px}
+.cbr-bar{height:100%;border-radius:0 4px 4px 0;display:flex;align-items:center;justify-content:flex-end;padding-right:10px;min-width:50px;transition:width 0.8s ease}
 .cbr-pct{font-size:13px;font-weight:800}
+.cbr-baseline{font-size:9px;color:#aaa;text-align:right;margin-top:2px;padding-right:4px}
 
 /* BARS */
 .bars{display:flex;flex-direction:column;gap:8px}
@@ -622,12 +624,24 @@ function render(year, q) {
   var CBTC = {'Instituciones de Educación Superior':'#555'};
   var CBLBL = {'Sector Público':'SECTOR PÚBLICO','Sector Municipal':'SECTOR MUNICIPAL','Empresas del Estado':'EMPRESAS DEL ESTADO','Instituciones de Educación Superior':'INSTITUCIONES DE<br>EDUCACIÓN SUPERIOR'};
   var ORD = ['Sector Público','Sector Municipal','Empresas del Estado','Instituciones de Educación Superior'];
+  // Scale: find min value, set baseline at floor(min/10)*10 - 10, max at 100
+  var cmVals = ORD.filter(function(s){return cm[s]!=null;}).map(function(s){return cm[s];});
+  var cmMin = cmVals.length ? Math.min.apply(null,cmVals) : 0;
+  var baseline = Math.max(0, Math.floor((cmMin-5)/10)*10);  // e.g. 84 → baseline 70
+  var cmRange = 100 - baseline;
   document.getElementById('b-cumpl').innerHTML = ORD.filter(function(s){return cm[s]!=null;}).map(function(s) {
     var p=cm[s]; var bg=CBGC[s]||'#1a2744'; var tc=CBTC[s]||'white';
-    return '<div class="cbr"><div class="cbr-lbl">' + (CBLBL[s]||s) + '</div>' +
-      '<div class="cbr-bar" style="width:' + Math.min(p,100) + '%;background:' + bg + '">' +
-      '<span class="cbr-pct" style="color:' + tc + '">' + p.toFixed(1) + '%</span></div></div>';
-  }).join('') || '<div style="color:#aaa;font-size:11px;padding:8px">Sin datos</div>';
+    var barW = Math.max(4, (p - baseline) / cmRange * 100);
+    return '<div class="cbr">' +
+      '<div class="cbr-lbl">' + (CBLBL[s]||s) + '</div>' +
+      '<div class="cbr-track">' +
+        '<div class="cbr-bar" style="width:' + barW + '%;background:' + bg + '">' +
+          '<span class="cbr-pct" style="color:' + tc + '">' + p.toFixed(1) + '%</span>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('') + (baseline>0?'<div class="cbr-baseline">Escala desde ' + baseline + '%</div>':'')
+    || '<div style="color:#aaa;font-size:11px;padding:8px">Sin datos</div>';
 
     // Barras ejecución
   const ej = EJEC_MAP[key];
