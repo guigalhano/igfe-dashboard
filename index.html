@@ -28,6 +28,22 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--te
 .fsep{width:1px;height:26px;background:rgba(255,255,255,.2)}
 .period-badge{background:var(--teal);color:var(--dark);padding:6px 16px;border-radius:7px;font-size:13px;font-weight:800;letter-spacing:.3px}
 .upd-btn:hover{background:rgba(255,255,255,.2)}
+.ct-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:2px}
+.ct-row .ct{margin-bottom:0;flex:1}
+.hist-btn{font-size:10px;font-weight:600;color:var(--teal);background:rgba(0,180,160,.08);border:1px solid rgba(0,180,160,.3);border-radius:6px;padding:3px 9px;cursor:pointer;white-space:nowrap;font-family:inherit;transition:background .15s}
+.hist-btn:hover{background:rgba(0,180,160,.18)}
+.hist-overlay{display:none;position:fixed;inset:0;background:rgba(10,20,44,.75);z-index:200;align-items:center;justify-content:center}
+.hist-overlay.open{display:flex}
+.hist-modal{background:white;border-radius:12px;width:min(94vw,900px);max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.hist-hdr{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.25rem;background:var(--navy);border-radius:12px 12px 0 0}
+.hist-title{font-size:14px;font-weight:700;color:white}
+.hist-close{background:none;border:none;color:rgba(255,255,255,.6);font-size:20px;cursor:pointer;line-height:1;padding:2px 6px}
+.hist-close:hover{color:white}
+.hist-body{padding:1.25rem;flex:1;overflow-y:auto}
+.hist-cw{position:relative;height:340px}
+.hist-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.hist-tab{font-size:10px;font-weight:600;padding:4px 10px;border-radius:5px;border:1px solid var(--border);cursor:pointer;background:white;color:var(--muted);font-family:inherit}
+.hist-tab.active{background:var(--navy);color:white;border-color:var(--navy)}
 .narr{background:#eef8f6;border-left:3px solid var(--teal);border-radius:0 6px 6px 0;padding:.65rem .9rem;margin-top:10px;font-size:12px;color:#333;line-height:1.65;display:none;position:relative;z-index:2;clear:both}
 .narr.show{display:block}
 
@@ -237,8 +253,8 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
     </div>
     <div class="g2">
       <div class="card">
-        <div class="ct">Comparativo Gastos Presupuestarios Ejecutados</div>
-        <div class="cs">Billones de pesos · todos los sectores</div>
+        <div class="ct-row"><div class="ct">Comparativo Gastos Presupuestarios Ejecutados</div>
+        <div class="cs">Billones de pesos · todos los sectores</div><button class="hist-btn" onclick="showHistoric('c-gsec','Gasto por Sector','gastoSector','B$')">📈 Histórico</button></div>
         <div class="cw"><canvas id="c-gsec"></canvas></div>
       </div>
       <div class="card">
@@ -254,14 +270,14 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
     <div class="sec-lbl">Sector Público · Ingresos y Gastos</div>
     <div class="g2">
       <div class="card">
-        <div class="ct">Ingresos Presupuestarios Ejecutados — Sector Público</div>
-        <div class="cs">Billones de pesos · comparativo año anterior</div>
+        <div class="ct-row"><div class="ct">Ingresos Presupuestarios Ejecutados — Sector Público</div>
+        <div class="cs">Billones de pesos · comparativo año anterior</div><button class="hist-btn" onclick="showHistoric('c-isp','Ingresos SP','ingresosSP','B$')">📈 Histórico</button></div>
         <div class="cw"><canvas id="c-isp"></canvas></div>
       <div class="narr" id="narr-isp"><span id="narr-isp-txt"></span></div>
       </div>
       <div class="card">
-        <div class="ct">Gastos Presupuestarios Ejecutados — Sector Público</div>
-        <div class="cs">Billones de pesos · comparativo año anterior</div>
+        <div class="ct-row"><div class="ct">Gastos Presupuestarios Ejecutados — Sector Público</div>
+        <div class="cs">Billones de pesos · comparativo año anterior</div><button class="hist-btn" onclick="showHistoric('c-gsp','Gastos SP','gastosSP','B$')">📈 Histórico</button></div>
         <div class="cw"><canvas id="c-gsp"></canvas></div>
       <div class="narr" id="narr-gsp"><span id="narr-gsp-txt"></span></div>
       </div>
@@ -285,15 +301,15 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
     <div class="sec-lbl">Deuda Pública e Inversiones Financieras</div>
     <div class="g2">
       <div class="card">
-        <div class="ct">Evolución de la Deuda Pública / PIB</div>
+        <div class="ct-row"><div class="ct">Evolución de la Deuda Pública / PIB</div>
         <div class="cs">Porcentaje del PIB</div>
-        <div class="debt-g" id="debt-g"></div>
+        <div class="debt-g" id="debt-g"></div><button class="hist-btn" onclick="showHistoric('c-deuda','Deuda Pública','deuda','%')">📈 Histórico</button></div>
         <div class="cw" style="height:180px"><canvas id="c-deuda"></canvas></div>
       <div class="narr" id="narr-deuda"><span id="narr-deuda-txt"></span></div>
       </div>
       <div class="card">
-        <div class="ct">Evolución de las Inversiones Financieras / PIB</div>
-        <div class="cs">Porcentaje del PIB</div>
+        <div class="ct-row"><div class="ct">Evolución de las Inversiones Financieras / PIB</div>
+        <div class="cs">Porcentaje del PIB</div><button class="hist-btn" onclick="showHistoric('c-inv','Inversiones/PIB','inversiones','%')">📈 Histórico</button></div>
         <div class="cw"><canvas id="c-inv"></canvas></div>
       <div class="narr" id="narr-inv"><span id="narr-inv-txt"></span></div>
       </div>
@@ -305,14 +321,14 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
     <div class="sec-lbl">Gobiernos Regionales</div>
     <div class="g2">
       <div class="card">
-        <div class="ct">Ingresos Presupuestarios — Gobiernos Regionales</div>
-        <div class="cs">Millones de pesos</div>
+        <div class="ct-row"><div class="ct">Ingresos Presupuestarios — Gobiernos Regionales</div>
+        <div class="cs">Millones de pesos</div><button class="hist-btn" onclick="showHistoric('c-ging','Ing. Gob. Regionales','gobIng','MM$')">📈 Histórico</button></div>
         <div class="cw"><canvas id="c-ging"></canvas></div>
       <div class="narr" id="narr-gores_ing"><span id="narr-gores_ing-txt"></span></div>
       </div>
       <div class="card">
-        <div class="ct">Gastos Presupuestarios — Gobiernos Regionales</div>
-        <div class="cs">Millones de pesos</div>
+        <div class="ct-row"><div class="ct">Gastos Presupuestarios — Gobiernos Regionales</div>
+        <div class="cs">Millones de pesos</div><button class="hist-btn" onclick="showHistoric('c-ggas','Gas. Gob. Regionales','gobGas','MM$')">📈 Histórico</button></div>
         <div class="cw"><canvas id="c-ggas"></canvas></div>
       <div class="narr" id="narr-gores_gas"><span id="narr-gores_gas-txt"></span></div>
       </div>
@@ -324,14 +340,14 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
     <div class="sec-lbl">Sector Municipal</div>
     <div class="g2">
       <div class="card">
-        <div class="ct">Ingresos Presupuestarios — Sector Municipal</div>
-        <div class="cs">Millones de pesos</div>
+        <div class="ct-row"><div class="ct">Ingresos Presupuestarios — Sector Municipal</div>
+        <div class="cs">Millones de pesos</div><button class="hist-btn" onclick="showHistoric('c-ming','Ingresos Municipal','munIng','M$')">📈 Histórico</button></div>
         <div class="cw"><canvas id="c-ming"></canvas></div>
       <div class="narr" id="narr-mun_ing"><span id="narr-mun_ing-txt"></span></div>
       </div>
       <div class="card">
-        <div class="ct">Gastos Presupuestarios — Sector Municipal</div>
-        <div class="cs">Millones de pesos</div>
+        <div class="ct-row"><div class="ct">Gastos Presupuestarios — Sector Municipal</div>
+        <div class="cs">Millones de pesos</div><button class="hist-btn" onclick="showHistoric('c-mgas','Gastos Municipal','munGas','M$')">📈 Histórico</button></div>
         <div class="cw"><canvas id="c-mgas"></canvas></div>
       <div class="narr" id="narr-mun_gas"><span id="narr-mun_gas-txt"></span></div>
       </div>
@@ -367,22 +383,22 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
     <div class="sec-lbl">Empresas del Estado y Educación Superior</div>
     <div class="g2">
       <div class="card">
-        <div class="ct">Utilidades / Pérdidas — Empresas del Estado</div>
-        <div class="cs">Millones de pesos</div>
+        <div class="ct-row"><div class="ct">Utilidades / Pérdidas — Empresas del Estado</div>
+        <div class="cs">Millones de pesos</div><button class="hist-btn" onclick="showHistoric('c-emp','Empresas del Estado','empresas','MM$')">📈 Histórico</button></div>
         <div class="cw" style="height:240px"><canvas id="c-emp"></canvas></div>
       <div class="narr" id="narr-emp"><span id="narr-emp-txt"></span></div>
       </div>
       <div class="card">
-        <div class="ct">Ingresos — Instituciones Educación Superior</div>
-        <div class="cs">Millones de pesos</div>
+        <div class="ct-row"><div class="ct">Ingresos — Instituciones Educación Superior</div>
+        <div class="cs">Millones de pesos</div><button class="hist-btn" onclick="showHistoric('c-edu','Ingresos IES','eduIng','MM$')">📈 Histórico</button></div>
         <div class="cw"><canvas id="c-edu"></canvas></div>
       <div class="narr" id="narr-edu_ing"><span id="narr-edu_ing-txt"></span></div>
       </div>
     </div>
     <div class="g2">
       <div class="card">
-        <div class="ct">Gastos — Instituciones Educación Superior</div>
-        <div class="cs">Millones de pesos</div>
+        <div class="ct-row"><div class="ct">Gastos — Instituciones Educación Superior</div>
+        <div class="cs">Millones de pesos</div><button class="hist-btn" onclick="showHistoric('c-edug','Gastos IES','eduGas','MM$')">📈 Histórico</button></div>
         <div class="cw"><canvas id="c-edug"></canvas></div>
       <div class="narr" id="narr-edu_gas"><span id="narr-edu_gas-txt"></span></div>
       </div>
@@ -1153,6 +1169,153 @@ function getPrev(year, q) {
 /* ====================================================
    MODAL
    ==================================================== */
+
+/* =====================================================
+   HISTÓRICO
+   ===================================================== */
+var histChart = null;
+
+function showHistoric(chartId, label, dbKey, unit) {
+  document.getElementById('hist-title').textContent = 'Serie Histórica · ' + label;
+  document.getElementById('hist-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  buildHistoric(dbKey, unit, 'total');
+}
+
+function closeHistoric() {
+  document.getElementById('hist-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function buildHistoric(dbKey, unit, mode) {
+  var periods = Object.keys(DB).sort();
+  var labels = periods.map(function(k) {
+    var p = k.split('-'); return 'T'+p[1]+' '+p[0];
+  });
+
+  // Build datasets based on mode
+  var datasets = [];
+  var COLORS = ['#2e5fa3','#00b4a0','#e8336e','#f0a500','#6c5ce7','#00b894','#e17055','#74b9ff'];
+
+  if (mode === 'total') {
+    // Single line — total per period
+    var vals = periods.map(function(k) {
+      var d = DB[k]; if (!d) return null;
+      var v = d[dbKey];
+      if (!v) return null;
+      if (typeof v === 'number') return v;
+      if (typeof v === 'object' && !Array.isArray(v)) {
+        // object like {interna, externa, total} or {g, t, p}
+        var keys = Object.keys(v);
+        if (v.total != null) return v.total;
+        if (v.t != null) return v.t;
+        return v[keys[0]];
+      }
+      if (Array.isArray(v)) return v.reduce(function(a,b){return a+(b||0);},0);
+      return null;
+    });
+    datasets.push({
+      label: 'Total '+unit,
+      data: vals,
+      borderColor: '#00b4a0',
+      backgroundColor: 'rgba(0,180,160,.12)',
+      tension: 0.35,
+      fill: true,
+      pointRadius: 5,
+      pointHoverRadius: 7,
+      type: 'line'
+    });
+  } else {
+    // Stacked bars — one dataset per component
+    var allKeys = [];
+    periods.forEach(function(k) {
+      var v = DB[k] && DB[k][dbKey];
+      if (Array.isArray(v)) allKeys = v.map(function(_,i){return i;});
+      else if (v && typeof v === 'object') allKeys = Object.keys(v);
+    });
+
+    // Get component names from chart labels
+    var compLabels = getCompLabels(dbKey);
+    allKeys.forEach(function(ki, ci) {
+      var vals = periods.map(function(k) {
+        var v = DB[k] && DB[k][dbKey];
+        if (!v) return null;
+        if (Array.isArray(v)) return v[ki] || null;
+        return v[ki] || null;
+      });
+      datasets.push({
+        label: compLabels[ci] || String(ki),
+        data: vals,
+        backgroundColor: COLORS[ci % COLORS.length] + 'cc',
+        borderColor: COLORS[ci % COLORS.length],
+        borderWidth: 1,
+        type: 'bar'
+      });
+    });
+  }
+
+  // Build tabs
+  var tabsEl = document.getElementById('hist-tabs');
+  tabsEl.innerHTML = [
+    {id:'total', lbl:'Total (línea)'},
+    {id:'components', lbl:'Por componente (barras)'}
+  ].map(function(t) {
+    return '<button class="hist-tab'+(mode===t.id?' active':'')+'" onclick="buildHistoric(''+dbKey+'',''+unit+'',''+t.id+'')">'+t.lbl+'</button>';
+  }).join('');
+
+  // Destroy old chart
+  if (histChart) { histChart.destroy(); histChart = null; }
+
+  var ctx = document.getElementById('hist-canvas').getContext('2d');
+  histChart = new Chart(ctx, {
+    type: mode === 'total' ? 'line' : 'bar',
+    data: { labels: labels, datasets: datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: datasets.length > 1, labels: { boxWidth: 10, font: { size: 11 } } },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              var v = ctx.parsed.y;
+              if (v == null) return '';
+              return ' ' + ctx.dataset.label + ': ' + (typeof v === 'number' ? v.toLocaleString('es-CL', {maximumFractionDigits:1}) : v) + ' ' + unit;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { grid: { color: '#f0f2f5' }, ticks: { font: { size: 10 }, maxRotation: 40 } },
+        y: { stacked: mode === 'components', grid: { color: '#f0f2f5' },
+             ticks: { font: { size: 10 }, callback: function(v) {
+               return v.toLocaleString('es-CL', {maximumFractionDigits:1}) + ' ' + unit;
+             }}
+        }
+      }
+    }
+  });
+}
+
+function getCompLabels(dbKey) {
+  var map = {
+    ingresosSP: ['Impuestos','Endeudamiento','Otros Corr.','Vta. Activos','Impos. Prev.','Recuperación','Otros'],
+    gastosSP:   ['Transferencias','Serv. Deuda','Personal','Seg. Social','Act. Fin.','Bs. y Serv.','Otros','Inversión'],
+    gobIng:     ['Transf. Capital','Transf. Corrientes','Otros'],
+    gobGas:     ['Ini. Inversión','Transf. Capital','Adq. Act. NF','Personal','Transf. Corr.','Serv. Deuda','Otros'],
+    munIng:     ['Ing. Propios','Transf. MINSAL','Transf. MINEDUC','FCM','Otros Ing.','Ing. Percibir','Bfo. FCM'],
+    munGas:     ['Personal','Transf. Corr.','Bs. y Serv.','Ini. Inversión','Serv. Deuda','Prest. SS','Adq. Act. NF','Otros'],
+    empresas:   ['Otras Emp.','TVN','BancoEstado','CODELCO','ENAP','Emp. Port.','Emp. Def.','ENAMI','EFE','METRO'],
+    eduIng:     ['Ing. Operación','Transferencias','Fin. Fiscal','Otros','Endeudamiento','Recuperación','Venta Activos'],
+    eduGas:     ['Personal','Bs. y Serv.','Transferencias','Inv. Real','Comp. Pendientes','Serv. Deuda','Inv. Financiera'],
+    gastoSector:['Sec. Público','Sec. Municipal','Empresas Estado','Educ. Superior'],
+    deuda:      ['Interna/PIB','Externa/PIB','Total/PIB'],
+  };
+  return map[dbKey] || [];
+}
+
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeHistoric(); });
+
 window.addEventListener('DOMContentLoaded', function() {
   initSelectors();
   var y = document.getElementById('sel-y').value;
@@ -1160,5 +1323,19 @@ window.addEventListener('DOMContentLoaded', function() {
   render(y, q);
 });
 </script>
+
+<!-- HISTÓRICO MODAL -->
+<div class="hist-overlay" id="hist-overlay" onclick="if(event.target===this)closeHistoric()">
+  <div class="hist-modal">
+    <div class="hist-hdr">
+      <span class="hist-title" id="hist-title">Serie Histórica</span>
+      <button class="hist-close" onclick="closeHistoric()">✕</button>
+    </div>
+    <div class="hist-body">
+      <div class="hist-tabs" id="hist-tabs"></div>
+      <div class="hist-cw"><canvas id="hist-canvas"></canvas></div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
