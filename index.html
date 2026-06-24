@@ -31,11 +31,17 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--te
 .period-badge{background:var(--teal);color:var(--dark);padding:6px 16px;border-radius:7px;font-size:13px;font-weight:800;letter-spacing:.3px}
 .upd-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#fff;padding:7px 14px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit}
 .upd-btn:hover{background:rgba(255,255,255,.2)}
-/* Period banner above KPIs */
-.period-banner{background:var(--navy);border-bottom:3px solid var(--teal);padding:.6rem 1.5rem;margin-bottom:0}
-.period-banner-in{max-width:1300px;margin:0 auto;display:flex;align-items:center;gap:16px}
-.pb-tag{background:var(--teal);color:var(--dark);font-size:18px;font-weight:900;padding:4px 18px;border-radius:7px;letter-spacing:.5px}
-.pb-txt{color:rgba(255,255,255,.75);font-size:12px}
+/* Period banner with selectors */
+.period-banner{background:var(--navy);border-bottom:3px solid var(--teal);padding:.65rem 1.5rem}
+.period-banner-in{max-width:1300px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.pb-filters{display:flex;align-items:center;gap:8px;background:rgba(0,180,160,.12);border:2px solid var(--teal);border-radius:9px;padding:5px 12px}
+.pb-lbl{font-size:10px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.8px;white-space:nowrap}
+.pb-sel{background:rgba(255,255,255,.12);border:1.5px solid rgba(0,180,160,.5);color:#fff;padding:5px 10px;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;outline:none;min-width:80px}
+.pb-sel:hover,.pb-sel:focus{background:rgba(0,180,160,.25);border-color:var(--teal)}
+.pb-sel option{background:#1a2744;color:#fff}
+.pb-divider{width:1px;height:28px;background:rgba(255,255,255,.2);flex-shrink:0}
+.pb-tag{background:var(--teal);color:var(--dark);font-size:17px;font-weight:900;padding:4px 16px;border-radius:7px;letter-spacing:.3px;white-space:nowrap}
+.pb-txt{color:rgba(255,255,255,.65);font-size:11px;line-height:1.4}
 
 /* COVER */
 .cover{background:var(--navy);color:#fff;padding:1rem 1.5rem}
@@ -173,17 +179,7 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
         <p>Contraloría General de la República de Chile</p>
       </div>
     </div>
-    <div class="controls">
-      <div class="filter-g">
-        <span class="lbl">Año</span>
-        <select class="sel" id="sel-y"></select>
-        <div class="fsep"></div>
-        <span class="lbl">Trimestre</span>
-        <select class="sel" id="sel-q"></select>
-      </div>
-      <span class="period-badge" id="pbadge">—</span>
-      <button class="upd-btn" onclick="openModal()">&#9881;&#65039; Actualizar</button>
-    </div>
+    <button class="upd-btn" onclick="openModal()">&#9881;&#65039; Actualizar</button>
   </div>
 </div>
 
@@ -202,8 +198,15 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
 
 <div class="period-banner">
   <div class="period-banner-in">
+    <div class="pb-filters">
+      <span class="pb-lbl">Año</span>
+      <select class="pb-sel" id="sel-y"></select>
+      <span class="pb-lbl">Trimestre</span>
+      <select class="pb-sel" id="sel-q"></select>
+    </div>
+    <div class="pb-divider"></div>
     <span class="pb-tag" id="cover-title-period">T3 2025</span>
-    <span class="pb-txt" id="cover-sub2"></span>
+    <span class="pb-txt" id="cover-sub2">Al 3er Trimestre 2025 · 1 de Enero al 30 de Septiembre</span>
   </div>
 </div>
 
@@ -554,7 +557,7 @@ function render(year, q) {
   document.getElementById('cover-sub').textContent = PFULL[qi].replace('{y}', year);
   document.getElementById('cover-title-period').textContent = shortPer;
   document.getElementById('cover-sub2').textContent = PFULL[qi].replace('{y}', year);
-  document.getElementById('pbadge').textContent = period;
+  /* pbadge moved to pb-tag */
 
   const km = KPI_MAP[key] || ['—','—','—'];
   const deu = d.deuda || {};
