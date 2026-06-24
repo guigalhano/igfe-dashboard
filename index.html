@@ -448,6 +448,8 @@ const DB = {"2023-4":{"year":2023,"quarter":4,"cumplimiento":{"Sector Municipal"
 /* KPI labels per period */
 const TR = {"2023-4":{"codelco":18.5,"codelcoToSP":3.5,"spToCodelco":1.7,"sp":95.7,"otras":24.4,"spToOtras":1.1,"otrasToSP":4.3,"municipal":12.4,"spToMun":5.5,"munToSP":0.9,"zofri":6.2,"ies":1.7,"spToIES":0.7},"2024-3":{"codelco":15.0,"codelcoToSP":2.8,"spToCodelco":1.7,"sp":78.0,"otras":14.8,"spToOtras":0.5,"otrasToSP":2.8,"municipal":10.0,"spToMun":4.3,"munToSP":1.2,"zofri":6.6,"ies":0.8,"spToIES":0.4},"2024-4":{"codelco":22.6,"codelcoToSP":3.9,"spToCodelco":1.8,"sp":102.6,"otras":26.8,"spToOtras":0.9,"otrasToSP":3.3,"municipal":13.7,"spToMun":5.8,"munToSP":0.9,"zofri":6.6,"ies":1.8,"spToIES":0.9},"2025-1":{"codelco":6.7,"codelcoToSP":0.7,"spToCodelco":1.0,"sp":28.5,"otras":5.7,"spToOtras":0.1,"otrasToSP":0.9,"municipal":3.2,"spToMun":1.8,"munToSP":0.5,"zofri":5.3,"ies":0.3,"spToIES":0.1},"2025-2":{"codelco":14.6,"codelcoToSP":1.4,"spToCodelco":1.6,"sp":55.5,"otras":6.8,"spToOtras":0.1,"otrasToSP":1.0,"municipal":7.0,"spToMun":2.9,"munToSP":0.6,"zofri":6.5,"ies":0.5,"spToIES":0.1},"2025-3":{"codelco":null,"codelcoToSP":null,"spToCodelco":null,"sp":null,"otras":null,"spToOtras":null,"otrasToSP":2.0,"municipal":10.4,"spToMun":4.2,"munToSP":0.9,"zofri":6.5,"ies":1.4,"spToIES":0.3},"2026-1":{"codelco":8.6,"codelcoToSP":1.0,"spToCodelco":0.8,"sp":null,"otras":5.1,"spToOtras":0.1,"otrasToSP":1.0,"municipal":null,"spToMun":null,"munToSP":null,"zofri":6.0,"ies":null,"spToIES":null},"2025-4":{"codelco":24.0,"codelcoToSP":4.3,"spToCodelco":2.5,"sp":106.8,"otras":22.8,"spToOtras":0.7,"otrasToSP":4.2,"municipal":14.0,"spToMun":5.7,"munToSP":1.0,"zofri":6.5,"ies":2.0,"spToIES":0.7}};
 
+const FULL_NAMES = {"Sec.Público": "Sector Público", "Sec.Municipal": "Sector Municipal", "Empresas": "Empresas del Estado", "Educ.Sup.": "Instituciones de Educación Superior", "Endeudam.": "Endeudamiento", "Otros Corr.": "Otros Ingresos Corrientes", "Vta.Activos": "Venta de Activos Financieros", "Impos.Prev.": "Imposiciones Previsionales", "Recup.": "Recuperación de Otros Préstamos", "Transf.": "Transferencias", "Serv.Deuda": "Servicio de la Deuda", "Seg.Social": "Prestaciones de Seguridad Social", "Act.Fin.": "Adquisición de Activos Financieros", "Bs.Serv.": "Bienes y Servicios de Consumo", "Inversion": "Iniciativas de Inversión", "Ing.Propios": "Ingresos Propios", "MINSAL": "Transferencias MINSAL", "FCM": "Fondo Común Municipal", "MINEDUC": "Transferencias MINEDUC", "Ing.Bfo FCM": "Ingresos Beneficio FCM", "Transf.Corr.": "Transferencias Corrientes", "Ini.Inv.": "Iniciativas de Inversión", "Prest.SS": "Prestaciones de Seguridad Social", "Act.NF": "Adquisición de Activos No Financieros", "Otras Emp.": "Otras Empresas del Estado e ITC", "Emp.Port.": "Empresas Portuarias", "Emp.Def.": "Empresas de Defensa", "Ing.Op.": "Ingresos de Operación", "Fin.Fiscal": "Financiamiento Fiscal", "Endeud.": "Endeudamiento", "Vta.": "Venta de Activos", "Bs. y Serv.": "Compra de Bienes y Servicios", "Inv. Real": "Inversión Real", "Comp.Pend.": "Compromisos Pendientes", "Inv.Fin.": "Inversión Financiera", "Transf.Capital": "Transferencias para Gastos de Capital", "Transf.Corrientes": "Transferencias Corrientes", "Ini.Inversion": "Iniciativas de Inversión", "Transf.Cap.": "Transferencias de Capital", "Adq.Act.": "Adquisición de Activos No Financieros"};
+
 const KPI_MAP = {
   "2025-3":["124,6","89,0","967,3"],
   "2025-4":["169,6","115,6","3510,7"],
@@ -513,7 +515,15 @@ function mkChart(id, type, labels, datasets, opts) {
       maintainAspectRatio: false,
       plugins: {
         legend: { display: datasets.length > 1, labels: { boxWidth: 9, font: { size: 10 }, color: '#555' } },
-        tooltip: { callbacks: { label: ctx => ' ' + (ctx.dataset.label || '') + ': ' + (opts.fmt ? opts.fmt(ctx.parsed.y) : ctx.parsed.y) } }
+        tooltip: {
+          callbacks: {
+            title: function(items) {
+              var lbl = items[0].label;
+              return FULL_NAMES[lbl] || lbl;
+            },
+            label: ctx => ' ' + (ctx.dataset.label || '') + ': ' + (opts.fmt ? opts.fmt(ctx.parsed.y) : ctx.parsed.y)
+          }
+        }
       },
       scales: {
         x: { grid: { color: GC }, ticks: { color: '#555', maxRotation: opts.rot || 35, font: { size: opts.xs || 10 } } },
@@ -645,7 +655,7 @@ function render(year, q) {
     // Barras ejecución
   const ej = EJEC_MAP[key];
   document.getElementById('b-ejec').innerHTML = ej ?
-    [['Sector P\u00fablico',ej.pub,'#2e5fa3'],['Sector Municipal',ej.mun,'#e8336e'],['Empresas del Estado',ej.emp,'#00b4a0'],['Instituciones de Educ. Superior',ej.ies,'#f0a500']].map(([s,p,c]) =>
+    [['Sector P\u00fablico',ej.pub,'#2e5fa3'],['Sector Municipal',ej.mun,'#e8336e'],['Empresas del Estado',ej.emp,'#00b4a0'],['Instituciones de Educaci\u00f3n Superior',ej.ies,'#f0a500']].map(([s,p,c]) =>
       '<div class="br"><div class="br-h"><span class="br-n">' + s + '</span>' +
       '<span class="br-p" style="color:' + c + '">' + p + '%</span></div>' +
       '<div class="bar-t"><div class="bar-f" style="width:' + p + '%;background:' + c + '"></div></div></div>'
