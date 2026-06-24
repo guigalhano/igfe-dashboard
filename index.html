@@ -40,8 +40,8 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--te
 .hist-close{background:none;border:none;color:rgba(255,255,255,.6);font-size:20px;cursor:pointer;line-height:1;padding:2px 6px}
 .hist-close:hover{color:white}
 .hist-body{padding:1.25rem;flex:1;overflow-y:auto}
-.hist-cw{position:relative;height:340px}
-.hist-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.hist-cw{position:relative;height:380px}
+.hist-tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
 .hist-tab{font-size:10px;font-weight:600;padding:4px 10px;border-radius:5px;border:1px solid var(--border);cursor:pointer;background:white;color:var(--muted);font-family:inherit}
 .hist-tab.active{background:var(--navy);color:white;border-color:var(--navy)}
 .narr{background:#eef8f6;border-left:3px solid var(--teal);border-radius:0 6px 6px 0;padding:.65rem .9rem;margin-top:10px;font-size:12px;color:#333;line-height:1.65;display:none;position:relative;z-index:2;clear:both}
@@ -1189,120 +1189,133 @@ function closeHistoric() {
 
 function buildHistoric(dbKey, unit, mode) {
   var periods = Object.keys(DB).sort();
-  var labels = periods.map(function(k) {
-    var p = k.split('-'); return 'T'+p[1]+' '+p[0];
-  });
 
-  // Build datasets based on mode
   var datasets = [];
-  var COLORS = ['#2e5fa3','#00b4a0','#e8336e','#f0a500','#6c5ce7','#00b894','#e17055','#74b9ff'];
+  var COLORS = ['#1a2744','#00b4a0','#e8336e','#f0a500','#2e5fa3','#6c5ce7','#e17055','#00b894','#74b9ff','#fd79a8'];
+
+  function getVal(k) {
+    var d = DB[k]; if (!d) return null;
+    var v = d[dbKey]; if (v == null) return null;
+    if (typeof v === 'number') return v;
+    if (Array.isArray(v)) return v.reduce(function(a,b){return a+(b||0);},0);
+    if (typeof v === 'object') {
+      if (v.total != null) return v.total;
+      if (v.t != null) return v.t;
+      return Object.values(v)[0];
+    }
+    return null;
+  }
+
+  var chartLabels;
 
   if (mode === 'total') {
-    // Single line — total per period
-    var vals = periods.map(function(k) {
-      var d = DB[k]; if (!d) return null;
-      var v = d[dbKey];
-      if (!v) return null;
-      if (typeof v === 'number') return v;
-      if (typeof v === 'object' && !Array.isArray(v)) {
-        // object like {interna, externa, total} or {g, t, p}
-        var keys = Object.keys(v);
-        if (v.total != null) return v.total;
-        if (v.t != null) return v.t;
-        return v[keys[0]];
-      }
-      if (Array.isArray(v)) return v.reduce(function(a,b){return a+(b||0);},0);
-      return null;
-    });
+    chartLabels = periods.map(function(k){ var p=k.split('-'); return 'T'+p[1]+' '+p[0]; });
     datasets.push({
-      label: 'Total '+unit,
-      data: vals,
+      label: 'Total',
+      data: periods.map(getVal),
       borderColor: '#00b4a0',
-      backgroundColor: 'rgba(0,180,160,.12)',
-      tension: 0.35,
-      fill: true,
-      pointRadius: 5,
-      pointHoverRadius: 7,
-      type: 'line'
-    });
-  } else {
-    // Stacked bars — one dataset per component
-    var allKeys = [];
-    periods.forEach(function(k) {
-      var v = DB[k] && DB[k][dbKey];
-      if (Array.isArray(v)) allKeys = v.map(function(_,i){return i;});
-      else if (v && typeof v === 'object') allKeys = Object.keys(v);
+      backgroundColor: 'rgba(0,180,160,.1)',
+      tension: 0.3, fill: true,
+      pointRadius: 6, pointBackgroundColor: '#00b4a0',
+      pointHoverRadius: 8, borderWidth: 2.5
     });
 
-    // Get component names from chart labels
+  } else if (mode === 'components') {
+    chartLabels = periods.map(function(k){ var p=k.split('-'); return 'T'+p[1]+' '+p[0]; });
     var compLabels = getCompLabels(dbKey);
-    allKeys.forEach(function(ki, ci) {
-      var vals = periods.map(function(k) {
-        var v = DB[k] && DB[k][dbKey];
-        if (!v) return null;
-        if (Array.isArray(v)) return v[ki] || null;
-        return v[ki] || null;
-      });
+    var nComp = 0;
+    periods.forEach(function(k) {
+      var v = DB[k] && DB[k][dbKey];
+      if (Array.isArray(v) && v.length > nComp) nComp = v.length;
+      else if (v && typeof v==='object' && !Array.isArray(v)) nComp = Math.max(nComp, Object.keys(v).length);
+    });
+    for (var ci = 0; ci < nComp; ci++) {
+      var ci2 = ci;
       datasets.push({
-        label: compLabels[ci] || String(ki),
-        data: vals,
-        backgroundColor: COLORS[ci % COLORS.length] + 'cc',
-        borderColor: COLORS[ci % COLORS.length],
-        borderWidth: 1,
-        type: 'bar'
+        label: compLabels[ci2] || ('Comp. '+(ci2+1)),
+        data: periods.map(function(k) {
+          var v = DB[k] && DB[k][dbKey];
+          if (!v) return null;
+          var val = Array.isArray(v) ? v[ci2] : Object.values(v)[ci2];
+          return val != null ? val : null;
+        }),
+        backgroundColor: COLORS[ci2 % COLORS.length]+'cc',
+        borderColor: COLORS[ci2 % COLORS.length],
+        borderWidth: 1, borderRadius: 3
+      });
+    }
+
+  } else {
+    // Annual comparison — group by quarter, one dataset per year
+    var years = []; var seen = {};
+    periods.forEach(function(k){ var y=k.split('-')[0]; if(!seen[y]){seen[y]=1;years.push(y);} });
+    var quarters = ['1','2','3','4'];
+    var qLabels = {'1':'1er Trim.','2':'2do Trim.','3':'3er Trim.','4':'4to Trim.'};
+    chartLabels = quarters.map(function(q){ return qLabels[q]; });
+    var yearColors = ['rgba(26,39,68,.85)','rgba(0,180,160,.85)','rgba(232,51,110,.85)','rgba(240,165,0,.85)'];
+    years.forEach(function(yr, yi) {
+      datasets.push({
+        label: yr,
+        data: quarters.map(function(q){ return getVal(yr+'-'+q); }),
+        backgroundColor: yearColors[yi % yearColors.length],
+        borderColor: yearColors[yi % yearColors.length],
+        borderWidth: 1, borderRadius: 4
       });
     });
   }
 
-  // Build tabs
+  // Tabs
   var tabsEl = document.getElementById('hist-tabs');
   var tabDefs = [
-    {id:'total', lbl:'Total (l\u00ednea)'},
-    {id:'components', lbl:'Por componente (barras)'}
+    {id:'total',      lbl:'\u25cf\u2009Total \u2014 l\u00ednea temporal'},
+    {id:'components', lbl:'\u25a0\u2009Por componente \u2014 barras'},
+    {id:'annual',     lbl:'\u25a6\u2009Comparativo por a\u00f1o'}
   ];
   tabsEl.innerHTML = '';
   tabDefs.forEach(function(t) {
     var btn = document.createElement('button');
     btn.className = 'hist-tab' + (mode===t.id?' active':'');
     btn.textContent = t.lbl;
-    btn.onclick = function() { buildHistoric(dbKey, unit, t.id); };
+    btn.onclick = (function(tid){ return function(){ buildHistoric(dbKey, unit, tid); }; })(t.id);
     tabsEl.appendChild(btn);
   });
 
-  // Destroy old chart
   if (histChart) { histChart.destroy(); histChart = null; }
 
   var ctx = document.getElementById('hist-canvas').getContext('2d');
   histChart = new Chart(ctx, {
     type: mode === 'total' ? 'line' : 'bar',
-    data: { labels: labels, datasets: datasets },
+    data: { labels: chartLabels, datasets: datasets },
     options: {
-      responsive: true,
-      maintainAspectRatio: false,
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: { display: datasets.length > 1, labels: { boxWidth: 10, font: { size: 11 } } },
+        legend: {
+          display: datasets.length > 1,
+          position: 'bottom',
+          labels: { boxWidth: 11, font: { size: 10 }, padding: 10 }
+        },
         tooltip: {
           callbacks: {
-            label: function(ctx) {
-              var v = ctx.parsed.y;
+            label: function(c) {
+              var v = c.parsed.y;
               if (v == null) return '';
-              return ' ' + ctx.dataset.label + ': ' + (typeof v === 'number' ? v.toLocaleString('es-CL', {maximumFractionDigits:1}) : v) + ' ' + unit;
+              return ' ' + c.dataset.label + ': ' + v.toLocaleString('es-CL',{maximumFractionDigits:1}) + '\u00a0' + unit;
             }
           }
         }
       },
       scales: {
-        x: { grid: { color: '#f0f2f5' }, ticks: { font: { size: 10 }, maxRotation: 40 } },
-        y: { stacked: mode === 'components', grid: { color: '#f0f2f5' },
-             ticks: { font: { size: 10 }, callback: function(v) {
-               return v.toLocaleString('es-CL', {maximumFractionDigits:1}) + ' ' + unit;
+        x: { grid:{color:'#f0f2f5'}, ticks:{font:{size:10}, maxRotation:0} },
+        y: { grid:{color:'#f0f2f5'},
+             ticks:{font:{size:10}, callback:function(v){
+               return v.toLocaleString('es-CL',{maximumFractionDigits:1})+'\u00a0'+unit;
              }}
         }
       }
     }
   });
 }
-
 function getCompLabels(dbKey) {
   var map = {
     ingresosSP: ['Impuestos','Endeudamiento','Otros Corr.','Vta. Activos','Impos. Prev.','Recuperación','Otros'],
