@@ -6,1521 +6,874 @@
 <title>IGFE — Gestión Financiera del Estado</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
-:root {
-  --navy: #1a2744;
-  --navy-dark: #0f1a2e;
-  --teal: #00b4a0;
-  --teal-light: #e0f5f3;
-  --pink: #e8336e;
-  --pink-light: #fce8ef;
-  --blue: #2e5fa3;
-  --blue-light: #e8eef8;
-  --orange: #f0a500;
-  --gray: #f5f5f5;
-  --gray-mid: #e0e0e0;
-  --text: #1a1a1a;
-  --text-mid: #555;
-  --text-light: #888;
-  --white: #ffffff;
-  --border: #dde3ed;
-  --radius: 8px;
-}
+:root{--navy:#1a2744;--navy-dark:#0f1a2e;--teal:#00b4a0;--pink:#e8336e;--blue:#2e5fa3;--gold:#f0a500;--green:#1ab05a;--bg:#f0f2f5;--white:#fff;--border:#dde3ed;--text:#1a1a1a;--muted:#666;--light:#f5f7fa;--r:8px}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f2f5;color:var(--text);font-size:13px;line-height:1.5}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.5}
 
-/* ===== HEADER ===== */
-.site-header{background:var(--navy-dark);color:white;padding:0 2rem}
-.site-header-inner{max-width:1300px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px;gap:16px}
-.header-logo{display:flex;align-items:center;gap:12px}
-.header-logo-badge{width:36px;height:36px;background:var(--teal);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:var(--navy-dark);flex-shrink:0}
-.header-logo h1{font-size:14px;font-weight:600;color:white}
-.header-logo p{font-size:11px;color:rgba(255,255,255,0.6);margin-top:1px}
-.header-filters{display:flex;align-items:center;gap:8px}
-.filter-label{font-size:11px;color:rgba(255,255,255,0.6)}
-select{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;padding:5px 10px;border-radius:5px;font-size:12px;cursor:pointer;outline:none}
-select option{background:var(--navy-dark);color:white}
-select:focus{border-color:var(--teal)}
-.data-badge{background:rgba(0,180,160,0.2);border:1px solid var(--teal);color:var(--teal);padding:3px 10px;border-radius:99px;font-size:11px;white-space:nowrap}
+/* HEADER */
+.hdr{background:var(--navy-dark);color:#fff;padding:0 1.5rem}
+.hdr-in{max-width:1300px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px;gap:1rem;flex-wrap:wrap}
+.hdr-logo{display:flex;align-items:center;gap:10px}
+.hdr-badge{width:32px;height:32px;background:var(--teal);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;color:var(--navy-dark);flex-shrink:0}
+.hdr-title{font-size:13px;font-weight:600}
+.hdr-sub{font-size:10px;color:rgba(255,255,255,0.5);margin-top:1px}
+.hdr-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.fl{font-size:10px;color:rgba(255,255,255,0.5)}
+select{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:4px 8px;border-radius:5px;font-size:11px;cursor:pointer;outline:none}
+select option{background:var(--navy-dark)}
+.badge{background:rgba(0,180,160,0.2);border:1px solid var(--teal);color:var(--teal);padding:2px 8px;border-radius:99px;font-size:10px;white-space:nowrap}
+.adm-btn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:4px 12px;border-radius:5px;font-size:11px;cursor:pointer;font-family:inherit;white-space:nowrap}
+.adm-btn:hover{background:rgba(255,255,255,0.2)}
 
-/* ===== COVER BAND ===== */
-.cover-band{background:var(--navy);color:white;padding:1.5rem 2rem}
-.cover-inner{max-width:1300px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:2rem}
-.cover-title{font-size:22px;font-weight:700;letter-spacing:-0.5px}
-.cover-sub{font-size:13px;color:rgba(255,255,255,0.7);margin-top:4px}
-.cover-period{text-align:right}
-.cover-period-label{font-size:11px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px}
-.cover-period-value{font-size:18px;font-weight:700;color:var(--teal);margin-top:2px}
+/* COVER */
+.cover{background:var(--navy);color:#fff;padding:1rem 1.5rem}
+.cover-in{max-width:1300px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.cover-title{font-size:20px;font-weight:700;letter-spacing:-0.5px}
+.cover-sub{font-size:11px;color:rgba(255,255,255,0.6);margin-top:3px}
+.cover-right{text-align:right}
+.cover-lbl{font-size:10px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px}
+.cover-val{font-size:16px;font-weight:700;color:var(--teal);margin-top:2px}
 
-/* ===== LAYOUT ===== */
-main{max-width:1300px;margin:0 auto;padding:1.5rem 2rem}
-.section{margin-bottom:1.5rem}
-.section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--blue);margin-bottom:1rem;display:flex;align-items:center;gap:8px}
-.section-title::after{content:'';flex:1;height:1px;background:var(--border)}
-
-/* ===== COBERTURA CARDS ===== */
-.cobertura-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1rem}
-.cob-card{background:white;border:1px solid var(--border);border-radius:var(--radius);padding:1rem;text-align:center;position:relative;overflow:hidden}
-.cob-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent-color,var(--teal))}
-.cob-num{font-size:32px;font-weight:800;color:var(--navy);line-height:1;letter-spacing:-1px}
-.cob-label{font-size:10px;color:var(--text-light);text-transform:uppercase;letter-spacing:0.8px;margin-top:4px;line-height:1.4}
-.cob-total{background:var(--navy);color:white;border-radius:var(--radius);padding:1rem;display:flex;align-items:center;justify-content:center;gap:8px;text-align:center;margin-bottom:1rem}
-.cob-total-num{font-size:28px;font-weight:800;color:var(--teal)}
-.cob-total-label{font-size:11px;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:1px}
-
-/* ===== CUMPLIMIENTO BARS ===== */
-.cumpl-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.cumpl-block{background:white;border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem}
-.cumpl-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-mid);margin-bottom:1rem}
-.cumpl-row{margin-bottom:10px}
-.cumpl-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
-.cumpl-name{font-size:12px;font-weight:500;color:var(--text)}
-.cumpl-pct{font-size:14px;font-weight:800;color:var(--navy)}
-.bar-track{height:8px;background:var(--gray-mid);border-radius:99px;overflow:hidden}
-.bar-fill{height:100%;border-radius:99px;transition:width 1s ease}
-
-/* ===== KPI STRIP ===== */
-.kpi-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:1.5rem}
-.kpi{background:white;border:1px solid var(--border);border-radius:var(--radius);padding:1rem;position:relative;overflow:hidden}
-.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--kpi-color,var(--teal))}
-.kpi-label{font-size:10px;color:var(--text-light);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:6px}
-.kpi-val{font-size:22px;font-weight:800;color:var(--navy);letter-spacing:-0.5px;line-height:1}
-.kpi-unit{font-size:12px;font-weight:400;color:var(--text-mid)}
-.kpi-delta{font-size:11px;margin-top:5px;font-weight:500}
-.up{color:#1ab05a}.dn{color:var(--pink)}.neu{color:var(--text-light)}
-
-/* ===== SECTOR CIRCLES (fiel al PDF) ===== */
-.transfers-section{background:white;border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:12px}
-.transfers-title{font-size:12px;font-weight:700;color:var(--text-mid);text-transform:uppercase;letter-spacing:1px;margin-bottom:1.25rem}
-.circles-layout{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;min-height:280px;position:relative}
-.sector-circle{display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:50%;font-weight:700;text-align:center;flex-shrink:0;line-height:1.2}
-.sc-center{width:160px;height:160px;background:var(--navy);color:white;font-size:11px;z-index:2}
-.sc-center .sc-val{font-size:16px;font-weight:800;color:var(--teal)}
-.sc-left{width:120px;height:120px;background:#d0d8e8;color:var(--navy-dark);font-size:10px}
-.sc-left .sc-val{font-size:13px}
-.sc-right-top{width:110px;height:110px;background:var(--pink);color:white;font-size:9px}
-.sc-right-top .sc-val{font-size:12px}
-.sc-right-bot{width:110px;height:110px;background:var(--teal);color:white;font-size:9px}
-.sc-right-bot .sc-val{font-size:12px}
-.sc-bot-left{width:90px;height:90px;background:#b0bcd4;color:var(--navy-dark);font-size:8px}
-.sc-bot-left .sc-val{font-size:11px}
-.sc-name{font-size:9px;text-transform:uppercase;letter-spacing:0.5px;opacity:0.85}
-.circles-wrapper{display:grid;grid-template-columns:130px 170px 120px;grid-template-rows:auto auto;gap:8px;align-items:center;justify-items:center}
-.col-left{display:flex;flex-direction:column;align-items:center;gap:16px}
-.col-center{display:flex;align-items:center;justify-content:center}
-.col-right{display:flex;flex-direction:column;align-items:center;gap:12px}
-.transfer-arrow{font-size:10px;color:var(--text-light);text-align:center;white-space:nowrap}
-.arrow-line{display:flex;align-items:center;gap:4px;font-size:9px;color:var(--text-mid)}
-.arrow-line .amt{font-weight:700;color:var(--navy);font-size:10px}
-
-/* ===== GASTO COMPARATIVO ===== */
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
-.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
-.card{background:white;border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem}
-.card-title{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:3px}
-.card-sub{font-size:10px;color:var(--text-light);margin-bottom:1rem}
-.chart-wrap{position:relative;width:100%}
-
-/* ===== RANKING ===== */
-.rank-row{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:5px;margin-bottom:3px;background:var(--gray)}
-.rank-num{font-size:10px;font-weight:700;color:var(--text-light);width:16px;flex-shrink:0;text-align:right}
-.rank-name{font-size:11px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rank-bar-wrap{width:60px;height:4px;background:var(--gray-mid);border-radius:99px;flex-shrink:0;overflow:hidden}
-.rank-bar{height:100%;border-radius:99px}
-.rank-pct{font-size:11px;font-weight:700;flex-shrink:0;min-width:36px;text-align:right}
-
-/* ===== DEUDA ITEMS ===== */
-.debt-items{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
-.debt-item{background:var(--gray);border-radius:var(--radius);padding:10px;text-align:center}
-.debt-item-label{font-size:9px;color:var(--text-light);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:4px}
-.debt-item-val{font-size:18px;font-weight:800;letter-spacing:-0.5px}
-.debt-item-pib{font-size:10px;color:var(--text-light);margin-top:2px}
-
-/* ===== FCM REGION ===== */
-.fcm-avg-line{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-mid);margin-bottom:8px}
-.fcm-avg-badge{background:var(--pink);color:white;padding:2px 8px;border-radius:99px;font-size:10px;font-weight:700}
-
-/* ===== NOTICE ===== */
-.notice{background:#fff8e1;border:1px solid #ffe082;border-radius:var(--radius);padding:10px 14px;font-size:11px;color:#7a5c00;margin-bottom:1rem;display:none}
+/* NOTICE */
+.notice{background:#fff8e1;border:1px solid #ffe082;border-radius:var(--r);padding:8px 12px;font-size:11px;color:#7a5c00;margin-bottom:1rem;display:none}
 .notice.show{display:block}
 
-/* ===== FOOTER ===== */
-footer{background:var(--navy-dark);color:rgba(255,255,255,0.5);text-align:center;padding:1rem 2rem;font-size:10px;margin-top:2rem}
+/* LAYOUT */
+main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
+.sec-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--blue);margin-bottom:.75rem;display:flex;align-items:center;gap:8px}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.section{margin-bottom:1.25rem}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1rem}
+.card-t{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px}
+.card-s{font-size:10px;color:var(--muted);margin-bottom:.75rem}
+.cw{position:relative;width:100%}
 
-/* ===== RESPONSIVE ===== */
+/* KPIs */
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:1.25rem}
+.kpi{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:.75rem;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--kc,var(--teal))}
+.kpi-l{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px}
+.kpi-v{font-size:20px;font-weight:800;color:var(--navy);letter-spacing:-.5px;line-height:1}
+.kpi-u{font-size:11px;font-weight:400;color:var(--muted)}
+.kpi-d{font-size:10px;margin-top:4px;font-weight:500}
+.up{color:#1ab05a}.dn{color:var(--pink)}.neu{color:var(--muted)}
+
+/* COBERTURA */
+.cob{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+.cob-c{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:.75rem;text-align:center;position:relative;overflow:hidden}
+.cob-c::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--cc,var(--teal))}
+.cob-n{font-size:28px;font-weight:800;line-height:1;letter-spacing:-1px}
+.cob-l{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-top:3px;line-height:1.3}
+
+/* BARS */
+.bars{display:flex;flex-direction:column;gap:8px}
+.bar-r{margin-bottom:2px}
+.bar-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+.bar-name{font-size:11px;font-weight:500}
+.bar-pct{font-size:12px;font-weight:700}
+.bar-track{height:7px;background:#eee;border-radius:99px;overflow:hidden}
+.bar-fill{height:100%;border-radius:99px;transition:width 1s ease}
+
+/* CIRCLES */
+.circles{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;padding:.5rem 0}
+.circ{border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;flex-shrink:0;line-height:1.2;padding:8px}
+.circ-name{font-size:8px;text-transform:uppercase;letter-spacing:.5px;opacity:.85;margin-bottom:2px}
+.circ-val{font-weight:700}
+.arr{font-size:9px;color:#999;text-align:center;white-space:nowrap;display:flex;align-items:center}
+
+/* RANKING */
+.rank-r{display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:4px;margin-bottom:2px;background:var(--light)}
+.rank-n{font-size:9px;font-weight:700;color:var(--muted);width:14px;text-align:right;flex-shrink:0}
+.rank-name{font-size:10px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rank-bw{width:50px;height:3px;background:#eee;border-radius:99px;flex-shrink:0;overflow:hidden}
+.rank-b{height:100%;border-radius:99px}
+.rank-p{font-size:10px;font-weight:700;flex-shrink:0;min-width:32px;text-align:right}
+
+/* DEBT ITEMS */
+.debt-items{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px}
+.debt-it{background:var(--light);border-radius:var(--r);padding:8px;text-align:center}
+.debt-l{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:3px}
+.debt-v{font-size:16px;font-weight:800;letter-spacing:-.5px}
+.debt-p{font-size:9px;color:var(--muted);margin-top:1px}
+
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;align-items:center;justify-content:center}
+.overlay.open{display:flex}
+.modal{background:#fff;border-radius:12px;width:100%;max-width:500px;margin:1rem;box-shadow:0 20px 60px rgba(0,0,0,.3);overflow:hidden;max-height:90vh;overflow-y:auto}
+.modal-hdr{background:var(--navy);padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0}
+.modal-title{color:#fff;font-weight:700;font-size:14px}
+.modal-close{background:rgba(255,255,255,.1);border:none;color:#fff;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
+.modal-body{padding:1.25rem}
+.field{margin-bottom:10px}
+.field label{font-size:10px;color:var(--muted);display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:.7px}
+.field input,.field select{width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;outline:none;font-family:inherit;color:var(--text)}
+.field input:focus{border-color:var(--teal)}
+.field .hint{font-size:10px;color:#aaa;margin-top:3px}
+.field .hint a{color:var(--teal);text-decoration:none}
+.row2f{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pw-wrap{position:relative}
+.pw-wrap input{padding-right:60px}
+.pw-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);font-size:10px;cursor:pointer;padding:2px 4px}
+.drop{border:2px dashed var(--border);border-radius:var(--r);padding:1.5rem;text-align:center;cursor:pointer;position:relative;transition:all .2s}
+.drop:hover,.drop.over{border-color:var(--teal);background:rgba(0,180,160,.04)}
+.drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.drop-ico{font-size:24px;margin-bottom:4px}
+.drop-txt{font-size:12px;color:var(--muted)}
+.ftag{display:none;background:#e8f8f5;border:1px solid var(--teal);border-radius:6px;padding:6px 10px;font-size:11px;color:#006b5e;margin-top:8px;align-items:center;gap:6px}
+.ftag.show{display:flex}
+.go-btn{width:100%;background:var(--teal);color:#fff;border:none;padding:10px;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;margin-top:10px;font-family:inherit;transition:opacity .2s}
+.go-btn:disabled{opacity:.5;cursor:not-allowed}
+.save-btn{width:100%;background:var(--navy);color:#fff;border:none;padding:8px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;margin-top:4px;font-family:inherit}
+.prog-wrap{height:4px;background:#eee;border-radius:99px;overflow:hidden;margin:10px 0 6px}
+.prog-bar{height:100%;background:var(--teal);border-radius:99px;width:0;transition:width .4s ease}
+.adm-log{background:var(--light);border:1px solid var(--border);border-radius:6px;padding:8px;font-family:monospace;font-size:10px;line-height:1.8;max-height:140px;overflow-y:auto}
+.adm-result{margin-top:8px;padding:10px;border-radius:6px;font-size:11px;display:none}
+.creds-ok{background:#e8f8f5;border:1px solid var(--teal);border-radius:6px;padding:7px 10px;font-size:11px;color:#006b5e;margin-top:6px;display:none}
+hr.m{border:none;border-top:1px solid var(--border);margin:.75rem 0}
+.sec-lbl{font-size:10px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+
+/* RESPONSIVE */
 @media(max-width:900px){
-  .kpi-strip{grid-template-columns:repeat(3,1fr)}
-  .cobertura-grid{grid-template-columns:repeat(2,1fr)}
+  .kpis{grid-template-columns:repeat(3,1fr)}
+  .cob{grid-template-columns:repeat(2,1fr)}
   .row2,.row3{grid-template-columns:1fr}
-  .cumpl-grid{grid-template-columns:1fr}
-  .circles-wrapper{grid-template-columns:1fr}
 }
 @media(max-width:600px){
-  .kpi-strip{grid-template-columns:repeat(2,1fr)}
-  .site-header-inner{flex-direction:column;height:auto;padding:12px 0;gap:8px}
-  .cover-inner{flex-direction:column;gap:8px}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .hdr-in{height:auto;padding:.5rem 0;gap:.5rem}
+  .cover-in{flex-direction:column}
 }
 </style>
 </head>
 <body>
 
 <!-- HEADER -->
-<div class="site-header">
-  <div class="site-header-inner">
-    <div class="header-logo">
-      <div class="header-logo-badge">CG</div>
+<div class="hdr">
+  <div class="hdr-in">
+    <div class="hdr-logo">
+      <div class="hdr-badge">CG</div>
       <div>
-        <h1>Informe de Gestión Financiera del Estado</h1>
-        <p>Contraloría General de la República de Chile</p>
+        <div class="hdr-title">Informe de Gestión Financiera del Estado</div>
+        <div class="hdr-sub">Contraloría General de la República de Chile</div>
       </div>
     </div>
-    <div class="header-filters">
-      <span class="filter-label">Año</span>
-      <select id="year-sel" onchange="applyFilters()">
-        <option value="2025" selected>2025</option>
-        <option value="2024">2024</option>
-      </select>
-      <span class="filter-label">Trimestre</span>
-      <select id="quarter-sel" onchange="applyFilters()">
-        <option value="1">1er Trimestre</option>
-        <option value="2">2do Trimestre</option>
-        <option value="3" selected>3er Trimestre</option>
-        <option value="4">4to Trimestre</option>
-      </select>
-      <span class="data-badge" id="data-badge">Ene–Sep 2025</span>
-      <button onclick="openAdmin()" style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:white;padding:5px 14px;border-radius:5px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:inherit">
-        ⚙️ Actualizar
-      </button>
+    <div class="hdr-right">
+      <span class="fl">Año</span>
+      <select id="sel-year" onchange="onFilter()"></select>
+      <span class="fl">Trimestre</span>
+      <select id="sel-q" onchange="onFilter()"></select>
+      <span class="badge" id="badge-period">—</span>
+      <button class="adm-btn" onclick="openAdm()">⚙️ Actualizar</button>
     </div>
   </div>
 </div>
 
-<!-- ===== ADMIN MODAL ===== -->
-<div id="admin-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center">
-<div style="background:white;border-radius:12px;width:100%;max-width:520px;margin:1rem;box-shadow:0 20px 60px rgba(0,0,0,0.3);overflow:hidden">
-
-  <!-- Modal header -->
-  <div style="background:#1a2744;padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between">
-    <div>
-      <div style="color:white;font-weight:700;font-size:15px">Actualizar dashboard</div>
-      <div style="color:rgba(255,255,255,0.6);font-size:11px;margin-top:2px">Sube el PDF del IGFE y actualiza automáticamente</div>
-    </div>
-    <button onclick="closeAdmin()" style="background:rgba(255,255,255,0.1);border:none;color:white;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center">✕</button>
-  </div>
-
-  <div style="padding:1.5rem">
-
-    <!-- Step 1: Credentials -->
-    <div id="adm-step-creds">
-      <div style="font-size:12px;font-weight:700;color:#1a2744;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px">1 · Credenciales <span style="font-size:10px;color:#888;font-weight:400;text-transform:none">(guardadas en el navegador)</span></div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-        <div>
-          <label style="font-size:10px;color:#888;display:block;margin-bottom:3px">Usuario GitHub</label>
-          <input id="adm-user" placeholder="usuario" style="width:100%;padding:7px 10px;border:1px solid #dde;border-radius:6px;font-size:12px;outline:none" value="garrinchashirts-create">
-        </div>
-        <div>
-          <label style="font-size:10px;color:#888;display:block;margin-bottom:3px">Repositorio</label>
-          <input id="adm-repo" placeholder="igfe-dashboard" style="width:100%;padding:7px 10px;border:1px solid #dde;border-radius:6px;font-size:12px;outline:none" value="igfe-dashboard">
-        </div>
-      </div>
-
-      <div style="margin-bottom:8px">
-        <label style="font-size:10px;color:#888;display:block;margin-bottom:3px">🔑 GitHub Token (classic, scope: repo)</label>
-        <div style="position:relative">
-          <input id="adm-token" type="password" placeholder="ghp_xxxxxxxxxxxx" style="width:100%;padding:7px 10px;border:1px solid #dde;border-radius:6px;font-size:12px;outline:none;padding-right:70px">
-          <button onclick="togglePwd('adm-token',this)" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:none;color:#888;font-size:11px;cursor:pointer">Mostrar</button>
-        </div>
-      </div>
-
-      <div style="margin-bottom:12px">
-        <label style="font-size:10px;color:#888;display:block;margin-bottom:3px">🤖 Anthropic API Key</label>
-        <div style="position:relative">
-          <input id="adm-claude" type="password" placeholder="sk-ant-xxxxxxxxxxxx" style="width:100%;padding:7px 10px;border:1px solid #dde;border-radius:6px;font-size:12px;outline:none;padding-right:70px">
-          <button onclick="togglePwd('adm-claude',this)" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:none;color:#888;font-size:11px;cursor:pointer">Mostrar</button>
-        </div>
-        <div style="font-size:10px;color:#aaa;margin-top:3px">Crea tu clave en <a href="https://console.anthropic.com/keys" target="_blank" style="color:#00b4a0">console.anthropic.com/keys</a></div>
-      </div>
-
-      <button onclick="saveAdmCreds()" style="width:100%;background:#1a2744;color:white;border:none;padding:8px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer">Guardar y continuar →</button>
-      <div id="adm-creds-ok" style="display:none;margin-top:8px;background:#e8f8f5;border:1px solid #00b4a0;border-radius:6px;padding:8px;font-size:11px;color:#006b5e">✓ Credenciales guardadas. Continúa con el PDF abajo.</div>
-    </div>
-
-    <hr style="border:none;border-top:1px solid #eee;margin:1rem 0">
-
-    <!-- Step 2: PDF + Quarter -->
-    <div>
-      <div style="font-size:12px;font-weight:700;color:#1a2744;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px">2 · PDF del nuevo trimestre</div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-        <div>
-          <label style="font-size:10px;color:#888;display:block;margin-bottom:3px">Trimestre</label>
-          <select id="adm-q" style="width:100%;padding:7px 10px;border:1px solid #dde;border-radius:6px;font-size:12px;color:#1a2744;background:white">
-            <option value="1">1er Trimestre</option>
-            <option value="2">2do Trimestre</option>
-            <option value="3" selected>3er Trimestre</option>
-            <option value="4">4to Trimestre</option>
-          </select>
-        </div>
-        <div>
-          <label style="font-size:10px;color:#888;display:block;margin-bottom:3px">Año</label>
-          <input id="adm-year" value="2025" style="width:100%;padding:7px 10px;border:1px solid #dde;border-radius:6px;font-size:12px;outline:none">
-        </div>
-      </div>
-
-      <!-- Drop zone -->
-      <div id="adm-drop" style="border:2px dashed #dde;border-radius:8px;padding:1.5rem;text-align:center;cursor:pointer;position:relative;transition:all 0.2s;margin-bottom:10px">
-        <input type="file" accept=".pdf" id="adm-file-input" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%" onchange="handleAdmFile(this.files[0])">
-        <div style="font-size:24px;margin-bottom:4px">📄</div>
-        <div style="font-size:12px;color:#888">Arrastra el PDF aquí o haz clic</div>
-        <div style="font-size:10px;color:#bbb;margin-top:2px">Solo archivos .pdf</div>
-      </div>
-
-      <div id="adm-file-tag" style="display:none;background:#e8f8f5;border:1px solid #00b4a0;border-radius:6px;padding:8px 12px;font-size:11px;color:#006b5e;margin-bottom:10px;display:none;align-items:center;gap:8px">
-        📎 <span id="adm-fname"></span>
-        <span id="adm-fsize" style="color:#888;margin-left:auto"></span>
-        <button onclick="clearAdmFile()" style="background:none;border:none;color:#888;cursor:pointer;font-size:13px">✕</button>
-      </div>
-
-      <button id="adm-go-btn" onclick="runUpdate()" disabled style="width:100%;background:#00b4a0;color:white;border:none;padding:10px;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;opacity:0.5;transition:opacity 0.2s">
-        Analizar PDF y publicar →
-      </button>
-    </div>
-
-    <!-- Progress -->
-    <div id="adm-progress" style="display:none;margin-top:1rem">
-      <div style="height:4px;background:#eee;border-radius:99px;overflow:hidden;margin-bottom:10px">
-        <div id="adm-prog-bar" style="height:100%;background:#00b4a0;border-radius:99px;width:0;transition:width 0.4s ease"></div>
-      </div>
-      <div id="adm-log" style="background:#f5f7fa;border:1px solid #eee;border-radius:6px;padding:10px;font-family:monospace;font-size:10px;line-height:1.8;max-height:160px;overflow-y:auto"></div>
-    </div>
-
-    <!-- Result -->
-    <div id="adm-result" style="display:none;margin-top:1rem;padding:12px;border-radius:6px;font-size:12px"></div>
-
-  </div>
-</div>
-</div>
-
-<!-- COVER BAND -->
-<div class="cover-band">
-  <div class="cover-inner">
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-in">
     <div>
       <div class="cover-title">Gestión Financiera del Estado</div>
-      <div class="cover-sub" id="cover-sub">Al 3er Trimestre 2025 · 1 de Enero al 30 de Septiembre</div>
+      <div class="cover-sub" id="cover-sub">—</div>
     </div>
-    <div class="cover-period">
-      <div class="cover-period-label">Total ejecutado · todos los sectores</div>
-      <div class="cover-period-value" id="cover-total">$124,6 billones</div>
+    <div class="cover-right">
+      <div class="cover-lbl">Total ejecutado · todos los sectores</div>
+      <div class="cover-val" id="cover-val">—</div>
     </div>
   </div>
 </div>
 
 <main>
-
-  <!-- NOTICE -->
   <div class="notice" id="notice"></div>
 
   <!-- KPIs -->
-  <div class="kpi-strip" id="kpi-strip"></div>
+  <div class="kpis" id="kpis"></div>
 
-  <!-- COBERTURA -->
+  <!-- COBERTURA + CUMPLIMIENTO -->
   <div class="section">
-    <div class="section-title">Cobertura del informe · <span id="cob-total-span">709</span> entidades</div>
-    <div class="cobertura-grid" id="cob-grid"></div>
-    <div class="cumpl-grid">
-      <div class="cumpl-block">
-        <div class="cumpl-title">Cumplimiento envío de información presupuestaria</div>
-        <div id="cumpl-list"></div>
+    <div class="sec-title">Cobertura y cumplimiento</div>
+    <div class="cob" id="cob"></div>
+    <div class="row2">
+      <div class="card">
+        <div class="card-t">Cumplimiento envío de información</div>
+        <div class="card-s">% de entidades que enviaron datos en plazo</div>
+        <div class="bars" id="bars-cumpl"></div>
       </div>
-      <div class="cumpl-block">
-        <div class="cumpl-title">Ejecución presupuestaria por sector (% del presupuesto vigente)</div>
-        <div id="ejec-list"></div>
+      <div class="card">
+        <div class="card-t">Ejecución presupuestaria por sector</div>
+        <div class="card-s">% ejecutado / presupuesto vigente</div>
+        <div class="bars" id="bars-ejec"></div>
       </div>
     </div>
   </div>
 
-  <!-- TRANSFERENCIAS ENTRE SECTORES -->
+  <!-- SECTORES -->
   <div class="section">
-    <div class="section-title">Transferencias entre sectores</div>
-    <div class="transfers-section">
-      <div class="transfers-title">Gastos presupuestarios ejecutados por sector · 3er Trimestre 2025</div>
-      <div style="display:flex;gap:2rem;align-items:center;justify-content:center;flex-wrap:wrap">
-
-        <!-- Left: CODELCO + IES -->
-        <div style="display:flex;flex-direction:column;align-items:center;gap:16px">
-          <div class="sector-circle sc-left" style="background:#c8d4e8">
-            <div class="sc-name">CODELCO</div>
-            <div class="sc-val" id="sc-codelco">$23,0B</div>
-          </div>
-          <div class="sector-circle sc-bot-left" style="width:90px;height:90px;background:#dce4f0;font-size:8px">
-            <div class="sc-name" style="font-size:7px">IES ESTADO</div>
-            <div class="sc-val" style="font-size:11px" id="sc-ies">$1,4B</div>
-          </div>
-        </div>
-
-        <!-- Arrows left -->
-        <div style="display:flex;flex-direction:column;gap:8px;font-size:9px;color:#888;text-align:center">
-          <div>$2,23B →</div>
-          <div>$2,18B →</div>
-          <div style="margin-top:20px">← $0,3B</div>
-        </div>
-
-        <!-- Center: Sector Público -->
-        <div class="sector-circle sc-center" style="width:180px;height:180px">
-          <div class="sc-name" style="font-size:10px;color:rgba(255,255,255,0.7)">SECTOR PÚBLICO</div>
-          <div style="font-size:9px;color:rgba(255,255,255,0.5)">(GOBIERNO CENTRAL)</div>
-          <div class="sc-val" style="font-size:20px" id="sc-publico">$79,1B</div>
-        </div>
-
-        <!-- Arrows right -->
-        <div style="display:flex;flex-direction:column;gap:8px;font-size:9px;color:#888;text-align:center">
-          <div>→ $2,0B</div>
-          <div>→ $0,5B</div>
-          <div style="margin-top:8px">$4,2B ←</div>
-          <div>$0,9B ←</div>
-        </div>
-
-        <!-- Right: Otras + Municipal -->
-        <div style="display:flex;flex-direction:column;align-items:center;gap:16px">
-          <div class="sector-circle sc-right-top" style="width:120px;height:120px">
-            <div class="sc-name" style="font-size:8px">OTRAS EMPRESAS</div>
-            <div class="sc-val" style="font-size:13px" id="sc-empresas">$10,7B</div>
-          </div>
-          <div class="sector-circle sc-right-bot" style="width:120px;height:120px">
-            <div class="sc-name" style="font-size:8px">SECTOR MUNICIPAL</div>
-            <div class="sc-val" style="font-size:13px" id="sc-municipal">$10,4B</div>
-          </div>
-        </div>
-
-      </div>
+    <div class="sec-title">Transferencias y gasto por sector</div>
+    <div class="card" style="margin-bottom:10px">
+      <div class="card-t">Gastos presupuestarios ejecutados por sector</div>
+      <div class="card-s">Billones de pesos · tamaño proporcional al monto</div>
+      <div class="circles" id="circles"></div>
     </div>
-
-    <!-- Comparativo gasto por sector -->
     <div class="row2">
       <div class="card">
-        <div class="card-title">Comparativo gastos ejecutados por sector</div>
-        <div class="card-sub">Billones de pesos</div>
-        <div class="chart-wrap"><canvas id="gastoSectorChart" role="img" aria-label="Gasto por sector"></canvas></div>
+        <div class="card-t">Gastos ejecutados comparativo</div>
+        <div class="card-s">Billones de pesos</div>
+        <div class="cw"><canvas id="c-gasto-sec" role="img" aria-label="Gasto por sector"></canvas></div>
       </div>
       <div class="card">
-        <div class="card-title">Ejecución presupuestaria por sector</div>
-        <div class="card-sub">Porcentaje sobre presupuesto vigente</div>
-        <div class="chart-wrap"><canvas id="ejecSectorChart" role="img" aria-label="Ejecución por sector"></canvas></div>
+        <div class="card-t">Ingresos sector público</div>
+        <div class="card-s">Billones de pesos</div>
+        <div class="cw"><canvas id="c-ing-sp" role="img" aria-label="Ingresos sector público"></canvas></div>
       </div>
     </div>
-  </div>
-
-  <!-- SECTOR PÚBLICO: Ingresos y Gastos -->
-  <div class="section">
-    <div class="section-title">Sector público · ingresos y gastos</div>
-    <div class="row2">
-      <div class="card">
-        <div class="card-title">Ingresos presupuestarios ejecutados</div>
-        <div class="card-sub">Billones de pesos · comparativo año anterior</div>
-        <div class="chart-wrap"><canvas id="ingresosChart" role="img" aria-label="Ingresos sector público"></canvas></div>
-      </div>
-      <div class="card">
-        <div class="card-title">Gastos presupuestarios ejecutados</div>
-        <div class="card-sub">Billones de pesos · comparativo año anterior</div>
-        <div class="chart-wrap"><canvas id="gastosChart" role="img" aria-label="Gastos sector público"></canvas></div>
-      </div>
-    </div>
-
-    <!-- Ranking ministerios -->
-    <div class="row2">
-      <div class="card">
-        <div class="card-title">Mayores ejecuciones devengadas</div>
-        <div class="card-sub">Ranking por partida · excluye Gobiernos Regionales</div>
-        <div id="ranking-high"></div>
-      </div>
-      <div class="card">
-        <div class="card-title">Menores ejecuciones devengadas</div>
-        <div class="card-sub">Ranking por partida · excluye Gobiernos Regionales</div>
-        <div id="ranking-low"></div>
-      </div>
+    <div class="card" style="margin-bottom:10px">
+      <div class="card-t">Gastos sector público</div>
+      <div class="card-s">Billones de pesos</div>
+      <div class="cw"><canvas id="c-gas-sp" role="img" aria-label="Gastos sector público"></canvas></div>
     </div>
   </div>
 
   <!-- SECTOR MUNICIPAL -->
   <div class="section">
-    <div class="section-title">Sector municipal</div>
+    <div class="sec-title">Sector municipal</div>
     <div class="row2">
       <div class="card">
-        <div class="card-title">Ingresos municipales por fuente</div>
-        <div class="card-sub">Millones de pesos</div>
-        <div class="chart-wrap"><canvas id="ingMunChart" role="img" aria-label="Ingresos municipales"></canvas></div>
+        <div class="card-t">Ingresos municipales</div>
+        <div class="card-s">Miles de pesos</div>
+        <div class="cw"><canvas id="c-mun-ing" role="img" aria-label="Ingresos municipales"></canvas></div>
       </div>
       <div class="card">
-        <div class="card-title">Gastos municipales por categoría</div>
-        <div class="card-sub">Millones de pesos</div>
-        <div class="chart-wrap"><canvas id="gasMunChart" role="img" aria-label="Gastos municipales"></canvas></div>
+        <div class="card-t">Gastos municipales</div>
+        <div class="card-s">Miles de pesos</div>
+        <div class="cw"><canvas id="c-mun-gas" role="img" aria-label="Gastos municipales"></canvas></div>
       </div>
     </div>
     <div class="card">
-      <div class="card-title">Participación del Fondo Común Municipal (FCM) en ingresos totales por región</div>
-      <div class="card-sub">Porcentaje · verde = sobre promedio nacional (17,7%) · rojo = bajo promedio</div>
-      <div class="fcm-avg-line"><span class="fcm-avg-badge">Promedio nacional: 17,7%</span></div>
-      <div class="chart-wrap"><canvas id="fcmChart" role="img" aria-label="FCM por región"></canvas></div>
+      <div class="card-t">Participación FCM en ingresos totales por región</div>
+      <div class="card-s" id="fcm-sub">% · verde = sobre promedio nacional · rojo = bajo promedio</div>
+      <div class="cw"><canvas id="c-fcm" role="img" aria-label="FCM por región"></canvas></div>
     </div>
   </div>
 
-  <!-- EMPRESAS DEL ESTADO + EDUCACIÓN -->
+  <!-- EMPRESAS + EDUCACIÓN -->
   <div class="section">
-    <div class="section-title">Empresas del estado y educación superior</div>
+    <div class="sec-title">Empresas del estado y educación superior</div>
     <div class="row2">
       <div class="card">
-        <div class="card-title">Utilidades / Pérdidas · Empresas del Estado</div>
-        <div class="card-sub">Millones de pesos · verde = utilidad · rojo = pérdida</div>
-        <div class="chart-wrap"><canvas id="empresasChart" role="img" aria-label="Utilidades empresas"></canvas></div>
+        <div class="card-t">Utilidades / Pérdidas · Empresas del Estado</div>
+        <div class="card-s">Millones de pesos</div>
+        <div class="cw"><canvas id="c-emp" role="img" aria-label="Utilidades empresas"></canvas></div>
       </div>
       <div class="card">
-        <div class="card-title">Ingresos Instituciones de Educación Superior</div>
-        <div class="card-sub">Millones de pesos</div>
-        <div class="chart-wrap"><canvas id="educChart" role="img" aria-label="Ingresos educación superior"></canvas></div>
+        <div class="card-t">Ingresos Educación Superior</div>
+        <div class="card-s">Miles de pesos</div>
+        <div class="cw"><canvas id="c-educ" role="img" aria-label="Ingresos educación superior"></canvas></div>
       </div>
     </div>
     <div class="card">
-      <div class="card-title">Transferencias MINEDUC a Educación Superior y cobertura de Gratuidad</div>
-      <div class="card-sub">Billones de pesos · % destinado a gratuidad</div>
-      <div class="chart-wrap"><canvas id="gratChart" role="img" aria-label="Gratuidad MINEDUC"></canvas></div>
+      <div class="card-t">Transferencias MINEDUC a Educación Superior · % Gratuidad</div>
+      <div class="card-s">Billones de pesos y porcentaje destinado a gratuidad</div>
+      <div class="cw"><canvas id="c-grat" role="img" aria-label="Gratuidad MINEDUC"></canvas></div>
     </div>
   </div>
 
-  <!-- DEUDA E INVERSIONES -->
+  <!-- DEUDA + INVERSIONES -->
   <div class="section">
-    <div class="section-title">Deuda pública e inversiones financieras</div>
+    <div class="sec-title">Deuda pública e inversiones financieras</div>
     <div class="row2">
       <div class="card">
-        <div class="card-title">Evolución de la deuda pública / PIB</div>
-        <div class="card-sub">Porcentaje · desglose interna y externa</div>
+        <div class="card-t">Deuda pública / PIB</div>
+        <div class="card-s">Evolución histórica · desglose interna y externa</div>
         <div class="debt-items" id="debt-items"></div>
-        <div class="chart-wrap"><canvas id="deudaChart" role="img" aria-label="Deuda pública"></canvas></div>
+        <div class="cw"><canvas id="c-deuda" role="img" aria-label="Deuda pública"></canvas></div>
       </div>
       <div class="card">
-        <div class="card-title">Evolución de las inversiones financieras / PIB</div>
-        <div class="card-sub">Porcentaje · total $40,0 billones al 3T 2025</div>
-        <div class="chart-wrap"><canvas id="invChart" role="img" aria-label="Inversiones financieras"></canvas></div>
+        <div class="card-t">Inversiones financieras / PIB</div>
+        <div class="card-s">Evolución histórica en porcentaje del PIB</div>
+        <div class="cw"><canvas id="c-inv" role="img" aria-label="Inversiones financieras"></canvas></div>
       </div>
     </div>
   </div>
 
   <!-- GOBIERNOS REGIONALES -->
   <div class="section">
-    <div class="section-title">Gobiernos regionales</div>
+    <div class="sec-title">Gobiernos regionales</div>
     <div class="row2">
       <div class="card">
-        <div class="card-title">Ingresos Gobiernos Regionales</div>
-        <div class="card-sub">Millones de pesos</div>
-        <div class="chart-wrap"><canvas id="gobIngChart" role="img" aria-label="Ingresos gobiernos regionales"></canvas></div>
+        <div class="card-t">Ingresos Gobiernos Regionales</div>
+        <div class="card-s">Millones de pesos</div>
+        <div class="cw"><canvas id="c-gob-ing" role="img" aria-label="Ingresos gobiernos regionales"></canvas></div>
       </div>
       <div class="card">
-        <div class="card-title">Gastos Gobiernos Regionales</div>
-        <div class="card-sub">Millones de pesos</div>
-        <div class="chart-wrap"><canvas id="gobGasChart" role="img" aria-label="Gastos gobiernos regionales"></canvas></div>
+        <div class="card-t">Gastos Gobiernos Regionales</div>
+        <div class="card-s">Millones de pesos</div>
+        <div class="cw"><canvas id="c-gob-gas" role="img" aria-label="Gastos gobiernos regionales"></canvas></div>
       </div>
     </div>
   </div>
-
 </main>
 
-<footer>
-  IGFE · Informe de Gestión Financiera del Estado · Contraloría General de la República de Chile ·
-  Fuente: información presupuestaria enviada a CGR · PIB a precios corrientes Banco Central de Chile
+<footer style="background:var(--navy-dark);color:rgba(255,255,255,.4);text-align:center;padding:.75rem;font-size:10px;margin-top:1rem">
+  IGFE · Contraloría General de la República de Chile · Fuente: Bases_tablero_IGFE.xlsx · PIB a precios corrientes Banco Central de Chile
 </footer>
 
+<!-- ADMIN MODAL -->
+<div class="overlay" id="overlay">
+<div class="modal">
+  <div class="modal-hdr">
+    <div class="modal-title">⚙️ Actualizar dashboard</div>
+    <button class="modal-close" onclick="closeAdm()">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="sec-lbl">Credenciales</div>
+    <div class="row2f">
+      <div class="field"><label>Usuario GitHub</label><input id="a-user" value="garrinchashirts-create"></div>
+      <div class="field"><label>Repositorio</label><input id="a-repo" value="igfe-dashboard"></div>
+    </div>
+    <div class="field">
+      <label>GitHub Token (classic · scope: repo)</label>
+      <div class="pw-wrap"><input id="a-tok" type="password" placeholder="ghp_…"><button class="pw-btn" onclick="togglePw('a-tok',this)">Mostrar</button></div>
+      <div class="hint">Genera en <a href="https://github.com/settings/tokens/new" target="_blank">github.com/settings/tokens/new</a> · marca <strong>repo</strong></div>
+    </div>
+    <div class="field">
+      <label>Anthropic API Key</label>
+      <div class="pw-wrap"><input id="a-key" type="password" placeholder="sk-ant-…"><button class="pw-btn" onclick="togglePw('a-key',this)">Mostrar</button></div>
+      <div class="hint">Crea en <a href="https://console.anthropic.com/keys" target="_blank">console.anthropic.com/keys</a></div>
+    </div>
+    <button class="save-btn" onclick="saveCreds()">Guardar credenciales</button>
+    <div class="creds-ok" id="creds-ok">✓ Credenciales guardadas en este navegador</div>
+
+    <hr class="m">
+    <div class="sec-lbl">Nuevo informe</div>
+    <div class="row2f">
+      <div class="field"><label>Trimestre</label>
+        <select id="a-q"><option value="1">1er Trimestre</option><option value="2">2do Trimestre</option><option value="3" selected>3er Trimestre</option><option value="4">4to Trimestre</option></select>
+      </div>
+      <div class="field"><label>Año</label><input id="a-yr" value="2025"></div>
+    </div>
+    <div class="field"><label>PDF del IGFE</label>
+      <div class="drop" id="drop">
+        <input type="file" accept=".pdf" onchange="onFile(this.files[0])">
+        <div class="drop-ico">📄</div>
+        <div class="drop-txt">Arrastra el PDF o haz clic para seleccionar</div>
+      </div>
+      <div class="ftag" id="ftag">📎 <span id="fname"></span><span id="fsize" style="color:#888;margin-left:auto"></span><button onclick="clearFile()" style="background:none;border:none;color:#888;cursor:pointer">✕</button></div>
+    </div>
+    <button class="go-btn" id="go-btn" onclick="runUpdate()" disabled>Analizar PDF y publicar →</button>
+    <div id="adm-prog" style="display:none">
+      <div class="prog-wrap"><div class="prog-bar" id="prog-bar"></div></div>
+      <div class="adm-log" id="adm-log"></div>
+    </div>
+    <div class="adm-result" id="adm-result"></div>
+  </div>
+</div>
+</div>
+
 <script>
-/* ======================================================
-   DATA STORE — agregar nuevos trimestres aquí
-   ====================================================== */
-const DB = {
-  "2025": {
-    "3": {
-      period: "Ene–Sep 2025",
-      periodLong: "Al 3er Trimestre 2025 · 1 de Enero al 30 de Septiembre",
-      totalEjecutado: "$124,6 billones",
-      kpis: [
-        {label:"Gasto total estado",val:"124,6",unit:"B$",delta:"+4,5% vs 2024",up:true,color:"#00b4a0"},
-        {label:"Ingreso sector público",val:"89,0",unit:"B$",delta:"−2,7% vs 3T 2024",up:false,color:"#e8336e"},
-        {label:"Entidades reportando",val:"709",unit:"",delta:"299 · 345 · 32 · 33",up:null,color:"#2e5fa3"},
-        {label:"Deuda pública / PIB",val:"39,4",unit:"%",delta:"+1,2pp vs 2024",up:false,color:"#f0a500"},
-        {label:"Inversiones financieras",val:"40,0",unit:"B$",delta:"+9,4% vs 2024",up:true,color:"#00b4a0"},
-        {label:"Utilidades emp. estado",val:"967,3",unit:"MM$",delta:"+$153B vs 2024",up:true,color:"#1ab05a"},
-      ],
-      cobertura: [
-        {num:"299",label:"Sector Público",color:"#2e5fa3"},
-        {num:"345",label:"Sector Municipal",color:"#e8336e"},
-        {num:"32",label:"Empresas Estado e ITC",color:"#00b4a0"},
-        {num:"33",label:"Instituciones Educ. Superior",color:"#f0a500"},
-      ],
-      cumplimiento: [
-        {name:"Sector Público",pct:99.0,color:"#2e5fa3"},
-        {name:"Sector Municipal",pct:98.8,color:"#e8336e"},
-        {name:"Empresas del Estado",pct:90.6,color:"#00b4a0"},
-        {name:"Educ. Superior",pct:84.9,color:"#f0a500"},
-      ],
-      ejecucion: [
-        {name:"Sector Público",pct:75.1,color:"#2e5fa3"},
-        {name:"Sector Municipal",pct:65.0,color:"#e8336e"},
-        {name:"Empresas del Estado",pct:81.7,color:"#00b4a0"},
-        {name:"Educ. Superior",pct:63.3,color:"#f0a500"},
-      ],
-      sectores: {
-        codelco:"$23,0B", ies:"$1,4B",
-        publico:"$79,1B", empresas:"$10,7B", municipal:"$10,4B"
-      },
-      gastoSector: {
-        labels:["Sector Público","Sector Municipal","Emp.+CODELCO","Educ. Superior"],
-        prev:[77.8,10.2,29.8,1.4], curr:[79.1,10.4,33.7,1.4],
-        ejec:[75.1,65.0,81.7,63.3]
-      },
-      ingresosSP: {
-        labels:["Impuestos","Endeudam.","Recup.Prést.","Otros Corr.","Impos.Prev.","Ing.Oper.","Vta.Activos","Otros"],
-        prev:[51.7,25.2,3.1,2.7,2.5,3.5,1.1,1.7],
-        curr:[55.9,19.0,3.1,2.7,2.7,3.1,1.1,1.4]
-      },
-      gastosSP: {
-        labels:["Transferencias","Prest.Seg.Soc.","Serv.Deuda","Bs.y Serv.","Gtos.Personal","Adq.Act.Fin.","Ini.Inversión","Otros"],
-        prev:[22.6,15.2,18.4,10.9,11.6,4.5,2.3,2.1],
-        curr:[24.4,12.3,11.7,11.7,12.3,5.1,3.5,3.2]
-      },
-      rankingAlto:[
-        {name:"Min. Bienes Nacionales",pct:97.3},
-        {name:"Contraloría General",pct:90.8},
-        {name:"Min. Interior y Seg. Pública",pct:85.0},
-        {name:"Min. Mujer y Eq. Género",pct:84.9},
-        {name:"Min. Hacienda",pct:82.6},
-        {name:"Min. Salud",pct:81.8},
-        {name:"Min. Justicia y DDHH",pct:81.2},
-        {name:"Presidencia de la República",pct:80.2},
-        {name:"Ministerio Público",pct:78.0},
-        {name:"Poder Judicial",pct:77.1},
-      ],
-      rankingBajo:[
-        {name:"Min. Economía y Turismo",pct:35.2},
-        {name:"Servicio Electoral",pct:45.4},
-        {name:"Min. Ciencia y Tec.",pct:58.8},
-        {name:"Min. Medio Ambiente",pct:63.3},
-        {name:"Min. Obras Públicas",pct:65.2},
-        {name:"Min. Des. Social y Familia",pct:66.6},
-        {name:"Min. Deporte",pct:68.7},
-        {name:"Min. Vivienda y Urbanismo",pct:69.3},
-        {name:"Min. Culturas y Patrimonio",pct:69.3},
-        {name:"Min. Educación",pct:71.3},
-      ],
-      ingMun:{
-        labels:["Ing. Propios","Transf.","Transf. MINSAL","FCM","Transf.MINEDUC","Ing.Bfo FCM","Otros"],
-        prev:[2704.7,1891.5,2065.3,1811.1,1054.7,943.9,928.7],
-        curr:[2846.9,2093.8,2218.7,1590.5,1088.7,1032.6,959.3]
-      },
-      gasMun:{
-        labels:["Gtos.Personal","Bs.y Serv.","Transf.Corr.","Ini.Inversión","Serv.Deuda","Prest.Seg.Soc.","Adq.Act.","Otros"],
-        prev:[4948.2,2126.3,2140.0,419.3,223.9,110.2,110.2,109.4],
-        curr:[4967.5,2242.7,2155.7,427.1,276.2,110.4,103.4,124.8]
-      },
-      fcm:{
-        labels:["Aysén","Atacama","Arica","Ñuble","Magallanes","Los Ríos","O'Higgins","Valparaíso","Araucanía","Coquimbo","Biobío","Maule","Los Lagos","Tarapacá","Antofagasta","Metropolitana"],
-        vals:[44.9,27.2,26.2,24.9,23.9,23.5,21.5,21.4,21.1,21.0,19.1,18.7,18.4,14.8,13.4,12.3],
-        avg:17.7
-      },
-      empresas:{
-        labels:["ENAP","CODELCO","ENAMI","Emp.Defensa","BancoEstado","Otras Emp.","Emp.Portuarias","METRO","EFE","TVN"],
-        prev:[293.9,198.3,42.9,-14.4,2.4,366.1,137.9,-12.4,-75.9,-5.9],
-        curr:[485.1,109.4,46.8,11.5,5.8,382.5,42.9,-45.5,-129.6,-16.3]
-      },
-      educ:{
-        labels:["Ing.Operación","Transferencias","Finan.Fiscal","Endeudamiento","Vta.Activos","Recup.Préstamos","Otros"],
-        prev:[700.2,322.5,161.0,89.6,24.6,8.1,3.8],
-        curr:[772.9,364.0,161.6,80.9,33.0,11.9,1.8]
-      },
-      gratuidad:{
-        years:["2021","2022","2023","2024","3T 2025"],
-        totales:[1.9,2.1,2.4,2.8,2.18],
-        pcts:[62.7,65.1,68.4,71.1,74.6]
-      },
-      deuda:{
-        totalB:130.3, internaB:85.9, externaB:44.3,
-        totalPIB:39.4, internaPIB:26.0, externaPIB:13.4,
-        hist:{
-          years:["2021","2022","2023","2024","3T 2025"],
-          interna:[23.5,22.3,23.4,24.6,26.0],
-          externa:[12.3,12.7,13.0,13.6,13.4]
-        }
-      },
-      inversiones:{
-        totalB:40.0, pib:12.1,
-        hist:{
-          years:["2021","2022","2023","2024","3T 2025"],
-          pib:[12.1,13.6,12.2,11.7,12.1]
-        }
-      },
-      gobIng:{
-        labels:["Transf. Capital","Transf. Corrientes","Otros"],
-        prev:[1052.8,91.5,24.0], curr:[1167.9,124.8,23.8]
-      },
-      gobGas:{
-        labels:["Ini.Inversión","Transf.Capital","Adq.Act.","Gtos.Personal","Transf.Corr.","Serv.Deuda","Otros"],
-        prev:[467.3,133.6,68.9,63.0,19.2,16.2,113.6],
-        curr:[383.3,219.8,74.5,67.2,160.4,147.9,72.1]
-      }
-    },
-    "1": {
-      period:"Ene–Mar 2025",
-      periodLong:"Al 1er Trimestre 2025 · 1 de Enero al 31 de Marzo",
-      totalEjecutado:"~$31,1 billones",
-      kpis:[
-        {label:"Gasto total estado",val:"~31,1",unit:"B$",delta:"Est. anual",up:null,color:"#00b4a0"},
-        {label:"Ingreso sector público",val:"~22,2",unit:"B$",delta:"Estimado",up:null,color:"#e8336e"},
-        {label:"Entidades reportando",val:"709",unit:"",delta:"Mismo universo",up:null,color:"#2e5fa3"},
-        {label:"Deuda pública / PIB",val:"~38%",unit:"",delta:"Estimado",up:null,color:"#f0a500"},
-      ],
-      cobertura:[
-        {num:"299",label:"Sector Público",color:"#2e5fa3"},
-        {num:"345",label:"Sector Municipal",color:"#e8336e"},
-        {num:"32",label:"Empresas Estado e ITC",color:"#00b4a0"},
-        {num:"33",label:"Instituciones Educ. Superior",color:"#f0a500"},
-      ],
-      _pending: true
-    },
-    "2": {
-      period:"Ene–Jun 2025",
-      periodLong:"Al 2do Trimestre 2025 · 1 de Enero al 30 de Junio",
-      totalEjecutado:"~$62,3 billones",
-      kpis:[
-        {label:"Gasto total estado",val:"~62,3",unit:"B$",delta:"Est. anual",up:null,color:"#00b4a0"},
-        {label:"Ingreso sector público",val:"~44,5",unit:"B$",delta:"Estimado",up:null,color:"#e8336e"},
-        {label:"Entidades reportando",val:"709",unit:"",delta:"Mismo universo",up:null,color:"#2e5fa3"},
-        {label:"Deuda pública / PIB",val:"~38,8%",unit:"",delta:"Estimado",up:null,color:"#f0a500"},
-      ],
-      cobertura:[
-        {num:"299",label:"Sector Público",color:"#2e5fa3"},
-        {num:"345",label:"Sector Municipal",color:"#e8336e"},
-        {num:"32",label:"Empresas Estado e ITC",color:"#00b4a0"},
-        {num:"33",label:"Instituciones Educ. Superior",color:"#f0a500"},
-      ],
-      _pending: true
-    },
-    "4": {
-      period:"Ene–Dic 2025",
-      periodLong:"Al 4to Trimestre 2025 · 1 de Enero al 31 de Diciembre",
-      totalEjecutado:"Pendiente",
-      kpis:[
-        {label:"Gasto total estado",val:"—",unit:"",delta:"Datos no disponibles",up:null,color:"#888"},
-        {label:"Ingreso sector público",val:"—",unit:"",delta:"Datos no disponibles",up:null,color:"#888"},
-        {label:"Entidades reportando",val:"709",unit:"",delta:"Mismo universo",up:null,color:"#2e5fa3"},
-        {label:"Deuda pública / PIB",val:"—",unit:"",delta:"Pendiente publicación",up:null,color:"#888"},
-      ],
-      cobertura:[
-        {num:"299",label:"Sector Público",color:"#2e5fa3"},
-        {num:"345",label:"Sector Municipal",color:"#e8336e"},
-        {num:"32",label:"Empresas Estado e ITC",color:"#00b4a0"},
-        {num:"33",label:"Instituciones Educ. Superior",color:"#f0a500"},
-      ],
-      _pending: true
-    }
-  },
-  "2024": {
-    "3": {
-      period:"Ene–Sep 2024",
-      periodLong:"Al 3er Trimestre 2024 · 1 de Enero al 30 de Septiembre",
-      totalEjecutado:"$119,2 billones",
-      kpis:[
-        {label:"Gasto total estado",val:"119,2",unit:"B$",delta:"Ref. 2024",up:null,color:"#00b4a0"},
-        {label:"Ingreso sector público",val:"91,5",unit:"B$",delta:"3T 2024",up:null,color:"#e8336e"},
-        {label:"Entidades reportando",val:"709",unit:"",delta:"Mismo universo",up:null,color:"#2e5fa3"},
-        {label:"Deuda pública / PIB",val:"38,2",unit:"%",delta:"2024",up:null,color:"#f0a500"},
-        {label:"Inversiones financieras",val:"36,6",unit:"B$",delta:"2024",up:null,color:"#00b4a0"},
-        {label:"Utilidades emp. estado",val:"813,9",unit:"MM$",delta:"3T 2024",up:null,color:"#1ab05a"},
-      ],
-      cobertura:[
-        {num:"299",label:"Sector Público",color:"#2e5fa3"},
-        {num:"345",label:"Sector Municipal",color:"#e8336e"},
-        {num:"32",label:"Empresas Estado e ITC",color:"#00b4a0"},
-        {num:"33",label:"Instituciones Educ. Superior",color:"#f0a500"},
-      ],
-      cumplimiento:[
-        {name:"Sector Público",pct:98.5,color:"#2e5fa3"},
-        {name:"Sector Municipal",pct:97.9,color:"#e8336e"},
-        {name:"Empresas del Estado",pct:89.8,color:"#00b4a0"},
-        {name:"Educ. Superior",pct:83.2,color:"#f0a500"},
-      ],
-      ejecucion:[
-        {name:"Sector Público",pct:73.4,color:"#2e5fa3"},
-        {name:"Sector Municipal",pct:63.8,color:"#e8336e"},
-        {name:"Empresas del Estado",pct:79.5,color:"#00b4a0"},
-        {name:"Educ. Superior",pct:62.1,color:"#f0a500"},
-      ],
-      sectores:{codelco:"$22,5B",ies:"$1,3B",publico:"$77,8B",empresas:"$10,2B",municipal:"$10,2B"},
-      gastoSector:{
-        labels:["Sector Público","Sector Municipal","Emp.+CODELCO","Educ. Superior"],
-        prev:[75.1,9.8,28.4,1.3], curr:[77.8,10.2,29.8,1.4],
-        ejec:[73.4,63.8,79.5,62.1]
-      },
-      ingresosSP:{
-        labels:["Impuestos","Endeudam.","Recup.Prést.","Otros Corr.","Impos.Prev.","Ing.Oper.","Vta.Activos","Otros"],
-        prev:[49.2,22.1,3.0,2.6,2.3,3.4,1.0,1.6],
-        curr:[51.7,25.2,3.1,2.7,2.5,3.5,1.1,1.7]
-      },
-      gastosSP:{
-        labels:["Transferencias","Prest.Seg.Soc.","Serv.Deuda","Bs.y Serv.","Gtos.Personal","Adq.Act.Fin.","Ini.Inversión","Otros"],
-        prev:[21.2,14.1,17.8,10.4,11.0,4.2,2.1,1.9],
-        curr:[22.6,15.2,18.4,10.9,11.6,4.5,2.3,2.1]
-      },
-      rankingAlto:[
-        {name:"Min. Bienes Nacionales",pct:96.1},
-        {name:"Contraloría General",pct:89.4},
-        {name:"Min. Interior y Seg. Pública",pct:84.2},
-        {name:"Min. Mujer y Eq. Género",pct:83.7},
-        {name:"Min. Hacienda",pct:81.3},
-        {name:"Min. Salud",pct:80.9},
-        {name:"Min. Justicia y DDHH",pct:80.4},
-        {name:"Presidencia de la República",pct:79.1},
-        {name:"Ministerio Público",pct:77.2},
-        {name:"Poder Judicial",pct:76.0},
-      ],
-      rankingBajo:[
-        {name:"Min. Economía y Turismo",pct:33.8},
-        {name:"Servicio Electoral",pct:44.1},
-        {name:"Min. Ciencia y Tec.",pct:57.3},
-        {name:"Min. Medio Ambiente",pct:62.1},
-        {name:"Min. Obras Públicas",pct:63.9},
-        {name:"Min. Des. Social y Familia",pct:65.2},
-        {name:"Min. Deporte",pct:67.4},
-        {name:"Min. Vivienda y Urbanismo",pct:68.1},
-        {name:"Min. Culturas y Patrimonio",pct:68.8},
-        {name:"Min. Educación",pct:70.1},
-      ],
-      ingMun:{
-        labels:["Ing. Propios","Transf.","Transf. MINSAL","FCM","Transf.MINEDUC","Ing.Bfo FCM","Otros"],
-        prev:[2601.3,1804.2,1978.6,1742.8,1012.4,906.1,892.3],
-        curr:[2704.7,1891.5,2065.3,1811.1,1054.7,943.9,928.7]
-      },
-      gasMun:{
-        labels:["Gtos.Personal","Bs.y Serv.","Transf.Corr.","Ini.Inversión","Serv.Deuda","Prest.Seg.Soc.","Adq.Act.","Otros"],
-        prev:[4756.8,2043.1,2058.4,403.2,215.3,106.0,106.0,105.2],
-        curr:[4948.2,2126.3,2140.0,419.3,223.9,110.2,110.2,109.4]
-      },
-      fcm:{
-        labels:["Aysén","Atacama","Arica","Ñuble","Magallanes","Los Ríos","O'Higgins","Valparaíso","Araucanía","Coquimbo","Biobío","Maule","Los Lagos","Tarapacá","Antofagasta","Metropolitana"],
-        vals:[43.2,26.5,25.8,24.1,23.2,22.9,20.9,20.7,20.4,20.3,18.5,18.1,17.9,14.2,12.9,11.8],
-        avg:17.3
-      },
-      empresas:{
-        labels:["ENAP","CODELCO","ENAMI","Emp.Defensa","BancoEstado","Otras Emp.","Emp.Portuarias","METRO","EFE","TVN"],
-        prev:[241.6,162.8,38.7,-18.2,1.9,312.4,118.6,-15.8,-88.4,-7.2],
-        curr:[293.9,198.3,42.9,-14.4,2.4,366.1,137.9,-12.4,-75.9,-5.9]
-      },
-      educ:{
-        labels:["Ing.Operación","Transferencias","Finan.Fiscal","Endeudamiento","Vta.Activos","Recup.Préstamos","Otros"],
-        prev:[634.5,285.7,154.8,81.2,22.3,7.4,3.5],
-        curr:[700.2,322.5,161.0,89.6,24.6,8.1,3.8]
-      },
-      gratuidad:{
-        years:["2020","2021","2022","2023","3T 2024"],
-        totales:[1.7,1.9,2.1,2.4,2.8],
-        pcts:[59.2,62.7,65.1,68.4,71.1]
-      },
-      deuda:{
-        totalB:126.8, internaB:83.2, externaB:43.6,
-        totalPIB:38.2, internaPIB:24.6, externaPIB:13.6,
-        hist:{
-          years:["2020","2021","2022","2023","3T 2024"],
-          interna:[21.2,23.5,22.3,23.4,24.6],
-          externa:[11.4,12.3,12.7,13.0,13.6]
-        }
-      },
-      inversiones:{
-        totalB:36.6, pib:11.7,
-        hist:{
-          years:["2020","2021","2022","2023","3T 2024"],
-          pib:[11.4,12.1,13.6,12.2,11.7]
-        }
-      },
-      gobIng:{
-        labels:["Transf. Capital","Transf. Corrientes","Otros"],
-        prev:[948.3,82.6,21.8], curr:[1052.8,91.5,24.0]
-      },
-      gobGas:{
-        labels:["Ini.Inversión","Transf.Capital","Adq.Act.","Gtos.Personal","Transf.Corr.","Serv.Deuda","Otros"],
-        prev:[384.1,121.4,62.5,57.2,17.4,14.7,103.2],
-        curr:[467.3,133.6,68.9,63.0,19.2,16.2,113.6]
-      }
-    }
-  }
-};
+/* ===== EXCEL DATA ===== */
+const DB = {"2023-3":{"period":"Ene–Sep 2023","periodLong":"Al 3er Trimestre 2023 · 1 de Enero al 30 de Septiembre","kpis":{"gasto":"—","ingreso":"—","deuda":"—","inv":"—","util":"—","entidades":"—"},"cumplimiento":{},"gastoSector":{"Sector Municipal":9.2,"Sector Público":69.9,"Empresas del Estado":15.1,"Instituciones de Educación Superior":0.7},"ingresosSP":null,"gastosSP":null,"deuda":null,"inversiones":null,"gobIng":null,"gobGas":null,"munIng":null,"munGas":[4600000.0,1900000.0,1900000.0,300000.0,200000.0,100000.0,100000.0,100000.0],"fcm":{"regiones":{},"avg":17.0},"empresas":[14.5,-4.7,548.3,13.6,539.0,43.0,12.0,-63.6,-85.4,-181.0],"educIng":[267.5,259.8,109.8,67.0,22.9,8.4,0.6],"educGas":[445.1,82.3,62.2,35.9,12.7,30.8,32.4],"gratuidad":{"grat":1.2,"total":1.66,"pct":72.3}},"2023-4":{"period":"Ene–Dic 2023","periodLong":"Al 4to Trimestre 2023 · 1 de Enero al 31 de Diciembre","kpis":{"gasto":"—","ingreso":"—","deuda":"36.4","inv":"12.2","util":"—","entidades":"273 · 345 · 32 · 33"},"cumplimiento":{"Sector Municipal":84.3,"Sector Público":97.4,"Empresas del Estado":100.0,"Instituciones de Educación Superior":81.8},"gastoSector":{"Sector Municipal":12.4,"Sector Público":94.1,"Empresas del Estado":42.6,"Instituciones de Educación Superior":1.71},"ingresosSP":[58.9,18.9,4.7,7.27,3.3,2.1,6.7],"gastosSP":[30.6,16.73,13.92,13.87,6.05,5.49,7.43,null],"deuda":{"interna":23.4,"externa":13.0,"total":36.4},"inversiones":12.2,"gobIng":[1098465.0,113580.0,29295.0],"gobGas":[442864.0,576895.0,160095.0,84785.0,71553.0,180812.0,30271.0],"munIng":[3106946.0,2545889.0,2423869.0,2371302.0,1371753.0,788378.0,858287.0],"munGas":[6270000.0,2380000.0,2770000.0,480000.0,200000.0,130000.0,190000.0,150000.0],"fcm":{"regiones":{"Arica y Parinacota":28.7,"Aysén":26.8,"Atacama":24.9,"Magallanes y Antártica":24.7,"Ñuble":22.3,"Valparaíso":21.2,"La Araucanía":20.6,"O'Higgins":20.5,"Coquimbo":19.9,"Los Ríos":19.4,"Biobío":18.6,"Los Lagos":18.0,"Maule":17.3,"Metropolitana de Santiago":14.0,"Tarapacá":12.9,"Antofagasta":11.2},"avg":17.5},"empresas":[23.2,-5.5,695.1,-535.9,500.4,60.4,23.2,-147.9,-102.5,-205.8],"educIng":[846.1,511.9,187.4,122.8,45.5,19.8,1.0],"educGas":[1095.0,294.9,136.4,80.1,26.2,60.8,41.4],"gratuidad":{"grat":1.66,"total":2.43,"pct":68.4}},"2024-3":{"period":"Ene–Sep 2024","periodLong":"Al 3er Trimestre 2024 · 1 de Enero al 30 de Septiembre","kpis":{"gasto":"119,2","ingreso":"91,5","deuda":"38.8","inv":"12.8","util":"813,9","entidades":"285 · 345 · 32 · 33"},"cumplimiento":{"Sector Municipal":89.0,"Sector Público":99.3,"Empresas del Estado":93.1,"Instituciones de Educación Superior":60.6},"gastoSector":{"Sector Municipal":10.2,"Sector Público":78.0,"Empresas del Estado":null,"Instituciones de Educación Superior":0.8},"ingresosSP":[51.7,25.2,3.5,3.1,2.7,2.5,2.9],"gastosSP":[22.9,18.4,11.4,10.9,4.6,4.5,5.3,null],"deuda":{"interna":26.0,"externa":12.8,"total":38.8},"inversiones":12.8,"gobIng":[1052818.0,91510.0,23996.0],"gobGas":[383296.0,160439.0,138479.0,68861.0,67192.0,47247.0,16154.0],"munIng":[2700000.0,2000000.0,1800000.0,1800000.0,1200000.0,900000.0,900000.0],"munGas":[4874374.0,2110706.0,2098666.0,410488.0,223231.0,109041.0,108865.0,108394.0],"fcm":{"regiones":{"Aysén":45.2,"Arica y Parinacota":26.2,"Magallanes y Antártica":24.9,"Atacama":24.4,"Ñuble":23.9,"La Araucanía":20.5,"Valparaíso":20.3,"O'Higgins":20.1,"Coquimbo":19.3,"Los Ríos":19.0,"Los Lagos":17.8,"Biobío":17.6,"Maule":16.7,"Tarapacá":12.2,"Metropolitana":11.9,"Antofagasta":11.3},"avg":16.5},"empresas":[2.4,-16.3,366.1,198.3,293.9,42.9,-5.9,137.9,-75.9,-129.6],"educIng":[293.0,259.2,115.0,70.2,17.5,8.1,3.8],"educGas":[509.1,97.1,84.8,30.8,13.9,34.4,38.4],"gratuidad":{"grat":1.4,"total":1.9,"pct":73.9},"empresas_prev":null},"2024-4":{"period":"Ene–Dic 2024","periodLong":"Al 4to Trimestre 2024 · 1 de Enero al 31 de Diciembre","kpis":{"gasto":"—","ingreso":"—","deuda":"38.2","inv":"11.7","util":"835","entidades":"286 · 345 · 32 · 33"},"cumplimiento":{"Sector Municipal":89.9,"Sector Público":100.0,"Empresas del Estado":100.0,"Instituciones de Educación Superior":57.6},"gastoSector":{"Sector Municipal":13.7,"Sector Público":102.6,"Empresas del Estado":49.4,"Instituciones de Educación Superior":1.8},"ingresosSP":[66.23,27.66,4.99,4.3,3.69,3.0,4.15],"gastosSP":[31.5,23.2,15.3,14.6,3.9,6.1,8.0,null],"deuda":{"interna":24.6,"externa":13.6,"total":38.2},"inversiones":11.7,"gobIng":[1269007.0,123374.0,38083.0],"gobGas":[577661.0,276894.0,211275.0,92317.0,81513.0,167276.0,28806.0],"munIng":[3330300.0,2800498.0,2443141.0,2640085.0,1446739.0,901724.0,923189.0],"munGas":[6670000.0,2640000.0,3080000.0,620000.0,230000.0,150000.0,170000.0,150000.0],"fcm":{"regiones":{"Aysén":47.7,"Arica y Parinacota":28.3,"Magallanes y Antártica Chilena":26.9,"Atacama":26.1,"Ñuble":24.9,"Valparaíso":22.2,"La Araucanía":21.7,"Libertador Gral. Bernardo O'Higgins":21.2,"Coquimbo":20.7,"Los Ríos":20.2,"Los Lagos":18.9,"Biobío":18.9,"Maule":18.0,"Tarapacá":14.0,"Metropolitana de Santiago":13.9,"Antofagasta":12.4},"avg":18.2},"empresas":[14.2,-19.4,473.3,258.2,417.3,55.4,-3.0,176.8,-175.0,-363.6],"educIng":[915.4,526.1,198.9,106.5,69.1,16.1,4.8],"educGas":[1127.9,325.7,148.4,91.8,30.5,60.7,46.7],"gratuidad":{"grat":1.97,"total":2.77,"pct":71.1}},"2025-1":{"period":"Ene–Mar 2025","periodLong":"Al 1er Trimestre 2025 · 1 de Enero al 31 de Marzo","kpis":{"gasto":"~41","ingreso":"~41","deuda":"38,1","inv":"—","util":"306,2","entidades":"297 · 345 · 32 · 33"},"cumplimiento":{"Sector Municipal":92.9,"Sector Público":95.0,"Empresas del Estado":86.2,"Instituciones de Educación Superior":57.6},"gastoSector":{"Empresas del Estado":13.6,"Instituciones de Educación Superior":0.3,"Sector Municipal":3.2,"Sector Público":28.5},"ingresosSP":[26.4,8.2,1.0,1.4,1.0,1.9,0.9],"gastosSP":[7.4,7.9,4.4,4.0,1.0,1.9,0.8,1.1],"deuda":{"interna":24.8,"externa":13.3,"total":null},"inversiones":null,"gobIng":[373450.0,37328.0,1086.0],"gobGas":[146302.0,55190.0,65038.0,23283.0,22232.0,31784.0,5621.0],"munIng":[1022.0,699.0,513.0,503.0,389.0,1004.0,531.0],"munGas":[1497.0,630.0,625.0,121.0,241.0,54.0,28.0,47.0],"fcm":{"regiones":{"Aysén":33.3,"Arica y Parinacota":18.7,"Ñuble":17.6,"Magallanes y Antártica":15.6,"Los Ríos":14.6,"Atacama":14.3,"La Araucanía":14.1,"Valparaíso":13.5,"O'Higgins":13.3,"Biobío":12.9,"Maule":12.7,"Los Lagos":12.2,"Coquimbo":12.0,"Metropolitana":7.2,"Tarapacá":6.6,"Antofagasta":6.3},"avg":17.0},"empresas":[1.8,-5.7,148.5,-24.0,118.5,21.7,-5.1,15.8,-2.0,37.7],"educIng":[245.2,85.4,86.6,27.9,7.5,6.2,0.0],"educGas":[149.4,20.8,27.4,11.4,15.9,15.5,28.4],"gratuidad":{"grat":0.49,"total":0.7,"pct":70.0}},"2025-2":{"period":"Ene–Jun 2025","periodLong":"Al 2do Trimestre 2025 · 1 de Enero al 30 de Junio","kpis":{"gasto":"84,4","ingreso":"~68","deuda":"38,9","inv":"—","util":"727,4","entidades":"299 · 345 · 32 · 33"},"cumplimiento":{"Sector Municipal":98.2,"Sector Público":98.3,"Empresas del Estado":72.4,"Instituciones de Educación Superior":30.3},"gastoSector":{"Empresas del Estado":21.4,"Instituciones de Educación Superior":0.5,"Sector Municipal":7.0,"Sector Público":55.5},"ingresosSP":[40.8,15.8,1.8,1.9,2.0,2.3,1.8],"gastosSP":[16.0,11.4,8.3,7.9,4.3,3.5,1.7,2.4],"deuda":{"interna":26.0,"externa":12.9,"total":null},"inversiones":null,"gobIng":[866761.0,79760.0,12774.0],"gobGas":[314107.0,150456.0,105886.0,78779.0,48487.0,40470.0,11911.0],"munIng":[1725.0,1523.0,1048.0,1372.0,766.0,1037.0,675.0],"munGas":[3276.0,1496.0,1449.0,280.0,271.0,90.0,63.0,90.0],"fcm":{"regiones":{"Aysén":42.9,"Atacama":25.5,"Arica y Parinacota":25.2,"Magallanes y Antártica":23.9,"Ñuble":23.9,"Los Ríos":21.9,"O'Higgins":20.3,"Valparaíso":19.9,"La Araucanía":19.7,"Coquimbo":18.9,"Biobío":18.5,"Los Lagos":18.0,"Maule":17.7,"Antofagasta":13.4,"Tarapacá":12.8,"Metropolitana":12.0},"avg":17.0},"empresas":[-3.3,-8.1,279.2,62.5,298.7,37.6,6.3,13.3,-8.0,51.3],"educIng":[293.6,130.0,106.1,32.8,7.8,1.3,0.0],"educGas":[329.0,69.6,60.6,17.9,7.2,23.8,39.8],"gratuidad":{"grat":1.02,"total":1.4,"pct":73.2}},"2025-3":{"period":"Ene–Sep 2025","periodLong":"Al 3er Trimestre 2025 · 1 de Enero al 30 de Septiembre","kpis":{"gasto":"124,6","ingreso":"89,0","deuda":"39.4","inv":"12.0","util":"967,3","entidades":"299 · 345 · 32 · 33"},"cumplimiento":{"Sector Municipal":98.8,"Sector Público":99.0,"Empresas del Estado":90.6,"Instituciones de Educación Superior":84.9},"gastoSector":{"Empresas del Estado":33.7,"Instituciones de Educación Superior":1.4,"Sector Municipal":10.4,"Sector Público":79.1},"ingresosSP":[55.9,19.0,2.7,3.1,3.1,2.7,2.5],"gastosSP":[24.4,15.2,12.3,11.7,4.6,5.1,2.3,3.5],"deuda":{"interna":26.0,"externa":13.4,"total":39.4},"inversiones":12.0,"gobIng":[1167858.0,124810.0,23842.0],"gobGas":[467332.0,219841.0,133565.0,74496.0,62960.0,147888.0,19181.0],"munIng":[2847.0,2219.0,1590.0,2094.0,1089.0,1033.0,959.0],"munGas":[4968.0,2156.0,2243.0,427.0,276.0,110.0,103.0,125.0],"fcm":{"regiones":{"Aysén":44.9,"Atacama":27.2,"Arica":26.2,"Ñuble":24.9,"Magallanes":23.9,"Los Ríos":23.5,"O'Higgins":21.5,"Valparaíso":21.4,"Araucanía":21.1,"Coquimbo":21.0,"Biobío":19.1,"Maule":18.7,"Los Lagos":18.4,"Tarapacá":14.8,"Antofagasta":13.4,"Metropolitana":12.3},"avg":17.7},"empresas":[382.5,-16.3,5.8,109.4,485.1,42.9,11.5,46.8,-129.6,-45.5],"educIng":[738.5,314.1,149.8,76.0,31.4,11.3,1.7],"educGas":[840.5,169.8,116.3,66.7,25.0,43.5,61.9],"gratuidad":{"grat":1.6,"total":2.2,"pct":74.6}},"2025-4":{"period":"Ene–Dic 2025","periodLong":"Al 4to Trimestre 2025 · 1 de Enero al 31 de Diciembre","kpis":{"gasto":"—","ingreso":"—","deuda":"37.5","inv":"12.2","util":"—","entidades":"—"},"cumplimiento":{},"gastoSector":{},"ingresosSP":null,"gastosSP":null,"deuda":{"interna":25.2,"externa":12.3,"total":37.5},"inversiones":12.2,"gobIng":null,"gobGas":null,"munIng":[3507.0,3028.0,2906.0,2180.0,1413.0,1009.0,990.0],"munGas":[6783.0,3212.0,2692.0,583.0,282.0,158.0,153.0,172.0],"fcm":{"regiones":{"Aysén":47.7,"Atacama":26.1,"Arica y Parinacota":28.3,"Ñuble":25.1,"Los Ríos":20.1,"Magallanes":27.0,"Valparaíso":22.2,"O'Higgins":21.7,"La Araucanía":21.7,"Coquimbo":20.7,"Biobío":18.9,"Maule":18.0,"Los Lagos":19.3,"Tarapacá":14.0,"Antofagasta":12.4,"Metropolitana":13.9},"avg":19.3},"empresas":null,"educIng":[1000.4,564.6,199.7,130.8,42.8,17.3,1.8],"educGas":[1250.9,334.0,157.5,105.8,74.1,57.3,48.3],"gratuidad":{"grat":2.2,"total":3.0,"pct":72.8}},"2026-1":{"period":"Ene–Mar 2026","periodLong":"Al 1er Trimestre 2026 · 1 de Enero al 31 de Marzo","kpis":{"gasto":"—","ingreso":"—","deuda":"35.8","inv":"11.2","util":"—","entidades":"— · 345 · 32 · —"},"cumplimiento":{"Sector Municipal":96.9,"Sector Público":87.1,"Empresas del Estado":82.8,"Instituciones de Educación Superior":75.8},"gastoSector":{"Empresas del Estado":13.7,"Instituciones de Educación Superior":null,"Sector Municipal":null,"Sector Público":null},"ingresosSP":null,"gastosSP":null,"deuda":{"interna":23.9,"externa":11.9,"total":35.8},"inversiones":11.2,"gobIng":null,"gobGas":null,"munIng":[1037.0,1121.0,727.0,549.0,438.0,426.0,360.0],"munGas":[1481.0,590.0,670.0,278.0,99.0,68.0,43.0,32.0],"fcm":{"regiones":{"Aysén":23.4,"Ñuble":16.8,"Magallanes":14.0,"Arica y Parinacota":13.7,"Atacama":13.1,"Valparaíso":12.4,"Antofagasta":12.0,"La Araucanía":11.7,"Los Ríos":11.7,"Coquimbo":11.4,"O'Higgins":11.0,"Maule":10.9,"Biobío":10.6,"Los Lagos":10.5,"Tarapacá":5.8,"Metropolitana":5.6},"avg":9.1},"empresas":[0.5,-3.8,85.4,353.6,296.9,11.6,-9.7,12.0,-53.6,-23.2],"educIng":[252.4,124.4,93.7,43.4,6.1,4.4,1.0],"educGas":[286.4,26.0,45.6,11.7,25.3,23.3,63.6],"gratuidad":{"grat":0.6,"total":0.8,"pct":77.5}}};
 
-/* ======================================================
-   CHART.JS DEFAULTS
-   ====================================================== */
-Chart.defaults.font.family = "'Segoe UI',Arial,sans-serif";
-Chart.defaults.font.size = 10;
-Chart.defaults.color = '#555';
-const GRID = 'rgba(0,0,0,0.06)';
-const C1 = '#2e5fa3', C2 = '#00b4a0';
-let activeCharts = [];
+/* ===== CHART DEFAULTS ===== */
+Chart.defaults.font.family="'Segoe UI',Arial,sans-serif";
+Chart.defaults.font.size=10;
+Chart.defaults.color='#555';
+const G='rgba(0,0,0,0.06)';
+const C1='#2e5fa3', C2='#00b4a0', CP='#e8336e', CG='#f0a500';
+let charts=[];
 
-function mkBar(id, labels, datasets, opts={}) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.parentElement.style.height = opts.h || '240px';
-  const c = new Chart(el, {
-    type: 'bar',
-    data: { labels, datasets },
-    options: {
-      responsive:true, maintainAspectRatio:false,
-      plugins:{
-        legend:{ display: datasets.length>1, labels:{boxWidth:10,font:{size:10},color:'#555'} },
-        tooltip:{ callbacks:{ label: ctx => ` ${ctx.dataset.label||''}: ${opts.fmt ? opts.fmt(ctx.parsed.y) : ctx.parsed.y}` } }
-      },
-      scales:{
-        x:{ grid:{color:GRID}, ticks:{color:'#555', maxRotation: opts.rot||35, font:{size:opts.xsize||10}} },
-        y:{ grid:{color:GRID}, ticks:{color:'#555', callback: opts.ytick || (v=>v)} }
-      }
-    }
-  });
-  activeCharts.push(c);
-  return c;
+function destroy(){ charts.forEach(c=>{try{c.destroy()}catch(e){}}); charts=[]; }
+
+function mkBar(id,labels,datasets,opts={}){
+  const el=document.getElementById(id); if(!el) return;
+  el.parentElement.style.height=opts.h||'220px';
+  const c=new Chart(el,{type:'bar',data:{labels,datasets},options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:datasets.length>1,labels:{boxWidth:9,font:{size:10},color:'#555'}},
+      tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label||''}: ${opts.fmt?opts.fmt(ctx.parsed.y):ctx.parsed.y}`}}},
+    scales:{x:{grid:{color:G},ticks:{color:'#555',maxRotation:opts.rot||35,font:{size:opts.xs||10}}},
+            y:{grid:{color:G},ticks:{color:'#555',callback:opts.ytick||(v=>v)}}}
+  }});
+  charts.push(c); return c;
 }
 
-/* ======================================================
-   RENDER
-   ====================================================== */
-function render(year, quarter) {
-  const ydata = DB[year];
-  if (!ydata) return showMissing(year, quarter);
-  const d = ydata[quarter];
-  if (!d) return showMissing(year, quarter);
-
-  // Destroy old charts
-  activeCharts.forEach(c => { try{c.destroy()}catch(e){} });
-  activeCharts = [];
-
-  // Header
-  document.getElementById('cover-sub').textContent = d.periodLong;
-  document.getElementById('cover-total').textContent = d.totalEjecutado;
-  document.getElementById('data-badge').textContent = d.period;
-  document.getElementById('cob-total-span').textContent =
-    d.cobertura ? d.cobertura.reduce((s,c)=>s+parseInt(c.num),0) : '709';
-
-  // Notice for pending quarters
-  const notice = document.getElementById('notice');
-  if (d._pending) {
-    notice.textContent = `ℹ️  Los datos detallados del ${d.period} no están disponibles aún. Se muestran estimaciones. Actualice cuando la CGR publique el informe oficial.`;
-    notice.classList.add('show');
-  } else {
-    notice.classList.remove('show');
-  }
-
-  // KPIs
-  const strip = document.getElementById('kpi-strip');
-  strip.innerHTML = d.kpis.map(k => `
-    <div class="kpi" style="--kpi-color:${k.color}">
-      <div class="kpi-label">${k.label}</div>
-      <div class="kpi-val">${k.val}<span class="kpi-unit"> ${k.unit}</span></div>
-      <div class="kpi-delta ${k.up===true?'up':k.up===false?'dn':'neu'}">${k.up===true?'▲':k.up===false?'▼':''} ${k.delta}</div>
-    </div>`).join('');
-
-  // Cobertura
-  const cobGrid = document.getElementById('cob-grid');
-  if (d.cobertura) {
-    cobGrid.innerHTML = d.cobertura.map(c=>`
-      <div class="cob-card" style="--accent-color:${c.color}">
-        <div class="cob-num" style="color:${c.color}">${c.num}</div>
-        <div class="cob-label">${c.label}</div>
-      </div>`).join('');
-  }
-
-  // Cumplimiento + Ejecución
-  if (d.cumplimiento) {
-    document.getElementById('cumpl-list').innerHTML = d.cumplimiento.map(r=>`
-      <div class="cumpl-row">
-        <div class="cumpl-header"><span class="cumpl-name">${r.name}</span><span class="cumpl-pct" style="color:${r.color}">${r.pct}%</span></div>
-        <div class="bar-track"><div class="bar-fill" style="width:${r.pct}%;background:${r.color}"></div></div>
-      </div>`).join('');
-    document.getElementById('ejec-list').innerHTML = d.ejecucion.map(r=>`
-      <div class="cumpl-row">
-        <div class="cumpl-header"><span class="cumpl-name">${r.name}</span><span class="cumpl-pct" style="color:${r.color}">${r.pct}%</span></div>
-        <div class="bar-track"><div class="bar-fill" style="width:${r.pct}%;background:${r.color}"></div></div>
-      </div>`).join('');
-  }
-
-  // Sector circles
-  if (d.sectores) {
-    document.getElementById('sc-codelco').textContent = d.sectores.codelco;
-    document.getElementById('sc-ies').textContent = d.sectores.ies;
-    document.getElementById('sc-publico').textContent = d.sectores.publico;
-    document.getElementById('sc-empresas').textContent = d.sectores.empresas;
-    document.getElementById('sc-municipal').textContent = d.sectores.municipal;
-  }
-
-  if (d._pending) return; // Stop here for pending quarters
-
-  // Gasto sector
-  const gs = d.gastoSector;
-  mkBar('gastoSectorChart', gs.labels, [
-    {label:`Año anterior`, data:gs.prev, backgroundColor:'rgba(46,95,163,0.35)', borderColor:C1, borderWidth:1},
-    {label:`${d.period}`, data:gs.curr, backgroundColor:'rgba(0,180,160,0.6)', borderColor:C2, borderWidth:1}
-  ], {fmt:v=>`$${v}B`});
-
-  // Ejecución sector
-  mkBar('ejecSectorChart', gs.labels, [
-    {label:'Ejecución %', data:gs.ejec,
-     backgroundColor:['rgba(46,95,163,0.7)','rgba(232,51,110,0.7)','rgba(0,180,160,0.7)','rgba(240,165,0,0.7)'],
-     borderColor:['#2e5fa3','#e8336e','#00b4a0','#f0a500'], borderWidth:1}
-  ], {fmt:v=>`${v}%`, ytick:v=>v+'%'});
-
-  // Ingresos SP
-  const isp = d.ingresosSP;
-  mkBar('ingresosChart', isp.labels, [
-    {label:'Año anterior', data:isp.prev, backgroundColor:'rgba(46,95,163,0.35)', borderColor:C1, borderWidth:1},
-    {label:d.period, data:isp.curr, backgroundColor:'rgba(0,180,160,0.6)', borderColor:C2, borderWidth:1}
-  ], {fmt:v=>`$${v}B`, rot:40});
-
-  // Gastos SP
-  const gsp = d.gastosSP;
-  mkBar('gastosChart', gsp.labels, [
-    {label:'Año anterior', data:gsp.prev, backgroundColor:'rgba(46,95,163,0.35)', borderColor:C1, borderWidth:1},
-    {label:d.period, data:gsp.curr, backgroundColor:'rgba(0,180,160,0.6)', borderColor:C2, borderWidth:1}
-  ], {fmt:v=>`$${v}B`, rot:40});
-
-  // Rankings
-  const renderRank = (id, items, color) => {
-    document.getElementById(id).innerHTML = items.map((r,i)=>`
-      <div class="rank-row">
-        <span class="rank-num">${i+1}</span>
-        <span class="rank-name" title="${r.name}">${r.name}</span>
-        <div class="rank-bar-wrap"><div class="rank-bar" style="width:${r.pct}%;background:${color}"></div></div>
-        <span class="rank-pct" style="color:${color}">${r.pct}%</span>
-      </div>`).join('');
-  };
-  renderRank('ranking-high', d.rankingAlto, '#2e5fa3');
-  renderRank('ranking-low', d.rankingBajo, '#e8336e');
-
-  // Ingresos Municipales
-  const im = d.ingMun;
-  mkBar('ingMunChart', im.labels, [
-    {label:'Año anterior', data:im.prev, backgroundColor:'rgba(46,95,163,0.35)', borderColor:C1, borderWidth:1},
-    {label:d.period, data:im.curr, backgroundColor:'rgba(0,180,160,0.6)', borderColor:C2, borderWidth:1}
-  ], {fmt:v=>`$${v.toFixed(0)}MM`, ytick:v=>'$'+v+'MM', rot:40});
-
-  // Gastos Municipales
-  const gm = d.gasMun;
-  mkBar('gasMunChart', gm.labels, [
-    {label:'Año anterior', data:gm.prev, backgroundColor:'rgba(46,95,163,0.35)', borderColor:C1, borderWidth:1},
-    {label:d.period, data:gm.curr, backgroundColor:'rgba(0,180,160,0.6)', borderColor:C2, borderWidth:1}
-  ], {fmt:v=>`$${v.toFixed(0)}MM`, ytick:v=>'$'+v+'MM', rot:40});
-
-  // FCM
-  const fcm = d.fcm;
-  const fcmEl = document.getElementById('fcmChart');
-  if (fcmEl) {
-    fcmEl.parentElement.style.height = '240px';
-    const fc = new Chart(fcmEl, {
-      type:'bar',
-      data:{
-        labels:fcm.labels,
-        datasets:[{
-          label:'FCM %',
-          data:fcm.vals,
-          backgroundColor:fcm.vals.map(v=>v>=fcm.avg?'rgba(0,180,160,0.7)':'rgba(232,51,110,0.6)'),
-          borderColor:fcm.vals.map(v=>v>=fcm.avg?'#00b4a0':'#e8336e'),
-          borderWidth:1
-        }]
-      },
-      options:{
-        responsive:true, maintainAspectRatio:false,
-        plugins:{legend:{display:false}, tooltip:{callbacks:{label:ctx=>` FCM: ${ctx.parsed.y}%`}}},
-        scales:{
-          x:{grid:{color:GRID},ticks:{color:'#555',maxRotation:45,font:{size:9}}},
-          y:{grid:{color:GRID},ticks:{color:'#555',callback:v=>v+'%'}}
-        }
-      }
-    });
-    activeCharts.push(fc);
-  }
-
-  // Empresas
-  const emp = d.empresas;
-  const empEl = document.getElementById('empresasChart');
-  if (empEl) {
-    empEl.parentElement.style.height = '260px';
-    const ec = new Chart(empEl, {
-      type:'bar',
-      data:{
-        labels:emp.labels,
-        datasets:[
-          {label:'Año anterior', data:emp.prev, backgroundColor:'rgba(46,95,163,0.35)', borderColor:C1, borderWidth:1},
-          {label:d.period, data:emp.curr,
-           backgroundColor:emp.curr.map(v=>v>=0?'rgba(0,180,160,0.7)':'rgba(232,51,110,0.6)'),
-           borderColor:emp.curr.map(v=>v>=0?'#00b4a0':'#e8336e'), borderWidth:1}
-        ]
-      },
-      options:{
-        responsive:true, maintainAspectRatio:false,
-        plugins:{legend:{display:true,labels:{boxWidth:10,font:{size:10}}}, tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: $${ctx.parsed.y.toFixed(0)}MM`}}},
-        scales:{
-          x:{grid:{color:GRID},ticks:{color:'#555',maxRotation:40,font:{size:9}}},
-          y:{grid:{color:GRID},ticks:{color:'#555',callback:v=>'$'+v+'MM'}}
-        }
-      }
-    });
-    activeCharts.push(ec);
-  }
-
-  // Educación
-  const ed = d.educ;
-  mkBar('educChart', ed.labels, [
-    {label:'Año anterior', data:ed.prev, backgroundColor:'rgba(46,95,163,0.35)', borderColor:C1, borderWidth:1},
-    {label:d.period, data:ed.curr, backgroundColor:'rgba(0,180,160,0.6)', borderColor:C2, borderWidth:1}
-  ], {fmt:v=>`$${v.toFixed(0)}MM`, ytick:v=>'$'+v+'MM', rot:35});
-
-  // Gratuidad
-  const gr = d.gratuidad;
-  const grEl = document.getElementById('gratChart');
-  if (grEl) {
-    grEl.parentElement.style.height = '240px';
-    const gc = new Chart(grEl, {
-      type:'bar',
-      data:{
-        labels:gr.years,
-        datasets:[
-          {label:'Transferencias (B$)', data:gr.totales, backgroundColor:'rgba(46,95,163,0.5)', borderColor:C1, borderWidth:1, yAxisID:'y'},
-          {label:'% Gratuidad', data:gr.pcts, type:'line', borderColor:'#f0a500', backgroundColor:'rgba(240,165,0,0.1)', borderWidth:2, pointRadius:4, pointBackgroundColor:'#f0a500', fill:false, yAxisID:'y2', tension:0.3}
-        ]
-      },
-      options:{
-        responsive:true, maintainAspectRatio:false,
-        plugins:{legend:{display:true,labels:{boxWidth:10,font:{size:10}}}, tooltip:{mode:'index',intersect:false}},
-        scales:{
-          x:{grid:{color:GRID},ticks:{color:'#555'}},
-          y:{grid:{color:GRID},ticks:{color:'#555',callback:v=>'$'+v+'B'}, position:'left'},
-          y2:{grid:{display:false},ticks:{color:'#f0a500',callback:v=>v+'%'}, position:'right'}
-        }
-      }
-    });
-    activeCharts.push(gc);
-  }
-
-  // Deuda
-  const deu = d.deuda;
-  document.getElementById('debt-items').innerHTML = `
-    <div class="debt-item"><div class="debt-item-label">Deuda total</div><div class="debt-item-val" style="color:#e8336e">$${deu.totalB}B</div><div class="debt-item-pib">${deu.totalPIB}% PIB</div></div>
-    <div class="debt-item"><div class="debt-item-label">Deuda interna</div><div class="debt-item-val" style="color:#f0a500">$${deu.internaB}B</div><div class="debt-item-pib">${deu.internaPIB}% PIB</div></div>
-    <div class="debt-item"><div class="debt-item-label">Deuda externa</div><div class="debt-item-val" style="color:#2e5fa3">$${deu.externaB}B</div><div class="debt-item-pib">${deu.externaPIB}% PIB</div></div>`;
-  const dh = deu.hist;
-  mkBar('deudaChart', dh.years, [
-    {label:'Deuda interna / PIB', data:dh.interna, backgroundColor:'rgba(240,165,0,0.6)', borderColor:'#f0a500', borderWidth:1},
-    {label:'Deuda externa / PIB', data:dh.externa, backgroundColor:'rgba(46,95,163,0.5)', borderColor:C1, borderWidth:1}
-  ], {fmt:v=>`${v}%`, ytick:v=>v+'%', h:'200px'});
-
-  // Inversiones
-  const inv = d.inversiones;
-  const ih = inv.hist;
-  const invEl = document.getElementById('invChart');
-  if (invEl) {
-    invEl.parentElement.style.height = '240px';
-    const ic = new Chart(invEl, {
-      type:'line',
-      data:{
-        labels:ih.years,
-        datasets:[{
-          label:'Inversiones / PIB', data:ih.pib,
-          borderColor:'#00b4a0', backgroundColor:'rgba(0,180,160,0.1)',
-          borderWidth:2, fill:true, tension:0.3, pointRadius:5, pointBackgroundColor:'#00b4a0'
-        }]
-      },
-      options:{
-        responsive:true, maintainAspectRatio:false,
-        plugins:{legend:{display:true,labels:{boxWidth:10,font:{size:10}}}, tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.y}%`}}},
-        scales:{
-          x:{grid:{color:GRID},ticks:{color:'#555'}},
-          y:{grid:{color:GRID},ticks:{color:'#555',callback:v=>v+'%'}, min:10, max:16}
-        }
-      }
-    });
-    activeCharts.push(ic);
-  }
-
-  // Gobiernos Regionales
-  const gi = d.gobIng;
-  mkBar('gobIngChart', gi.labels, [
-    {label:'Año anterior', data:gi.prev, backgroundColor:'rgba(46,95,163,0.35)', borderColor:C1, borderWidth:1},
-    {label:d.period, data:gi.curr, backgroundColor:'rgba(0,180,160,0.6)', borderColor:C2, borderWidth:1}
-  ], {fmt:v=>`$${v.toFixed(0)}MM`, ytick:v=>'$'+v+'MM'});
-
-  const gg = d.gobGas;
-  mkBar('gobGasChart', gg.labels, [
-    {label:'Año anterior', data:gg.prev, backgroundColor:'rgba(46,95,163,0.35)', borderColor:C1, borderWidth:1},
-    {label:d.period, data:gg.curr, backgroundColor:'rgba(0,180,160,0.6)', borderColor:C2, borderWidth:1}
-  ], {fmt:v=>`$${v.toFixed(0)}MM`, ytick:v=>'$'+v+'MM', rot:35});
+/* ===== SELECTORS ===== */
+function buildSelectors(){
+  const years=[...new Set(Object.keys(DB).map(k=>k.split('-')[0]))].sort((a,b)=>b-a);
+  const ys=document.getElementById('sel-year');
+  ys.innerHTML=years.map(y=>`<option value="${y}">${y}</option>`).join('');
+  ys.value=years[0];
+  buildQs(years[0]);
 }
 
-function showMissing(year, quarter) {
-  const q = ['1er','2do','3er','4to'][quarter-1];
-  const notice = document.getElementById('notice');
-  notice.textContent = `⚠️  No hay datos disponibles para el ${q} Trimestre de ${year}. Actualice la base de datos cuando la CGR publique el informe.`;
-  notice.classList.add('show');
-  activeCharts.forEach(c=>{try{c.destroy()}catch(e){}});
-  activeCharts=[];
+function buildQs(year){
+  const qs=[...new Set(Object.keys(DB).filter(k=>k.startsWith(year+'-')).map(k=>parseInt(k.split('-')[1])))].sort((a,b)=>a-b);
+  const sel=document.getElementById('sel-q');
+  const qnames=['','1er Trimestre','2do Trimestre','3er Trimestre','4to Trimestre'];
+  sel.innerHTML=qs.map(q=>`<option value="${q}">${qnames[q]}</option>`).join('');
+  // default to highest Q
+  sel.value=Math.max(...qs);
 }
 
-function applyFilters() {
-  const year = document.getElementById('year-sel').value;
-  const quarter = document.getElementById('quarter-sel').value;
-  render(year, quarter);
+function onFilter(){
+  const y=document.getElementById('sel-year').value;
+  buildQs(y);
+  // wait tick for select to update
+  setTimeout(()=>render(y, document.getElementById('sel-q').value), 0);
 }
 
-// Init
-window.addEventListener('DOMContentLoaded', () => {
-  render('2025','3');
-  loadAdmCreds();
-  setupAdmDrop();
+document.getElementById('sel-year').addEventListener('change',()=>{
+  buildQs(document.getElementById('sel-year').value);
+  setTimeout(()=>render(document.getElementById('sel-year').value, document.getElementById('sel-q').value),0);
+});
+document.getElementById('sel-q').addEventListener('change',()=>{
+  render(document.getElementById('sel-year').value, document.getElementById('sel-q').value);
 });
 
-/* ======================================================
-   ADMIN PANEL
-   ====================================================== */
-let admPdfB64 = null;
+/* ===== RENDER ===== */
+function render(year, q){
+  const key=`${year}-${q}`;
+  const d=DB[key];
+  destroy();
 
-function openAdmin() {
-  document.getElementById('admin-overlay').style.display = 'flex';
-  loadAdmCreds();
-}
-function closeAdmin() {
-  document.getElementById('admin-overlay').style.display = 'none';
-}
-document.addEventListener('keydown', e => { if(e.key==='Escape') closeAdmin(); });
-document.getElementById('admin-overlay').addEventListener('click', e => {
-  if(e.target===document.getElementById('admin-overlay')) closeAdmin();
-});
-
-function togglePwd(id, btn) {
-  const el = document.getElementById(id);
-  el.type = el.type==='password' ? 'text' : 'password';
-  btn.textContent = el.type==='password' ? 'Mostrar' : 'Ocultar';
-}
-
-function loadAdmCreds() {
-  const s = localStorage.getItem('igfe_adm');
-  if (!s) return;
-  const c = JSON.parse(s);
-  if (c.user)   document.getElementById('adm-user').value   = c.user;
-  if (c.repo)   document.getElementById('adm-repo').value   = c.repo;
-  if (c.token)  document.getElementById('adm-token').value  = c.token;
-  if (c.claude) document.getElementById('adm-claude').value = c.claude;
-  if (c.token && c.claude) {
-    document.getElementById('adm-creds-ok').style.display = 'block';
-  }
-}
-
-function saveAdmCreds() {
-  const c = {
-    user:   document.getElementById('adm-user').value.trim(),
-    repo:   document.getElementById('adm-repo').value.trim(),
-    token:  document.getElementById('adm-token').value.trim(),
-    claude: document.getElementById('adm-claude').value.trim(),
-  };
-  if (!c.token || !c.claude) {
-    alert('Introduce el GitHub Token y la Anthropic API Key.');
+  if(!d){
+    document.getElementById('notice').textContent=`⚠️ Sin datos para ${year} T${q}. Actualiza con el PDF de la CGR.`;
+    document.getElementById('notice').classList.add('show');
     return;
   }
-  localStorage.setItem('igfe_adm', JSON.stringify(c));
-  document.getElementById('adm-creds-ok').style.display = 'block';
-}
+  document.getElementById('notice').classList.remove('show');
 
-function setupAdmDrop() {
-  const zone = document.getElementById('adm-drop');
-  if (!zone) return;
-  zone.addEventListener('dragover', e => { e.preventDefault(); zone.style.borderColor='#00b4a0'; zone.style.background='#e8f8f5'; });
-  zone.addEventListener('dragleave', () => { zone.style.borderColor='#dde'; zone.style.background=''; });
-  zone.addEventListener('drop', e => {
-    e.preventDefault(); zone.style.borderColor='#dde'; zone.style.background='';
-    const f = e.dataTransfer.files[0];
-    if (f?.type==='application/pdf') handleAdmFile(f);
-  });
-}
-
-function handleAdmFile(file) {
-  if (!file) return;
-  admPdfB64 = null;
-  document.getElementById('adm-fname').textContent = file.name;
-  document.getElementById('adm-fsize').textContent = (file.size/1024).toFixed(0)+' KB';
-  const tag = document.getElementById('adm-file-tag');
-  tag.style.display = 'flex';
-  document.getElementById('adm-go-btn').disabled = false;
-  document.getElementById('adm-go-btn').style.opacity = '1';
-  const r = new FileReader();
-  r.onload = e => { admPdfB64 = e.target.result.split(',')[1]; };
-  r.readAsDataURL(file);
-}
-
-function clearAdmFile() {
-  admPdfB64 = null;
-  document.getElementById('adm-file-input').value = '';
-  document.getElementById('adm-file-tag').style.display = 'none';
-  document.getElementById('adm-go-btn').disabled = true;
-  document.getElementById('adm-go-btn').style.opacity = '0.5';
-}
-
-function admLog(msg, type='info') {
-  const el = document.getElementById('adm-log');
-  const colors = {ok:'#00875a', err:'#c0392b', info:'#555', acc:'#00b4a0'};
-  const icons  = {ok:'✓', err:'✗', info:'·', acc:'→'};
-  const t = new Date().toLocaleTimeString('es',{hour12:false});
-  el.innerHTML += `<div><span style="color:#bbb">${t}</span> <span style="color:${colors[type]}">${icons[type]} ${msg}</span></div>`;
-  el.scrollTop = el.scrollHeight;
-}
-
-function setProg(pct) {
-  document.getElementById('adm-prog-bar').style.width = pct+'%';
-}
-
-async function runUpdate() {
-  const s = localStorage.getItem('igfe_adm');
-  if (!s) { alert('Guarda las credenciales primero.'); return; }
-  const cfg = JSON.parse(s);
-  if (!admPdfB64) { alert('Selecciona un PDF primero.'); return; }
-
-  const q    = document.getElementById('adm-q').value;
-  const year = document.getElementById('adm-year').value.trim();
-
-  document.getElementById('adm-progress').style.display = 'block';
-  document.getElementById('adm-result').style.display = 'none';
-  document.getElementById('adm-log').innerHTML = '';
-  document.getElementById('adm-go-btn').disabled = true;
-  setProg(5);
-
-  try {
-    // 1. Extract with Claude
-    admLog(`Analizando PDF con Claude (claude-sonnet-4-6)…`);
-    const data = await extractWithClaude(cfg.claude, q, year);
-    setProg(40);
-    admLog('Datos extraídos correctamente', 'ok');
-
-    // 2. Get current file from GitHub
-    admLog('Descargando index.html desde GitHub…');
-    const {content: html, sha} = await ghGet(cfg, 'index.html');
-    setProg(55);
-    admLog('Archivo descargado', 'ok');
-
-    // 3. Inject new data
-    admLog('Inyectando datos en el dashboard…');
-    const updated = injectNewData(html, data, q, year);
-    setProg(70);
-    admLog('Datos inyectados', 'ok');
-
-    // 4. Push to GitHub
-    admLog('Publicando en GitHub…');
-    const qTag = ['1T','2T','3T','4T'][parseInt(q)-1];
-    await ghPut(cfg, 'index.html', updated, sha, `Update IGFE ${qTag} ${year}`);
-    setProg(100);
-    admLog(`Commit publicado: IGFE ${qTag} ${year}`, 'ok');
-    admLog(`→ https://${cfg.user}.github.io/${cfg.repo}/`, 'acc');
-
-    showAdmResult(true, cfg, q, year);
-
-  } catch(err) {
-    admLog('Error: '+err.message, 'err');
-    showAdmResult(false, cfg, q, year, err.message);
-  }
-  document.getElementById('adm-go-btn').disabled = false;
-}
-
-function showAdmResult(ok, cfg, q, year, errMsg) {
-  const el = document.getElementById('adm-result');
-  el.style.display = 'block';
-  const qTag = ['1T','2T','3T','4T'][parseInt(q)-1];
-  if (ok) {
-    el.style.background = '#e8f8f5';
-    el.style.border = '1px solid #00b4a0';
-    el.style.color = '#006b5e';
-    el.innerHTML = `<strong>✓ Dashboard actualizado: IGFE ${qTag} ${year}</strong><br>
-      <span style="font-size:11px">Disponible en 1–2 min en <a href="https://${cfg.user}.github.io/${cfg.repo}/" target="_blank" style="color:#00b4a0">https://${cfg.user}.github.io/${cfg.repo}/</a></span>`;
-    // Reload page after 3s
-    setTimeout(() => { closeAdmin(); location.reload(); }, 3000);
-  } else {
-    el.style.background = '#fdf0f0';
-    el.style.border = '1px solid #e8336e';
-    el.style.color = '#8b0000';
-    el.innerHTML = `<strong>✗ Error al actualizar</strong><br><span style="font-size:11px">${errMsg}</span>`;
-  }
-}
-
-/* ===== GITHUB API ===== */
-async function ghGet(cfg, path) {
-  const r = await fetch(`https://api.github.com/repos/${cfg.user}/${cfg.repo}/contents/${path}`, {
-    headers: {'Authorization': `Bearer ${cfg.token}`, 'Accept': 'application/vnd.github.v3+json'}
-  });
-  if (!r.ok) { const e=await r.json(); throw new Error(e.message||r.statusText); }
-  const d = await r.json();
-  return { content: decodeURIComponent(escape(atob(d.content.replace(/\n/g,'')))), sha: d.sha };
-}
-
-async function ghPut(cfg, path, content, sha, message) {
-  const encoded = btoa(unescape(encodeURIComponent(content)));
-  const r = await fetch(`https://api.github.com/repos/${cfg.user}/${cfg.repo}/contents/${path}`, {
-    method: 'PUT',
-    headers: {'Authorization': `Bearer ${cfg.token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json'},
-    body: JSON.stringify({message, content: encoded, sha})
-  });
-  if (!r.ok) { const e=await r.json(); throw new Error(e.message||r.statusText); }
-  return r.json();
-}
-
-/* ===== CLAUDE EXTRACTION ===== */
-async function extractWithClaude(apiKey, q, year) {
-  const qNames = ['primer','segundo','tercer','cuarto'];
-  const prompt = `Eres un analista financiero experto. Analiza este PDF del IGFE (${qNames[parseInt(q)-1]} trimestre de ${year}).
-Extrae TODOS los valores numéricos y responde ÚNICAMENTE con este JSON (sin texto extra, sin markdown):
-{"quarter":${q},"year":"${year}","kpis":{"gastoTotal":"124,6","ingresoPublico":"89,0","entidades":"709","deudaPIB":"39,4","inversionesFinancieras":"40,0","utilidadesEmpresas":"967,3","entidadesDetalle":"299 · 345 · 32 · 33"},"cumplimiento":{"sectorPublico":99.0,"municipal":98.8,"empresasEstado":90.6,"educacionSuperior":84.9},"ejecucion":{"sectorPublico":75.1,"municipal":65.0,"empresasEstado":81.7,"educacionSuperior":63.3},"sectores":{"codelco":"$23,0B","ies":"$1,4B","publico":"$79,1B","empresas":"$10,7B","municipal":"$10,4B"},"gastoSector":{"labels":["Sector Público","Sector Municipal","Emp.+CODELCO","Educ. Superior"],"prev":[77.8,10.2,29.8,1.4],"curr":[79.1,10.4,33.7,1.4],"ejec":[75.1,65.0,81.7,63.3]},"ingresosSP":{"labels":["Impuestos","Endeudam.","Recup.Prést.","Otros Corr.","Impos.Prev.","Ing.Oper.","Vta.Activos","Otros"],"prev":[51.7,25.2,3.1,2.7,2.5,3.5,1.1,1.7],"curr":[55.9,19.0,3.1,2.7,2.7,3.1,1.1,1.4]},"gastosSP":{"labels":["Transferencias","Prest.Seg.Soc.","Serv.Deuda","Bs.y Serv.","Gtos.Personal","Adq.Act.Fin.","Ini.Inversión","Otros"],"prev":[22.6,15.2,18.4,10.9,11.6,4.5,2.3,2.1],"curr":[24.4,12.3,11.7,11.7,12.3,5.1,3.5,3.2]},"rankingAlto":[{"name":"Min. Bienes Nacionales","pct":97.3},{"name":"Contraloría General","pct":90.8},{"name":"Min. Interior y Seg. Pública","pct":85.0},{"name":"Min. Mujer y Eq. Género","pct":84.9},{"name":"Min. Hacienda","pct":82.6},{"name":"Min. Salud","pct":81.8},{"name":"Min. Justicia y DDHH","pct":81.2},{"name":"Presidencia de la República","pct":80.2},{"name":"Ministerio Público","pct":78.0},{"name":"Poder Judicial","pct":77.1}],"rankingBajo":[{"name":"Min. Economía y Turismo","pct":35.2},{"name":"Servicio Electoral","pct":45.4},{"name":"Min. Ciencia y Tec.","pct":58.8},{"name":"Min. Medio Ambiente","pct":63.3},{"name":"Min. Obras Públicas","pct":65.2},{"name":"Min. Des. Social y Familia","pct":66.6},{"name":"Min. Deporte","pct":68.7},{"name":"Min. Vivienda y Urbanismo","pct":69.3},{"name":"Min. Culturas y Patrimonio","pct":69.3},{"name":"Min. Educación","pct":71.3}],"ingMun":{"labels":["Ing. Propios","Transf.","Transf. MINSAL","FCM","Transf.MINEDUC","Ing.Bfo FCM","Otros"],"prev":[2704.7,1891.5,2065.3,1811.1,1054.7,943.9,928.7],"curr":[2846.9,2093.8,2218.7,1590.5,1088.7,1032.6,959.3]},"gasMun":{"labels":["Gtos.Personal","Bs.y Serv.","Transf.Corr.","Ini.Inversión","Serv.Deuda","Prest.Seg.Soc.","Adq.Act.","Otros"],"prev":[4948.2,2126.3,2140.0,419.3,223.9,110.2,110.2,109.4],"curr":[4967.5,2242.7,2155.7,427.1,276.2,110.4,103.4,124.8]},"fcm":{"labels":["Aysén","Atacama","Arica","Ñuble","Magallanes","Los Ríos","O'Higgins","Valparaíso","Araucanía","Coquimbo","Biobío","Maule","Los Lagos","Tarapacá","Antofagasta","Metropolitana"],"vals":[44.9,27.2,26.2,24.9,23.9,23.5,21.5,21.4,21.1,21.0,19.1,18.7,18.4,14.8,13.4,12.3],"avg":17.7},"empresas":{"labels":["ENAP","CODELCO","ENAMI","Emp.Defensa","BancoEstado","Otras Emp.","Emp.Portuarias","METRO","EFE","TVN"],"prev":[293.9,198.3,42.9,-14.4,2.4,366.1,137.9,-12.4,-75.9,-5.9],"curr":[485.1,109.4,46.8,11.5,5.8,382.5,42.9,-45.5,-129.6,-16.3]},"educ":{"labels":["Ing.Operación","Transferencias","Finan.Fiscal","Endeudamiento","Vta.Activos","Recup.Préstamos","Otros"],"prev":[700.2,322.5,161.0,89.6,24.6,8.1,3.8],"curr":[772.9,364.0,161.6,80.9,33.0,11.9,1.8]},"gratuidad":{"years":["2021","2022","2023","2024","3T ${year}"],"totales":[1.9,2.1,2.4,2.8,2.18],"pcts":[62.7,65.1,68.4,71.1,74.6]},"deuda":{"totalB":130.3,"internaB":85.9,"externaB":44.3,"totalPIB":39.4,"internaPIB":26.0,"externaPIB":13.4,"hist":{"years":["2021","2022","2023","2024","3T ${year}"],"interna":[23.5,22.3,23.4,24.6,26.0],"externa":[12.3,12.7,13.0,13.6,13.4]}},"inversiones":{"totalB":40.0,"pib":12.1,"hist":{"years":["2021","2022","2023","2024","3T ${year}"],"pib":[12.1,13.6,12.2,11.7,12.1]}},"gobIng":{"labels":["Transf. Capital","Transf. Corrientes","Otros"],"prev":[1052.8,91.5,24.0],"curr":[1167.9,124.8,23.8]},"gobGas":{"labels":["Ini.Inversión","Transf.Capital","Adq.Act.","Gtos.Personal","Transf.Corr.","Serv.Deuda","Otros"],"prev":[467.3,133.6,68.9,63.0,19.2,16.2,113.6],"curr":[383.3,219.8,74.5,67.2,160.4,147.9,72.1]}}
-Sustituye TODOS los valores con los del PDF. Si no encuentras un valor mantén el del ejemplo.`;
-
-  const r = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 4096,
-      messages: [{
-        role: 'user',
-        content: [
-          {type:'document', source:{type:'base64', media_type:'application/pdf', data:admPdfB64}},
-          {type:'text', text:prompt}
-        ]
-      }]
-    })
-  });
-  if (!r.ok) { const e=await r.json(); throw new Error('Claude API: '+(e.error?.message||r.statusText)); }
-  const resp = await r.json();
-  const text = resp.content.find(b=>b.type==='text')?.text||'';
-  return JSON.parse(text.replace(/```json|```/g,'').trim());
-}
-
-/* ===== DATA INJECTION ===== */
-function injectNewData(html, d, q, year) {
-  const periods = ['Ene–Mar','Ene–Jun','Ene–Sep','Ene–Dic'];
-  const periodLongs = [
+  const pLabels=['','Ene–Mar','Ene–Jun','Ene–Sep','Ene–Dic'];
+  const pFull=['',
     `Al 1er Trimestre ${year} · 1 de Enero al 31 de Marzo`,
     `Al 2do Trimestre ${year} · 1 de Enero al 30 de Junio`,
     `Al 3er Trimestre ${year} · 1 de Enero al 30 de Septiembre`,
-    `Al 4to Trimestre ${year} · 1 de Enero al 31 de Diciembre`
+    `Al 4to Trimestre ${year} · 1 de Enero al 31 de Diciembre`];
+  const period=`${pLabels[q]} ${year}`;
+
+  document.getElementById('cover-sub').textContent=pFull[q];
+  document.getElementById('cover-val').textContent=d.kpis.gasto!=='—'?`$${d.kpis.gasto} billones`:'Pendiente';
+  document.getElementById('badge-period').textContent=period;
+
+  // KPIs
+  const kpiDef=[
+    {l:'Gasto total',v:d.kpis.gasto,u:'B$',col:'#00b4a0'},
+    {l:'Ingreso SP',v:d.kpis.ingreso,u:'B$',col:'#e8336e'},
+    {l:'Deuda / PIB',v:d.kpis.deuda,u:'%',col:'#f0a500'},
+    {l:'Inversiones / PIB',v:d.kpis.inv,u:'%',col:'#2e5fa3'},
+    {l:'Util. Emp. Estado',v:d.kpis.util,u:'MM$',col:'#1ab05a'},
+    {l:'Entidades',v:d.kpis.entidades,u:'',col:'#8e44ad'},
   ];
-  const qi = parseInt(q)-1;
-  const period = periods[qi]+' '+year;
-  const qTag = ['1T','2T','3T','4T'][qi];
+  document.getElementById('kpis').innerHTML=kpiDef.map(k=>`
+    <div class="kpi" style="--kc:${k.col}">
+      <div class="kpi-l">${k.l}</div>
+      <div class="kpi-v">${k.v}<span class="kpi-u">${k.u?' '+k.u:''}</span></div>
+    </div>`).join('');
 
-  // Build the new data entry
-  const newEntry = `"${year}": {
-    "${q}": {
-      period:"${period}",
-      periodLong:"${periodLongs[qi]}",
-      totalEjecutado:"$${d.kpis.gastoTotal} billones",
-      kpis:[
-        {label:"Gasto total estado",val:"${d.kpis.gastoTotal}",unit:"B$",delta:"${qTag} ${year}",up:true,color:"#00b4a0"},
-        {label:"Ingreso sector público",val:"${d.kpis.ingresoPublico}",unit:"B$",delta:"${qTag} ${year}",up:null,color:"#e8336e"},
-        {label:"Entidades reportando",val:"${d.kpis.entidades}",unit:"",delta:"${d.kpis.entidadesDetalle}",up:null,color:"#2e5fa3"},
-        {label:"Deuda pública / PIB",val:"${d.kpis.deudaPIB}",unit:"%",delta:"${qTag} ${year}",up:false,color:"#f0a500"},
-        {label:"Inversiones financieras",val:"${d.kpis.inversionesFinancieras}",unit:"B$",delta:"Total",up:true,color:"#00b4a0"},
-        {label:"Utilidades emp. estado",val:"${d.kpis.utilidadesEmpresas}",unit:"MM$",delta:"${qTag} ${year}",up:true,color:"#1ab05a"},
-      ],
-      cobertura:[
-        {num:"299",label:"Sector Público",color:"#2e5fa3"},
-        {num:"345",label:"Sector Municipal",color:"#e8336e"},
-        {num:"32",label:"Empresas Estado e ITC",color:"#00b4a0"},
-        {num:"33",label:"Instituciones Educ. Superior",color:"#f0a500"},
-      ],
-      cumplimiento:[
-        {name:"Sector Público",pct:${d.cumplimiento.sectorPublico},color:"#2e5fa3"},
-        {name:"Sector Municipal",pct:${d.cumplimiento.municipal},color:"#e8336e"},
-        {name:"Empresas del Estado",pct:${d.cumplimiento.empresasEstado},color:"#00b4a0"},
-        {name:"Educ. Superior",pct:${d.cumplimiento.educacionSuperior},color:"#f0a500"},
-      ],
-      ejecucion:[
-        {name:"Sector Público",pct:${d.ejecucion.sectorPublico},color:"#2e5fa3"},
-        {name:"Sector Municipal",pct:${d.ejecucion.municipal},color:"#e8336e"},
-        {name:"Empresas del Estado",pct:${d.ejecucion.empresasEstado},color:"#00b4a0"},
-        {name:"Educ. Superior",pct:${d.ejecucion.educacionSuperior},color:"#f0a500"},
-      ],
-      sectores:${JSON.stringify(d.sectores)},
-      gastoSector:${JSON.stringify(d.gastoSector)},
-      ingresosSP:${JSON.stringify(d.ingresosSP)},
-      gastosSP:${JSON.stringify(d.gastosSP)},
-      rankingAlto:${JSON.stringify(d.rankingAlto)},
-      rankingBajo:${JSON.stringify(d.rankingBajo)},
-      ingMun:${JSON.stringify(d.ingMun)},
-      gasMun:${JSON.stringify(d.gasMun)},
-      fcm:${JSON.stringify(d.fcm)},
-      empresas:${JSON.stringify(d.empresas)},
-      educ:${JSON.stringify(d.educ)},
-      gratuidad:${JSON.stringify(d.gratuidad)},
-      deuda:${JSON.stringify(d.deuda)},
-      inversiones:${JSON.stringify(d.inversiones)},
-      gobIng:${JSON.stringify(d.gobIng)},
-      gobGas:${JSON.stringify(d.gobGas)}
-    }`;
+  // Cobertura
+  const cobDef=[
+    {n:'299',l:'Sector Público',c:'#2e5fa3'},
+    {n:'345',l:'Sector Municipal',c:'#e8336e'},
+    {n:'32',l:'Empresas Estado e ITC',c:'#00b4a0'},
+    {n:'33',l:'Instituciones Educ. Superior',c:'#f0a500'},
+  ];
+  document.getElementById('cob').innerHTML=cobDef.map(c=>`
+    <div class="cob-c" style="--cc:${c.c}">
+      <div class="cob-n" style="color:${c.c}">${c.n}</div>
+      <div class="cob-l">${c.l}</div>
+    </div>`).join('');
 
-  // Find DB object and inject/replace the year+quarter entry
-  const dbStart = html.indexOf('const DB = {');
-  const dbEnd   = html.indexOf('\n};\n\n/* ======', dbStart);
-  let dbSection = html.slice(dbStart, dbEnd);
+  // Barras cumplimiento
+  const cm=d.cumplimiento||{};
+  const colors={'Sector Público':'#2e5fa3','Sector Municipal':'#e8336e','Empresas del Estado':'#00b4a0','Instituciones de Educación Superior':'#f0a500'};
+  document.getElementById('bars-cumpl').innerHTML=Object.entries(cm).map(([s,p])=>`
+    <div class="bar-r">
+      <div class="bar-h"><span class="bar-name">${s}</span><span class="bar-pct" style="color:${colors[s]||'#555'}">${p}%</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${p}%;background:${colors[s]||'#555'}"></div></div>
+    </div>`).join('') || '<div style="color:#aaa;font-size:11px">Sin datos</div>';
 
-  // Check if year exists
-  const yearKey = `"${year}": {`;
-  if (dbSection.includes(yearKey)) {
-    // Year exists — check if quarter exists
-    const qKey = `"${q}": {`;
-    const yearStart = dbSection.indexOf(yearKey);
-    // Find and replace the quarter block within the year
-    // Simple approach: replace the entire year block
-    const yearBlockStart = dbSection.indexOf(yearKey);
-    // Find matching closing brace for the year
-    let depth = 0, idx = yearBlockStart;
-    while (idx < dbSection.length) {
-      if (dbSection[idx]==='{') depth++;
-      else if (dbSection[idx]==='}') { depth--; if(depth===0){idx++;break;} }
-      idx++;
-    }
-    const yearBlock = dbSection.slice(yearBlockStart, idx);
-    // Add/replace quarter in year block
-    let newYearBlock;
-    if (yearBlock.includes(`"${q}":`)) {
-      // Replace existing quarter
-      const qStart = yearBlock.indexOf(`"${q}":`);
-      let qDepth=0, qIdx=qStart;
-      while(qIdx<yearBlock.length){
-        if(yearBlock[qIdx]==='{')qDepth++;
-        else if(yearBlock[qIdx]==='}'){qDepth--;if(qDepth===0){qIdx++;break;}}
-        qIdx++;
-      }
-      newYearBlock = yearBlock.slice(0,qStart) + `"${q}": {\n${newEntry.split('\n').slice(2).join('\n')}` + yearBlock.slice(qIdx);
-    } else {
-      // Add new quarter to existing year
-      const lastBrace = yearBlock.lastIndexOf('}');
-      newYearBlock = yearBlock.slice(0,lastBrace) + `,\n    ${newEntry.split('{')[1].replace(/^[^{]*/,'')}` + yearBlock.slice(lastBrace);
-    }
-    dbSection = dbSection.slice(0,yearBlockStart) + newYearBlock + dbSection.slice(idx);
-  } else {
-    // Year doesn't exist — add it
-    const insertAt = dbSection.lastIndexOf('};');
-    const fullEntry = `\n  ${newEntry}\n  },`;
-    dbSection = dbSection.slice(0,insertAt) + fullEntry + '\n' + dbSection.slice(insertAt);
+  // Ejecución sectorial: get from gastoSector
+  const gs=d.gastoSector||{};
+  const ejec_map={'Sector Público':d.kpis.deuda?75:null,'Sector Municipal':null,'Empresas del Estado':null,'Instituciones de Educación Superior':null};
+  // Pull from known values per period if available
+  const ejec_vals={
+    'Sector Público':{'2025-3':75.1,'2025-2':null,'2025-1':null,'2024-3':73.8,'2024-4':null,'2023-4':null}[key],
+    'Sector Municipal':{'2025-3':65.0,'2024-3':63.8}[key],
+    'Empresas del Estado':{'2025-3':81.7,'2024-3':79.5}[key],
+    'Instituciones de Educación Superior':{'2025-3':63.3,'2024-3':61.2}[key],
+  };
+  const ej_colors={'Sector Público':'#2e5fa3','Sector Municipal':'#e8336e','Empresas del Estado':'#00b4a0','Instituciones de Educación Superior':'#f0a500'};
+  document.getElementById('bars-ejec').innerHTML=Object.entries(ejec_vals).filter(([s,p])=>p!==null&&p!==undefined).map(([s,p])=>`
+    <div class="bar-r">
+      <div class="bar-h"><span class="bar-name">${s}</span><span class="bar-pct" style="color:${ej_colors[s]}">${p}%</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${p}%;background:${ej_colors[s]}"></div></div>
+    </div>`).join('') || '<div style="color:#aaa;font-size:11px">Sin datos</div>';
+
+  // Circles
+  const circleData=[
+    {name:'CODELCO',val:gs['Empresas del Estado']?`$${gs['Empresas del Estado']}B`:'—',bg:'#c8d4e8',color:'#1a2744',size:100},
+    {name:'IES ESTADO',val:'$1,4B',bg:'#dce4f0',color:'#1a2744',size:80},
+    {name:'SECTOR PÚBLICO (GOB. CENTRAL)',val:gs['Sector Público']?`$${gs['Sector Público']}B`:'—',bg:'#1a2744',color:'white',size:150,valColor:'#00b4a0'},
+    {name:'OTRAS EMPRESAS',val:gs['Empresas del Estado']?`$${gs['Empresas del Estado']}B`:'—',bg:'#e8336e',color:'white',size:100},
+    {name:'SECTOR MUNICIPAL',val:gs['Sector Municipal']?`$${gs['Sector Municipal']}B`:'—',bg:'#00b4a0',color:'white',size:100},
+  ];
+  document.getElementById('circles').innerHTML=circleData.map(c=>`
+    <div class="circ" style="width:${c.size}px;height:${c.size}px;background:${c.bg};color:${c.color}">
+      <div class="circ-name" style="font-size:${c.size<90?'7':'8'}px">${c.name}</div>
+      <div class="circ-val" style="font-size:${c.size>130?'16':'12'}px;color:${c.valColor||c.color}">${c.val}</div>
+    </div>`).join('');
+
+  // Chart: Gasto sectores
+  const prevKey=getPrev(year,q);
+  const prev=prevKey?DB[prevKey]:null;
+  const secLabels=['Sector Público','Sector Municipal','Empresas del Estado','Instituciones de Educación Superior'];
+  const secVals=secLabels.map(s=>gs[s]||null);
+  const prevVals=prev?secLabels.map(s=>prev.gastoSector?.[s]||null):null;
+  mkBar('c-gasto-sec',['Sec.Público','Sec.Municipal','Empresas','Educ.Sup.'],
+    [...(prevVals?[{label:prevKey?.replace('-',' T'),data:prevVals,backgroundColor:'rgba(46,95,163,.35)',borderColor:C1,borderWidth:1}]:[]),
+     {label:period,data:secVals,backgroundColor:'rgba(0,180,160,.65)',borderColor:C2,borderWidth:1}],
+    {fmt:v=>`$${v}B`});
+
+  // Chart: Ingresos SP
+  const isp=d.ingresosSP;
+  const ispLabels=['Impuestos','Endeudam.','Otros Corr.','Vta.Activos','Impos.Prev.','Recup.','Otros'];
+  const pisp=prev?.ingresosSP;
+  if(isp) mkBar('c-ing-sp',ispLabels,
+    [...(pisp?[{label:prevKey?.replace('-',' T'),data:pisp,backgroundColor:'rgba(46,95,163,.35)',borderColor:C1,borderWidth:1}]:[]),
+     {label:period,data:isp,backgroundColor:'rgba(0,180,160,.65)',borderColor:C2,borderWidth:1}],
+    {fmt:v=>`$${v}B`,rot:40});
+
+  // Chart: Gastos SP
+  const gsp=d.gastosSP;
+  const gspLabels=['Transf.','Serv.Deuda','Personal','Seg.Social','Act.Fin.','Bs.Serv.','Otros','Inversión'];
+  const pgsp=prev?.gastosSP;
+  if(gsp) mkBar('c-gas-sp',gspLabels,
+    [...(pgsp?[{label:prevKey?.replace('-',' T'),data:pgsp,backgroundColor:'rgba(46,95,163,.35)',borderColor:C1,borderWidth:1}]:[]),
+     {label:period,data:gsp,backgroundColor:'rgba(0,180,160,.65)',borderColor:C2,borderWidth:1}],
+    {fmt:v=>`$${v}B`,rot:40,h:'200px'});
+
+  // Chart: Municipal Ingresos
+  const mi=d.munIng;
+  const pmi=prev?.munIng;
+  const milabels=['Ing.Propios','MINSAL','FCM','Transf.','MINEDUC','Ing.Bfo FCM','Otros'];
+  if(mi) mkBar('c-mun-ing',milabels,
+    [...(pmi?[{label:prevKey?.replace('-',' T'),data:pmi,backgroundColor:'rgba(46,95,163,.35)',borderColor:C1,borderWidth:1}]:[]),
+     {label:period,data:mi,backgroundColor:'rgba(0,180,160,.65)',borderColor:C2,borderWidth:1}],
+    {fmt:v=>`$${(v/1000).toFixed(0)}MM`,ytick:v=>'$'+(v/1000).toFixed(0)+'MM',rot:40});
+
+  // Chart: Municipal Gastos
+  const mg=d.munGas;
+  const pmg=prev?.munGas;
+  const mglabels=['Personal','Transf.Corr.','Bs.Serv.','Ini.Inv.','Serv.Deuda','Prest.SS','Act.NF','Otros'];
+  if(mg) mkBar('c-mun-gas',mglabels,
+    [...(pmg?[{label:prevKey?.replace('-',' T'),data:pmg,backgroundColor:'rgba(46,95,163,.35)',borderColor:C1,borderWidth:1}]:[]),
+     {label:period,data:mg,backgroundColor:'rgba(0,180,160,.65)',borderColor:C2,borderWidth:1}],
+    {fmt:v=>`$${(v/1000).toFixed(0)}MM`,ytick:v=>'$'+(v/1000).toFixed(0)+'MM',rot:40});
+
+  // Chart: FCM
+  const fcm=d.fcm;
+  if(fcm&&fcm.regiones&&Object.keys(fcm.regiones).length){
+    const avg=fcm.avg||17.7;
+    document.getElementById('fcm-sub').textContent=`% · verde = sobre promedio nacional (${avg}%) · rojo = bajo promedio`;
+    const fcmLabels=Object.keys(fcm.regiones);
+    const fcmVals=Object.values(fcm.regiones);
+    const fcmEl=document.getElementById('c-fcm');
+    fcmEl.parentElement.style.height='220px';
+    const fc=new Chart(fcmEl,{type:'bar',data:{labels:fcmLabels,datasets:[{
+      label:'FCM %',data:fcmVals,
+      backgroundColor:fcmVals.map(v=>v>=avg?'rgba(0,180,160,.7)':'rgba(232,51,110,.6)'),
+      borderColor:fcmVals.map(v=>v>=avg?C2:CP),borderWidth:1}]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` FCM: ${ctx.parsed.y}%`}}},
+        scales:{x:{grid:{color:G},ticks:{color:'#555',maxRotation:45,font:{size:9}}},
+                y:{grid:{color:G},ticks:{color:'#555',callback:v=>v+'%'}}}}});
+    charts.push(fc);
   }
 
-  // Update year selector to include new year if needed
-  let result = html.slice(0, dbStart) + dbSection + html.slice(dbEnd);
-  if (!result.includes(`<option value="${year}">${year}</option>`)) {
-    result = result.replace(
-      `<option value="2024">2024</option>`,
-      `<option value="${year}" selected>${year}</option>\n        <option value="2024">2024</option>`
-    );
+  // Chart: Empresas
+  const emp=d.empresas;
+  const pemp=prev?.empresas;
+  const empLbls=['Otras Emp.','TVN','BancoEstado','CODELCO','ENAP','Emp.Port.','Emp.Def.','ENAMI','EFE','METRO'];
+  if(emp) {
+    const empEl=document.getElementById('c-emp');
+    empEl.parentElement.style.height='240px';
+    const ec=new Chart(empEl,{type:'bar',data:{labels:empLbls,datasets:[
+      ...(pemp?[{label:prevKey?.replace('-',' T'),data:pemp,backgroundColor:'rgba(46,95,163,.35)',borderColor:C1,borderWidth:1}]:[]),
+      {label:period,data:emp,backgroundColor:emp.map(v=>v>=0?'rgba(0,180,160,.7)':'rgba(232,51,110,.6)'),
+       borderColor:emp.map(v=>v>=0?C2:CP),borderWidth:1}]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:true,labels:{boxWidth:9,font:{size:10}}},tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: $${ctx.parsed.y.toFixed(0)}MM`}}},
+        scales:{x:{grid:{color:G},ticks:{color:'#555',maxRotation:40,font:{size:9}}},
+                y:{grid:{color:G},ticks:{color:'#555',callback:v=>'$'+v+'MM'}}}}});
+    charts.push(ec);
   }
 
-  return result;
+  // Chart: Educación ingresos
+  const ei=d.educIng;
+  const pei=prev?.educIng;
+  const eiLbls=['Ing.Op.','Transf.','Fin.Fiscal','Otros','Endeud.','Recup.','Vta.'];
+  if(ei) mkBar('c-educ',eiLbls,
+    [...(pei?[{label:prevKey?.replace('-',' T'),data:pei,backgroundColor:'rgba(46,95,163,.35)',borderColor:C1,borderWidth:1}]:[]),
+     {label:period,data:ei,backgroundColor:'rgba(0,180,160,.65)',borderColor:C2,borderWidth:1}],
+    {fmt:v=>`$${v.toFixed(0)}MM`,ytick:v=>'$'+v+'MM',rot:35});
+
+  // Chart: Gratuidad — show all available periods
+  const gratKeys=Object.keys(DB).filter(k=>DB[k].gratuidad).sort();
+  const gratPeriods=gratKeys.map(k=>{const[y,q]=k.split('-');return `${['','T1','T2','T3','T4'][q]} ${y}`;});
+  const gratTotals=gratKeys.map(k=>DB[k].gratuidad?.total);
+  const gratPcts=gratKeys.map(k=>DB[k].gratuidad?.pct);
+  if(gratTotals.length){
+    const grEl=document.getElementById('c-grat');
+    grEl.parentElement.style.height='220px';
+    const gc=new Chart(grEl,{type:'bar',data:{labels:gratPeriods,datasets:[
+      {label:'Transferencias (B$)',data:gratTotals,backgroundColor:'rgba(46,95,163,.5)',borderColor:C1,borderWidth:1,yAxisID:'y'},
+      {label:'% Gratuidad',data:gratPcts,type:'line',borderColor:CG,backgroundColor:'rgba(240,165,0,.1)',borderWidth:2,pointRadius:4,pointBackgroundColor:CG,fill:false,yAxisID:'y2',tension:.3}]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:true,labels:{boxWidth:9,font:{size:10}}},tooltip:{mode:'index',intersect:false}},
+        scales:{x:{grid:{color:G},ticks:{color:'#555',font:{size:9}}},
+                y:{grid:{color:G},ticks:{color:'#555',callback:v=>'$'+v+'B'},position:'left'},
+                y2:{grid:{display:false},ticks:{color:CG,callback:v=>v+'%'},position:'right'}}}});
+    charts.push(gc);
+  }
+
+  // Deuda: build history from all DB
+  const deuKeys=Object.keys(DB).filter(k=>DB[k].deuda).sort();
+  const deuPeriods=deuKeys.map(k=>{const[y,q]=k.split('-');return `T${q} ${y}`;});
+  const deuInterna=deuKeys.map(k=>DB[k].deuda?.interna);
+  const deuExterna=deuKeys.map(k=>DB[k].deuda?.externa);
+  const deu=d.deuda;
+  if(deu){
+    document.getElementById('debt-items').innerHTML=`
+      <div class="debt-it"><div class="debt-l">Deuda total</div><div class="debt-v" style="color:var(--pink)">${deu.total||'—'}%</div><div class="debt-p">del PIB</div></div>
+      <div class="debt-it"><div class="debt-l">Deuda interna</div><div class="debt-v" style="color:var(--gold)">${deu.interna||'—'}%</div><div class="debt-p">del PIB</div></div>
+      <div class="debt-it"><div class="debt-l">Deuda externa</div><div class="debt-v" style="color:var(--blue)">${deu.externa||'—'}%</div><div class="debt-p">del PIB</div></div>`;
+    mkBar('c-deuda',deuPeriods,[
+      {label:'Interna/PIB',data:deuInterna,backgroundColor:'rgba(240,165,0,.65)',borderColor:CG,borderWidth:1},
+      {label:'Externa/PIB',data:deuExterna,backgroundColor:'rgba(46,95,163,.5)',borderColor:C1,borderWidth:1}],
+      {fmt:v=>`${v}%`,ytick:v=>v+'%',h:'180px'});
+  }
+
+  // Inversiones history
+  const invKeys=Object.keys(DB).filter(k=>DB[k].inversiones!=null).sort();
+  const invPeriods=invKeys.map(k=>{const[y,q]=k.split('-');return `T${q} ${y}`;});
+  const invVals=invKeys.map(k=>DB[k].inversiones);
+  if(invVals.some(v=>v!=null)){
+    const invEl=document.getElementById('c-inv');
+    invEl.parentElement.style.height='220px';
+    const ic=new Chart(invEl,{type:'line',data:{labels:invPeriods,datasets:[{
+      label:'Inversiones/PIB',data:invVals,borderColor:C2,backgroundColor:'rgba(0,180,160,.1)',
+      borderWidth:2,fill:true,tension:.3,pointRadius:4,pointBackgroundColor:C2}]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:true,labels:{boxWidth:9,font:{size:10}}},tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.y}%`}}},
+        scales:{x:{grid:{color:G},ticks:{color:'#555',font:{size:9}}},
+                y:{grid:{color:G},ticks:{color:'#555',callback:v=>v+'%'},min:9,max:15}}}});
+    charts.push(ic);
+  }
+
+  // Gobiernos regionales
+  const gi=d.gobIng;
+  const pgi=prev?.gobIng;
+  if(gi) mkBar('c-gob-ing',['Transf.Capital','Transf.Corrientes','Otros'],
+    [...(pgi?[{label:prevKey?.replace('-',' T'),data:pgi,backgroundColor:'rgba(46,95,163,.35)',borderColor:C1,borderWidth:1}]:[]),
+     {label:period,data:gi,backgroundColor:'rgba(0,180,160,.65)',borderColor:C2,borderWidth:1}],
+    {fmt:v=>`$${(v/1000).toFixed(0)}MM`,ytick:v=>'$'+(v/1000).toFixed(0)+'MM'});
+
+  const gg=d.gobGas;
+  const pgg=prev?.gobGas;
+  if(gg) mkBar('c-gob-gas',['Ini.Inversión','Transf.Cap.','Adq.Act.','Personal','Transf.Corr.','Serv.Deuda','Otros'],
+    [...(pgg?[{label:prevKey?.replace('-',' T'),data:pgg,backgroundColor:'rgba(46,95,163,.35)',borderColor:C1,borderWidth:1}]:[]),
+     {label:period,data:gg,backgroundColor:'rgba(0,180,160,.65)',borderColor:C2,borderWidth:1}],
+    {fmt:v=>`$${(v/1000).toFixed(0)}MM`,ytick:v=>'$'+(v/1000).toFixed(0)+'MM',rot:40});
 }
+
+function getPrev(year,q){
+  const qi=parseInt(q);
+  const candidates=qi===1?[`${parseInt(year)-1}-4`,`${parseInt(year)-1}-3`]:[`${year}-${qi-1}`];
+  return candidates.find(k=>DB[k])||null;
+}
+
+/* ===== ADMIN ===== */
+let pdfB64=null;
+
+function openAdm(){ loadCreds(); document.getElementById('overlay').classList.add('open'); }
+function closeAdm(){ document.getElementById('overlay').classList.remove('open'); }
+document.getElementById('overlay').addEventListener('click',e=>{ if(e.target===document.getElementById('overlay')) closeAdm(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeAdm(); });
+
+function loadCreds(){
+  const s=localStorage.getItem('igfe_c');
+  if(!s) return;
+  const c=JSON.parse(s);
+  if(c.u) document.getElementById('a-user').value=c.u;
+  if(c.r) document.getElementById('a-repo').value=c.r;
+  if(c.t) document.getElementById('a-tok').value=c.t;
+  if(c.k) document.getElementById('a-key').value=c.k;
+  if(c.t&&c.k) document.getElementById('creds-ok').style.display='block';
+}
+
+function saveCreds(){
+  const c={u:document.getElementById('a-user').value.trim(),r:document.getElementById('a-repo').value.trim(),t:document.getElementById('a-tok').value.trim(),k:document.getElementById('a-key').value.trim()};
+  if(!c.t||!c.k){ alert('Introduce el Token y la API Key.'); return; }
+  localStorage.setItem('igfe_c',JSON.stringify(c));
+  document.getElementById('creds-ok').style.display='block';
+}
+
+function togglePw(id,btn){
+  const el=document.getElementById(id);
+  el.type=el.type==='password'?'text':'password';
+  btn.textContent=el.type==='password'?'Mostrar':'Ocultar';
+}
+
+// Drop
+const dropEl=document.getElementById('drop');
+dropEl.addEventListener('dragover',e=>{e.preventDefault();dropEl.classList.add('over');});
+dropEl.addEventListener('dragleave',()=>dropEl.classList.remove('over'));
+dropEl.addEventListener('drop',e=>{e.preventDefault();dropEl.classList.remove('over');const f=e.dataTransfer.files[0];if(f?.type==='application/pdf') onFile(f);});
+
+function onFile(f){
+  if(!f) return;
+  pdfB64=null;
+  document.getElementById('fname').textContent=f.name;
+  document.getElementById('fsize').textContent=(f.size/1024).toFixed(0)+' KB';
+  document.getElementById('ftag').classList.add('show');
+  document.getElementById('go-btn').disabled=false;
+  const r=new FileReader(); r.onload=e=>{pdfB64=e.target.result.split(',')[1];}; r.readAsDataURL(f);
+}
+
+function clearFile(){
+  pdfB64=null;
+  document.getElementById('ftag').classList.remove('show');
+  document.getElementById('go-btn').disabled=true;
+}
+
+function admLog(msg,t='info'){
+  const el=document.getElementById('adm-log');
+  const colors={ok:'#00875a',err:'#c0392b',info:'#555',acc:'#00b4a0'};
+  const icons={ok:'✓',err:'✗',info:'·',acc:'→'};
+  const ts=new Date().toLocaleTimeString('es',{hour12:false});
+  el.innerHTML+=`<div><span style="color:#bbb">${ts}</span> <span style="color:${colors[t]}">${icons[t]} ${msg}</span></div>`;
+  el.scrollTop=el.scrollHeight;
+}
+function setProg(p){ document.getElementById('prog-bar').style.width=p+'%'; }
+
+async function runUpdate(){
+  const s=localStorage.getItem('igfe_c');
+  if(!s||!pdfB64){ alert('Guarda credenciales y selecciona PDF.'); return; }
+  const cfg=JSON.parse(s);
+  const q=document.getElementById('a-q').value;
+  const yr=document.getElementById('a-yr').value;
+
+  document.getElementById('adm-prog').style.display='block';
+  document.getElementById('adm-result').style.display='none';
+  document.getElementById('adm-log').innerHTML='';
+  document.getElementById('go-btn').disabled=true;
+  setProg(5);
+
+  try{
+    admLog(`Analizando PDF con Claude (3.5)…`);
+    const data=await callClaude(cfg.k,q,yr);
+    setProg(40); admLog('Datos extraídos','ok');
+
+    admLog('Descargando index.html de GitHub…');
+    const {content:html,sha}=await ghGet(cfg,'index.html');
+    setProg(55); admLog('Descargado','ok');
+
+    admLog('Inyectando datos…');
+    const updated=injectEntry(html,data,q,yr);
+    setProg(70); admLog('Datos inyectados','ok');
+
+    admLog('Publicando en GitHub…');
+    const qt=['1T','2T','3T','4T'][parseInt(q)-1];
+    await ghPut(cfg,'index.html',updated,sha,`Update IGFE ${qt} ${yr}`);
+    setProg(100); admLog(`Publicado: IGFE ${qt} ${yr}`,'ok');
+    admLog(`→ https://${cfg.u}.github.io/${cfg.r}/`,'acc');
+
+    const res=document.getElementById('adm-result');
+    res.style.display='block';
+    res.style.cssText+='background:#e8f8f5;border:1px solid #00b4a0;border-radius:6px;color:#006b5e';
+    res.innerHTML=`✓ Dashboard actualizado · disponible en 1–2 min en <a href="https://${cfg.u}.github.io/${cfg.r}/" target="_blank" style="color:#00b4a0">https://${cfg.u}.github.io/${cfg.r}/</a>`;
+    setTimeout(()=>{closeAdm();location.reload();},3000);
+  }catch(e){
+    admLog('Error: '+e.message,'err');
+    const res=document.getElementById('adm-result');
+    res.style.display='block';
+    res.style.cssText+='background:#fdf0f0;border:1px solid #e8336e;border-radius:6px;color:#8b0000';
+    res.textContent='✗ '+e.message;
+  }
+  document.getElementById('go-btn').disabled=false;
+}
+
+async function ghGet(cfg,path){
+  const r=await fetch(`https://api.github.com/repos/${cfg.u}/${cfg.r}/contents/${path}`,{headers:{'Authorization':`Bearer ${cfg.t}`,'Accept':'application/vnd.github.v3+json'}});
+  if(!r.ok){const e=await r.json();throw new Error(e.message||r.statusText);}
+  const d=await r.json();
+  return{content:decodeURIComponent(escape(atob(d.content.replace(/\n/g,'')))),sha:d.sha};
+}
+
+async function ghPut(cfg,path,content,sha,msg){
+  const enc=btoa(unescape(encodeURIComponent(content)));
+  const r=await fetch(`https://api.github.com/repos/${cfg.u}/${cfg.r}/contents/${path}`,{method:'PUT',headers:{'Authorization':`Bearer ${cfg.t}`,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},body:JSON.stringify({message:msg,content:enc,sha})});
+  if(!r.ok){const e=await r.json();throw new Error(e.message||r.statusText);}
+}
+
+async function callClaude(apiKey,q,year){
+  const qn=['primer','segundo','tercer','cuarto'];
+  const prompt=`Analiza este PDF del IGFE (${qn[parseInt(q)-1]} trimestre de ${year}). Extrae TODOS los datos numéricos. Responde ÚNICAMENTE con JSON válido sin texto extra:
+{"cumplimiento":{"Sector Público":99.0,"Sector Municipal":98.8,"Empresas del Estado":90.6,"Instituciones de Educación Superior":84.9},"gastoSector":{"Sector Público":79.1,"Sector Municipal":10.4,"Empresas del Estado":33.7,"Instituciones de Educación Superior":1.4},"ingresosSP":[55.9,19.0,2.7,3.1,3.1,2.7,2.5],"gastosSP":[24.4,15.2,12.3,11.7,4.6,5.1,2.3,3.5],"deuda":{"interna":26.0,"externa":13.4,"total":39.4},"inversiones":12.1,"gobIng":[1167858,124810,23842],"gobGas":[467332,219841,133565,74496,62960,147888,19181],"munIng":[2846881,2218700,1590492,2093831,1088737,1032571,959319],"munGas":[4967525,2155736,2242675,427055,276203,110351,103437,124843],"fcmRegiones":{"Aysén":44.9,"Atacama":27.2,"Arica":26.2,"Ñuble":24.9,"Magallanes":23.9,"Los Ríos":23.5,"O'Higgins":21.5,"Valparaíso":21.4,"Araucanía":21.1,"Coquimbo":21.0,"Biobío":19.1,"Maule":18.7,"Los Lagos":18.4,"Tarapacá":14.8,"Antofagasta":13.4,"Metropolitana":12.3},"fcmAvg":17.7,"empresas":[382.5,-16.3,5.8,109.4,485.1,42.9,11.5,46.8,-129.6,-45.5],"educIng":[738.5,314.1,149.8,76.0,31.4,11.3,1.7],"educGas":[840.5,169.8,116.3,66.7,25.0,43.5,61.9],"gratuidad":{"grat":1.6,"total":2.2,"pct":74.6},"kpis":{"gasto":"124,6","ingreso":"89,0","util":"967,3","entidades":"299 · 345 · 32 · 33"}}
+Sustituye con los valores del PDF.`;
+
+  const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:4096,messages:[{role:'user',content:[{type:'document',source:{type:'base64',media_type:'application/pdf',data:pdfB64}},{type:'text',text:prompt}]}]})});
+  if(!r.ok){const e=await r.json();throw new Error('Claude: '+(e.error?.message||r.statusText));}
+  const resp=await r.json();
+  return JSON.parse(resp.content.find(b=>b.type==='text')?.text.replace(/```json|```/g,'').trim());
+}
+
+function injectEntry(html,data,q,yr){
+  const key=`${yr}-${q}`;
+  const pLabels=['','Ene–Mar','Ene–Jun','Ene–Sep','Ene–Dic'];
+  const pFull=['',
+    `Al 1er Trimestre ${yr} · 1 de Enero al 31 de Marzo`,
+    `Al 2do Trimestre ${yr} · 1 de Enero al 30 de Junio`,
+    `Al 3er Trimestre ${yr} · 1 de Enero al 30 de Septiembre`,
+    `Al 4to Trimestre ${yr} · 1 de Enero al 31 de Diciembre`];
+  const d=data;
+  const entry={
+    period:`${pLabels[q]} ${yr}`,
+    periodLong:pFull[q],
+    kpis:{gasto:d.kpis?.gasto||'—',ingreso:d.kpis?.ingreso||'—',deuda:d.deuda?.total?.toString()||'—',inv:d.inversiones?.toString()||'—',util:d.kpis?.util||'—',entidades:d.kpis?.entidades||'—'},
+    cumplimiento:d.cumplimiento||{},
+    gastoSector:d.gastoSector||{},
+    ingresosSP:d.ingresosSP||null,
+    gastosSP:d.gastosSP||null,
+    deuda:d.deuda||null,
+    inversiones:d.inversiones||null,
+    gobIng:d.gobIng||null,
+    gobGas:d.gobGas||null,
+    munIng:d.munIng||null,
+    munGas:d.munGas||null,
+    fcm:{regiones:d.fcmRegiones||{},avg:d.fcmAvg||17.7},
+    empresas:d.empresas||null,
+    educIng:d.educIng||null,
+    educGas:d.educGas||null,
+    gratuidad:d.gratuidad||null,
+  };
+  // Inject into DB
+  const dbStr=`const DB = `;
+  const dbStart=html.indexOf(dbStr)+dbStr.length;
+  const dbEnd=html.indexOf(';
+
+/* ===== CHART',dbStart);
+  const currentDB=JSON.parse(html.slice(dbStart,dbEnd));
+  currentDB[key]=entry;
+  return html.slice(0,dbStart)+JSON.stringify(currentDB,null,null)+html.slice(dbEnd);
+}
+
+/* ===== INIT ===== */
+window.addEventListener('DOMContentLoaded',()=>{
+  buildSelectors();
+  render('2025','3');
+});
 </script>
 </body>
 </html>
