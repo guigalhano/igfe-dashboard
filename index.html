@@ -111,6 +111,12 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
 #circles-svg svg{display:block;width:100%;height:auto}
 
 /* RANK */
+.mun-row{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:5px;margin-bottom:3px;background:var(--light)}
+.mun-n{font-size:10px;font-weight:700;color:var(--muted);width:16px;text-align:right;flex-shrink:0}
+.mun-name{font-size:11px;flex:1;font-weight:500}
+.mun-bw{width:120px;height:6px;background:#e0e0e0;border-radius:99px;flex-shrink:0;overflow:hidden}
+.mun-bar{height:100%;border-radius:99px}
+.mun-pct{font-size:11px;font-weight:700;flex-shrink:0;min-width:42px;text-align:right}
 .rr{display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:4px;margin-bottom:2px;background:var(--light)}
 .rn{font-size:9px;font-weight:700;color:var(--muted);width:14px;text-align:right;flex-shrink:0}
 .rname{font-size:11px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -359,6 +365,25 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
     </div>
   </div>
 
+  <!-- 7b. RANKING MUNICIPAL -->
+  <div class="sec">
+    <div class="sec-lbl">Ranking Municipal</div>
+    <div class="card">
+      <div class="ct" id="mun-rank-title">Ranking Ejecución Presupuestaria por Municipalidad</div>
+      <div class="cs">% de ejecución · excluye municipios sin información</div>
+      <div class="g2" style="margin-top:.75rem">
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:8px;padding:6px 10px;background:var(--navy);color:white;border-radius:6px;text-align:center">Mayores Ejecuciones Devengadas</div>
+          <div id="mun-rank-may"></div>
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:white;margin-bottom:8px;padding:6px 10px;background:var(--teal);border-radius:6px;text-align:center">Menores Ejecuciones Devengadas</div>
+          <div id="mun-rank-men"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- 7. EMPRESAS DEL ESTADO Y EDUCACIÓN SUPERIOR -->
   <div class="sec">
     <div class="sec-lbl">Empresas del Estado y Educación Superior</div>
@@ -481,6 +506,8 @@ const TR = {"2023-4":{"codelco":18.5,"codelcoToSP":3.5,"spToCodelco":1.7,"sp":95
 
 const FULL_NAMES = {"Sec.Público": "Sector Público", "Sec.Municipal": "Sector Municipal", "Empresas": "Empresas del Estado", "Educ.Sup.": "Instituciones de Educación Superior", "Endeudam.": "Endeudamiento", "Otros Corr.": "Otros Ingresos Corrientes", "Vta.Activos": "Venta de Activos Financieros", "Impos.Prev.": "Imposiciones Previsionales", "Recup.": "Recuperación de Otros Préstamos", "Transf.": "Transferencias", "Serv.Deuda": "Servicio de la Deuda", "Seg.Social": "Prestaciones de Seguridad Social", "Act.Fin.": "Adquisición de Activos Financieros", "Bs.Serv.": "Bienes y Servicios de Consumo", "Inversion": "Iniciativas de Inversión", "Ing.Propios": "Ingresos Propios", "MINSAL": "Transferencias MINSAL", "FCM": "Fondo Común Municipal", "MINEDUC": "Transferencias MINEDUC", "Ing.Bfo FCM": "Ingresos Beneficio FCM", "Transf.Corr.": "Transferencias Corrientes", "Ini.Inv.": "Iniciativas de Inversión", "Prest.SS": "Prestaciones de Seguridad Social", "Act.NF": "Adquisición de Activos No Financieros", "Otras Emp.": "Otras Empresas del Estado e ITC", "Emp.Port.": "Empresas Portuarias", "Emp.Def.": "Empresas de Defensa", "Ing.Op.": "Ingresos de Operación", "Fin.Fiscal": "Financiamiento Fiscal", "Endeud.": "Endeudamiento", "Vta.": "Venta de Activos", "Bs. y Serv.": "Compra de Bienes y Servicios", "Inv. Real": "Inversión Real", "Comp.Pend.": "Compromisos Pendientes", "Inv.Fin.": "Inversión Financiera", "Transf.Capital": "Transferencias para Gastos de Capital", "Transf.Corrientes": "Transferencias Corrientes", "Ini.Inversion": "Iniciativas de Inversión", "Transf.Cap.": "Transferencias de Capital", "Adq.Act.": "Adquisición de Activos No Financieros"};
 
+
+const MUN_RANK = {"2025-4":{"may":[{"name":"Graneros","pct":109.7},{"name":"Queil\u00e9n","pct":104.5},{"name":"Alto Biob\u00edo","pct":104.4},{"name":"M\u00e1fil","pct":103.7},{"name":"R\u00edo Claro","pct":102.6},{"name":"Pichilemu","pct":101.7},{"name":"Catemu","pct":101.4},{"name":"San Fernando","pct":101.1},{"name":"Quilaco","pct":100.7},{"name":"San Ignacio","pct":100.6}],"men":[{"name":"Mar\u00eda Elena","pct":36.2},{"name":"San Pedro de Atacama","pct":41.4},{"name":"General Lagos","pct":41.9},{"name":"Sierra Gorda","pct":54.3},{"name":"Cabo de Hornos","pct":57.8},{"name":"Primavera","pct":61.2},{"name":"Timaukel","pct":61.5},{"name":"R\u00edo Ib\u00e1\u00f1ez","pct":61.9},{"name":"Curarrehue","pct":63.6},{"name":"Diego de Almagro","pct":66.0}]},"2025-3":{"may":[{"name":"Queil\u00e9n","pct":100.6},{"name":"Quinchao","pct":88.6},{"name":"M\u00e1fil","pct":84.9},{"name":"Graneros","pct":87.0},{"name":"Colchane","pct":82.0},{"name":"R\u00edo Claro","pct":83.7},{"name":"Alhu\u00e9","pct":80.0},{"name":"Combarbal\u00e1","pct":78.7},{"name":"Marchihue","pct":77.8},{"name":"San Vicente","pct":77.6}],"men":[{"name":"Puchuncav\u00ed","pct":25.2},{"name":"Paihuano","pct":26.6},{"name":"Curarrehue","pct":29.2},{"name":"Mar\u00eda Pinto","pct":30.0},{"name":"Independencia","pct":34.8},{"name":"Portezuelo","pct":36.1},{"name":"Sierra Gorda","pct":36.6},{"name":"San Pedro de Atacama","pct":38.9},{"name":"Mar\u00eda Elena","pct":40.8},{"name":"General Lagos","pct":40.9}]},"2025-2":{"may":[{"name":"Queil\u00e9n","pct":74.2},{"name":"Quinchao","pct":69.3},{"name":"M\u00e1fil","pct":66.7},{"name":"Graneros","pct":69.2},{"name":"Colchane","pct":58.8},{"name":"Huasco","pct":60.8},{"name":"Alhu\u00e9","pct":58.1},{"name":"Pe\u00f1alol\u00e9n","pct":57.9},{"name":"Marchihue","pct":57.7},{"name":"R\u00edo Claro","pct":57.7}],"men":[{"name":"R\u00edo Verde","pct":7.7},{"name":"Cholchol","pct":12.9},{"name":"Frutillar","pct":16.2},{"name":"Curanilahue","pct":16.5},{"name":"Victoria","pct":18.9},{"name":"Curarrehue","pct":20.1},{"name":"Cobquecura","pct":26.3},{"name":"San Pedro de Atacama","pct":26.4},{"name":"General Lagos","pct":26.9},{"name":"Mar\u00eda Elena","pct":27.2}]},"2025-1":{"may":[{"name":"M\u00e1fil","pct":47.6},{"name":"Colchane","pct":37.0},{"name":"Quinchao","pct":32.6},{"name":"Vi\u00f1a del Mar","pct":33.0},{"name":"Salamanca","pct":30.8},{"name":"Las Condes","pct":32.4},{"name":"Marchihue","pct":30.5},{"name":"Valdivia","pct":30.2},{"name":"Huasco","pct":30.1},{"name":"Panquehue","pct":28.6}],"men":[{"name":"R\u00edo Ib\u00e1\u00f1ez","pct":6.1},{"name":"Antofagasta","pct":7.3},{"name":"R\u00edo Verde","pct":9.3},{"name":"Curarrehue","pct":9.8},{"name":"San Pedro de Atacama","pct":11.3},{"name":"Cabo de Hornos","pct":12.0},{"name":"Paillaco","pct":12.2},{"name":"Paine","pct":12.3},{"name":"General Lagos","pct":12.4},{"name":"Mar\u00eda Elena","pct":13.4}]}};
 
 const KPI_MAP = {
   "2025-3":["124,6","89,0","967,3"],
@@ -1039,6 +1066,34 @@ function render(year, q) {
     dsMG.push(ds(shortPer+'  $'+(mGasTotal/1000).toLocaleString('es-CL',{maximumFractionDigits:0})+'MM', d.munGas, 'rgba(0,180,160,.65)', C2));
     bar('c-mgas', mgL, dsMG, {fmt: v => '$'+(v/1000).toFixed(0)+'MM', ytick: function(v){return '$ '+(v/1000).toLocaleString('es-CL',{maximumFractionDigits:0})+'MM';}, rot:40});
   }
+
+  // Municipal ranking
+  (function(){
+    var mr = MUN_RANK[key];
+    var titleEl = document.getElementById('mun-rank-title');
+    var mayEl = document.getElementById('mun-rank-may');
+    var menEl = document.getElementById('mun-rank-men');
+    if(!mayEl || !menEl) return;
+    if(!mr) {
+      mayEl.innerHTML = '<div style="color:#aaa;font-size:11px;padding:8px">Sin datos para este periodo</div>';
+      menEl.innerHTML = '<div style="color:#aaa;font-size:11px;padding:8px">Sin datos para este periodo</div>';
+      return;
+    }
+    if(titleEl) titleEl.textContent = 'Ranking Ejecución Presupuestaria por Municipalidad · ' + curPer;
+    function rankRows(items, color) {
+      return items.map(function(it, i) {
+        var w = Math.min(it.pct, 120) / 120 * 100;
+        return '<div class="mun-row">' +
+          '<span class="mun-n">' + (i+1) + '</span>' +
+          '<span class="mun-name">' + it.name + '</span>' +
+          '<div class="mun-bw"><div class="mun-bar" style="width:' + w + '%;background:' + color + '"></div></div>' +
+          '<span class="mun-pct" style="color:' + color + '">' + it.pct.toFixed(1) + '%</span>' +
+          '</div>';
+      }).join('');
+    }
+    mayEl.innerHTML = rankRows(mr.may, 'var(--navy)');
+    menEl.innerHTML = rankRows(mr.men, 'var(--teal)');
+  })();
 
   // FCM
   const fcmReg = d.fcmReg || {};
