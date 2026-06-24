@@ -864,7 +864,7 @@ function render(year, q) {
     var prop=mi[0], minsal=mi[1], mineduc=mi[2], fcm=mi[3];
     var dTotal = ptotal ? pct(total,ptotal) : null;
     var totPct = function(v){ return total>0 ? (v/total*100).toFixed(1) : '--'; };
-    var t = 'Al '+curPer+', los ingresos del Sector Municipal alcanzaron $\u00a0'+(total/1000).toFixed(0)+' mil millones'
+    var t = 'Al '+curPer+', los ingresos del Sector Municipal alcanzaron $\u00a0'+(total/1000).toLocaleString('es-CL',{maximumFractionDigits:0})+' mil millones'
       +(pPer&&dTotal!=null?', un '+(parseFloat(dTotal)>=0?'aumento':'disminuci\u00f3n')+' del '+Math.abs(dTotal)+'% respecto al '+pPer:'')+'.'
       +' Los Ingresos Propios representaron el '+totPct(prop)+'% del total'
       +', las Transferencias MINSAL el '+totPct(minsal)+'%'
@@ -881,7 +881,7 @@ function render(year, q) {
     var pers=mg[0], transf=mg[1], bs=mg[2];
     var dTotal = ptotal ? pct(total,ptotal) : null;
     var totPct = function(v){ return total>0 ? (v/total*100).toFixed(1) : '--'; };
-    var t = 'Al '+curPer+', los gastos del Sector Municipal alcanzaron $\u00a0'+(total/1000).toFixed(0)+' mil millones'
+    var t = 'Al '+curPer+', los gastos del Sector Municipal alcanzaron $\u00a0'+(total/1000).toLocaleString('es-CL',{maximumFractionDigits:0})+' mil millones'
       +(pPer&&dTotal!=null?', '+(parseFloat(dTotal)>=0?'un aumento':'una disminuci\u00f3n')+' del '+Math.abs(dTotal)+'% respecto al '+pPer:'')+'.'
       +' Los Gastos en Personal representaron el '+totPct(pers)+'% del total'
       +', Transferencias Corrientes el '+totPct(transf)+'%'
@@ -899,9 +899,9 @@ function render(year, q) {
     var biggest = emp.reduce(function(prev,cur,i){ return (Math.abs(cur||0)>Math.abs(prev.v||0))?{v:cur,i:i}:prev; },{v:0,i:0});
     var NAMES=['Otras Emp.','TVN','BancoEstado','CODELCO','ENAP','Emp. Portuarias','Emp. Defensa','ENAMI','EFE','METRO'];
     var losses = emp.filter(function(v){return v!=null&&v<0;}).length;
-    var t = 'Al '+curPer+', las utilidades de las Empresas del Estado alcanzaron $\u00a0'+Math.round(total)+' millones'
+    var t = 'Al '+curPer+', las utilidades de las Empresas del Estado alcanzaron $\u00a0'+Math.round(total).toLocaleString('es-CL')+' millones'
       +(pPer&&dTotal!=null?', '+(dTotal>=0?'un aumento':'una disminuci\u00f3n')+' de $\u00a0'+Math.round(Math.abs(dTotal))+' millones respecto al '+pPer:'')+'.'
-      +' '+NAMES[biggest.i]+' represent\u00f3 el mayor resultado con $\u00a0'+Math.round(Math.abs(biggest.v||0))+' millones'
+      +' '+NAMES[biggest.i]+' represent\u00f3 el mayor resultado con $\u00a0'+Math.round(Math.abs(biggest.v||0)).toLocaleString('es-CL')+' millones'
       +(biggest.v<0?' (p\u00e9rdida)':' (utilidad)')+'.'
       +(losses>0?' '+losses+' empresa'+(losses>1?'s registraron':' registr\u00f3')+' p\u00e9rdidas en el periodo.':'');
     showNarr('emp',t);
@@ -916,10 +916,10 @@ function render(year, q) {
     var op=ei[0], transf=ei[1], fiscal=ei[2];
     var dOp = pei ? pct(op,pei[0]) : null;
     var dTransf = pei ? pct(transf,pei[1]) : null;
-    var t = 'Al '+curPer+', los ingresos de las Instituciones de Educaci\u00f3n Superior alcanzaron $\u00a0'+Math.round(total)+' millones.'
-      +' Los Ingresos de Operaci\u00f3n fueron el principal componente con $\u00a0'+Math.round(op)+' millones'
+    var t = 'Al '+curPer+', los ingresos de las Instituciones de Educaci\u00f3n Superior alcanzaron $\u00a0'+Math.round(total).toLocaleString('es-CL')+' millones.'
+      +' Los Ingresos de Operaci\u00f3n fueron el principal componente con $\u00a0'+Math.round(op).toLocaleString('es-CL')+' millones'
       +(dOp!=null?' ('+dirv(parseFloat(dOp))+' un '+Math.abs(dOp)+'% respecto al '+pPer+')':'')+'. '
-      +'Las Transferencias alcanzaron $\u00a0'+Math.round(transf)+' millones'
+      +'Las Transferencias alcanzaron $\u00a0'+Math.round(transf).toLocaleString('es-CL')+' millones'
       +(dTransf!=null?' ('+dirv(parseFloat(dTransf))+' un '+Math.abs(dTransf)+'%)':'')+'.';
     showNarr('edu_ing',t);
   })();
@@ -932,10 +932,10 @@ function render(year, q) {
     var ptotal = peg ? peg.reduce(function(a,b){return a+(b||0);},0) : null;
     var pers=eg[0], bs=eg[1], transf=eg[2];
     var dPers = peg ? pct(pers,peg[0]) : null;
-    var t = 'Al '+curPer+', los gastos de las Instituciones de Educaci\u00f3n Superior alcanzaron $\u00a0'+Math.round(total)+' millones.'
-      +' Los Gastos en Personal representaron el principal componente con $\u00a0'+Math.round(pers)+' millones'
+    var t = 'Al '+curPer+', los gastos de las Instituciones de Educaci\u00f3n Superior alcanzaron $\u00a0'+Math.round(total).toLocaleString('es-CL')+' millones.'
+      +' Los Gastos en Personal representaron el principal componente con $\u00a0'+Math.round(pers).toLocaleString('es-CL')+' millones'
       +(dPers!=null?' ('+dirv(parseFloat(dPers))+' un '+Math.abs(dPers)+'% respecto al '+pPer+')':'')+'. '
-      +'La Compra de Bienes y Servicios alcanz\u00f3 $\u00a0'+Math.round(bs)+' millones.';
+      +'La Compra de Bienes y Servicios alcanz\u00f3 $\u00a0'+Math.round(bs).toLocaleString('es-CL')+' millones.';
     showNarr('edu_gas',t);
   })();
 
@@ -1061,7 +1061,7 @@ function render(year, q) {
     const dsEmp = [];
     var empTotal = d.empresas.reduce(function(a,b){return a+(b||0);},0);
     if (prd && prd.empresas) { var pET=prd.empresas.reduce(function(a,b){return a+(b||0);},0); dsEmp.push(ds('T'+prev.split('-')[1]+' '+prev.split('-')[0]+'  $'+Math.round(Math.abs(pET)).toLocaleString('es-CL')+'MM', prd.empresas, 'rgba(46,95,163,.35)', C1)); }
-    dsEmp.push({label:shortPer+'  $'+Math.round(empTotal)+'MM', data:d.empresas, backgroundColor:empBG, borderColor:empBC, borderWidth:1});
+    dsEmp.push({label:shortPer+'  $'+Math.round(empTotal).toLocaleString('es-CL')+'MM', data:d.empresas, backgroundColor:empBG, borderColor:empBC, borderWidth:1});
     bar('c-emp', empL, dsEmp, {fmt: v => '$'+v+'MM', ytick: function(v){return '$ '+Math.round(v).toLocaleString('es-CL')+'MM';}, rot:40, xs:9});
   }
 
