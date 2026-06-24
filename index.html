@@ -1415,7 +1415,9 @@ function injectData(html, data, q, yr) {
    ==================================================== */
 window.addEventListener('DOMContentLoaded', function() {
   initSelectors();
-  render('2025', '3');
+  var y = document.getElementById('sel-y').value;
+  var q = document.getElementById('sel-q').value;
+  render(y, q);
 });
 </script>
 </body>
