@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IGFE Updater — Actualizar desde PDF</title>
+<style>
+  :root {
+    --navy: #0a1628;
+    --navy-mid: #152340;
+    --navy-light: #1e3258;
+    --accent: #00c4a0;
+    --gold: #f0a500;
+    --coral: #e8614a;
+    --text: #e8edf5;
+    --text-muted: #8a9ab8;
+    --border: rgba(255,255,255,0.1);
+    --card: rgba(21,35,64,0.8);
+    --success: #4ade80;
+    --warning: #f0a500;
+    --error: #e8614a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--navy);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+  }
+
+  .container { width: 100%; max-width: 720px; }
+
+  header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 2rem;
+  }
+
+  .logo {
+    width: 40px; height: 40px;
+    background: var(--accent);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px; color: var(--navy);
+  }
+
+  h1 { font-size: 18px; font-weight: 600; }
+  .subtitle { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+  /* Steps */
+  .steps { display: flex; flex-direction: column; gap: 16px; }
+
+  .step {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    position: relative;
+  }
+
+  .step.disabled { opacity: 0.4; pointer-events: none; }
+  .step.done { border-color: rgba(0,196,160,0.3); }
+  .step.active { border-color: rgba(0,196,160,0.5); }
+
+  .step-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 1rem;
+  }
+
+  .step-num {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--navy-light);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600; color: var(--text-muted);
+    flex-shrink: 0;
+  }
+
+  .step.done .step-num { background: var(--accent); border-color: var(--accent); color: var(--navy); }
+  .step.active .step-num { background: rgba(0,196,160,0.2); border-color: var(--accent); color: var(--accent); }
+
+  .step-title { font-size: 14px; font-weight: 600; }
+  .step-desc { font-size: 12px; color: var(--text-muted); margin-left: auto; }
+
+  /* Inputs */
+  label { font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 6px; }
+
+  input[type="text"], input[type="password"], select {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+    font-family: inherit;
+  }
+
+  input[type="text"]:focus, input[type="password"]:focus, select:focus {
+    border-color: var(--accent);
+  }
+
+  input[type="password"] { letter-spacing: 2px; }
+
+  .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .input-col { margin-bottom: 12px; }
+
+  .hint {
+    font-size: 11px; color: var(--text-muted);
+    margin-top: 5px; line-height: 1.5;
+  }
+
+  .hint a { color: var(--accent); text-decoration: none; }
+
+  /* Drop zone */
+  .drop-zone {
+    border: 2px dashed rgba(255,255,255,0.15);
+    border-radius: 10px;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .drop-zone:hover, .drop-zone.dragging {
+    border-color: var(--accent);
+    background: rgba(0,196,160,0.05);
+  }
+
+  .drop-zone input[type="file"] {
+    position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+  }
+
+  .drop-icon { font-size: 32px; margin-bottom: 8px; }
+  .drop-text { font-size: 13px; color: var(--text-muted); }
+  .drop-sub { font-size: 11px; color: rgba(138,154,184,0.6); margin-top: 4px; }
+
+  .file-selected {
+    display: none;
+    align-items: center; gap: 10px;
+    background: rgba(0,196,160,0.08);
+    border: 1px solid rgba(0,196,160,0.3);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    margin-top: 12px;
+  }
+
+  .file-selected.show { display: flex; }
+  .file-name { font-weight: 500; color: var(--accent); }
+  .file-size { color: var(--text-muted); font-size: 11px; margin-left: auto; }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 13px; font-weight: 600;
+    border: none; cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--navy);
+    width: 100%;
+    justify-content: center;
+    margin-top: 4px;
+  }
+
+  .btn-primary:hover { background: #00a386; }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+
+  .btn-secondary:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+
+  /* Log / progress */
+  .log-area {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 11px;
+    line-height: 1.8;
+    max-height: 280px;
+    overflow-y: auto;
+    margin-top: 12px;
+  }
+
+  .log-line { display: flex; gap: 10px; }
+  .log-time { color: rgba(138,154,184,0.5); flex-shrink: 0; }
+  .log-ok { color: var(--success); }
+  .log-err { color: var(--error); }
+  .log-info { color: var(--text-muted); }
+  .log-accent { color: var(--accent); }
+  .log-warn { color: var(--warning); }
+
+  /* Progress bar */
+  .progress-wrap {
+    height: 4px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 99px;
+    overflow: hidden;
+    margin-top: 12px;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 99px;
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+
+  /* Result card */
+  .result-card {
+    display: none;
+    background: rgba(0,196,160,0.08);
+    border: 1px solid rgba(0,196,160,0.3);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    margin-top: 16px;
+  }
+
+  .result-card.show { display: block; }
+  .result-card.error { background: rgba(232,97,74,0.08); border-color: rgba(232,97,74,0.3); }
+
+  .result-title { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+  .result-url { font-size: 12px; color: var(--accent); margin-top: 8px; }
+  .result-url a { color: var(--accent); }
+
+  /* Spinner */
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner {
+    width: 14px; height: 14px;
+    border: 2px solid rgba(10,22,40,0.3);
+    border-top-color: var(--navy);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+  }
+
+  /* Divider */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+
+  /* Diff preview */
+  .diff-section { margin-top: 12px; }
+  .diff-label { font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
+  .diff-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    font-size: 11px; padding: 3px 10px; border-radius: 99px;
+    border: 1px solid;
+  }
+  .chip-green { background: rgba(74,222,128,0.1); border-color: rgba(74,222,128,0.3); color: #4ade80; }
+  .chip-red { background: rgba(232,97,74,0.1); border-color: rgba(232,97,74,0.3); color: var(--coral); }
+  .chip-blue { background: rgba(41,121,200,0.1); border-color: rgba(41,121,200,0.3); color: #5b9bd5; }
+
+  @media (max-width: 600px) {
+    .input-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <header>
+    <div class="logo">CG</div>
+    <div>
+      <h1>IGFE Updater</h1>
+      <div class="subtitle">Actualizar dashboard desde PDF · vía Claude AI + GitHub API</div>
+    </div>
+  </header>
+
+  <div class="steps">
+
+    <!-- STEP 1: Config -->
+    <div class="step active" id="step1">
+      <div class="step-header">
+        <div class="step-num" id="num1">1</div>
+        <div class="step-title">Configuración de GitHub</div>
+        <div class="step-desc">Se guarda localmente en tu navegador</div>
+      </div>
+
+      <div class="input-row">
+        <div>
+          <label>Usuario de GitHub</label>
+          <input type="text" id="gh-user" placeholder="garrinchashirts-create" value="garrinchashirts-create">
+        </div>
+        <div>
+          <label>Repositorio</label>
+          <input type="text" id="gh-repo" placeholder="igfe-dashboard" value="igfe-dashboard">
+        </div>
+      </div>
+
+      <div class="input-col">
+        <label>GitHub Personal Access Token (PAT)</label>
+        <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+        <div class="hint">
+          Genera un token en <a href="https://github.com/settings/tokens/new" target="_blank">github.com/settings/tokens</a>
+          con permisos <strong>repo → Contents (write)</strong>. Se guarda solo en tu navegador, nunca se envía a servidores.
+        </div>
+      </div>
+
+      <div class="input-col">
+        <label>Anthropic API Key</label>
+        <input type="password" id="claude-key" placeholder="sk-ant-xxxxxxxxxxxxxxxxxxxx">
+        <div class="hint">
+          Consigue tu clave en <a href="https://console.anthropic.com/keys" target="_blank">console.anthropic.com/keys</a>.
+          Solo se usa en tu navegador para llamar a Claude Sonnet 4.6 y analizar el PDF.
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="saveConfig()">Guardar configuración →</button>
+    </div>
+
+    <!-- STEP 2: PDF -->
+    <div class="step disabled" id="step2">
+      <div class="step-header">
+        <div class="step-num" id="num2">2</div>
+        <div class="step-title">Subir PDF del nuevo trimestre</div>
+      </div>
+
+      <div class="drop-zone" id="drop-zone">
+        <input type="file" id="pdf-input" accept=".pdf" onchange="handleFile(this.files[0])">
+        <div class="drop-icon">📄</div>
+        <div class="drop-text">Arrastra el PDF del IGFE aquí o haz clic para seleccionar</div>
+        <div class="drop-sub">Solo archivos .pdf · Máx. 10 MB</div>
+      </div>
+
+      <div class="file-selected" id="file-info">
+        <span>📎</span>
+        <span class="file-name" id="file-name-txt"></span>
+        <span class="file-size" id="file-size-txt"></span>
+        <button class="btn btn-secondary" style="padding:4px 10px;font-size:11px;" onclick="clearFile()">✕</button>
+      </div>
+
+      <div class="input-row" style="margin-top:14px;">
+        <div>
+          <label>Trimestre del informe</label>
+          <select id="quarter-sel">
+            <option value="1">1er Trimestre (Ene–Mar)</option>
+            <option value="2">2do Trimestre (Ene–Jun)</option>
+            <option value="3" selected>3er Trimestre (Ene–Sep)</option>
+            <option value="4">4to Trimestre (Ene–Dic)</option>
+          </select>
+        </div>
+        <div>
+          <label>Año</label>
+          <input type="text" id="year-input" value="2025" placeholder="2025">
+        </div>
+      </div>
+
+      <button class="btn btn-primary" id="analyze-btn" onclick="analyzeAndUpdate()" disabled>
+        Analizar PDF y actualizar dashboard →
+      </button>
+    </div>
+
+    <!-- STEP 3: Progress -->
+    <div class="step disabled" id="step3">
+      <div class="step-header">
+        <div class="step-num" id="num3">3</div>
+        <div class="step-title">Procesando y publicando</div>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+
+      <div class="log-area" id="log-area"></div>
+
+      <div class="result-card" id="result-card">
+        <div class="result-title" id="result-title"></div>
+        <div id="result-body"></div>
+        <div class="diff-section" id="diff-section"></div>
+        <div class="result-url" id="result-url"></div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+/* ===== CONFIG ===== */
+const CLAUDE_MODEL = 'claude-sonnet-4-6';
+const CLAUDE_API   = 'https://api.anthropic.com/v1/messages';
+
+let pdfFile = null;
+let pdfBase64 = null;
+let config = {};
+
+/* ===== BOOT ===== */
+window.addEventListener('DOMContentLoaded', () => {
+  loadConfig();
+  setupDrop();
+});
+
+function loadConfig() {
+  const saved = localStorage.getItem('igfe_config');
+  if (!saved) return;
+  config = JSON.parse(saved);
+  if (config.ghUser)    document.getElementById('gh-user').value    = config.ghUser;
+  if (config.ghRepo)    document.getElementById('gh-repo').value    = config.ghRepo;
+  if (config.ghToken)   document.getElementById('gh-token').value   = config.ghToken;
+  if (config.claudeKey) document.getElementById('claude-key').value = config.claudeKey;
+  if (config.ghToken && config.claudeKey) {
+    enableStep(2);
+    markDone(1);
+  }
+}
+
+function saveConfig() {
+  config = {
+    ghUser:    document.getElementById('gh-user').value.trim(),
+    ghRepo:    document.getElementById('gh-repo').value.trim(),
+    ghToken:   document.getElementById('gh-token').value.trim(),
+    claudeKey: document.getElementById('claude-key').value.trim(),
+  };
+  if (!config.ghUser || !config.ghRepo || !config.ghToken || !config.claudeKey) {
+    alert('Por favor completa todos los campos antes de continuar.');
+    return;
+  }
+  localStorage.setItem('igfe_config', JSON.stringify(config));
+  markDone(1);
+  enableStep(2);
+}
+
+/* ===== DRAG DROP ===== */
+function setupDrop() {
+  const zone = document.getElementById('drop-zone');
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragging'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('dragging'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('dragging');
+    const f = e.dataTransfer.files[0];
+    if (f && f.type === 'application/pdf') handleFile(f);
+    else alert('Solo se aceptan archivos PDF.');
+  });
+}
+
+function handleFile(file) {
+  if (!file) return;
+  if (file.size > 10 * 1024 * 1024) { alert('El PDF supera 10 MB.'); return; }
+  pdfFile = file;
+  document.getElementById('file-name-txt').textContent = file.name;
+  document.getElementById('file-size-txt').textContent = (file.size / 1024).toFixed(0) + ' KB';
+  document.getElementById('file-info').classList.add('show');
+  document.getElementById('analyze-btn').disabled = false;
+
+  const reader = new FileReader();
+  reader.onload = e => { pdfBase64 = e.target.result.split(',')[1]; };
+  reader.readAsDataURL(file);
+}
+
+function clearFile() {
+  pdfFile = null; pdfBase64 = null;
+  document.getElementById('pdf-input').value = '';
+  document.getElementById('file-info').classList.remove('show');
+  document.getElementById('analyze-btn').disabled = true;
+}
+
+/* ===== MAIN FLOW ===== */
+async function analyzeAndUpdate() {
+  if (!pdfBase64) { alert('Primero selecciona un PDF.'); return; }
+
+  const quarter = parseInt(document.getElementById('quarter-sel').value);
+  const year    = document.getElementById('year-input').value.trim();
+
+  enableStep(3);
+  markDone(2);
+  setProgress(5);
+  clearLog();
+
+  try {
+    // 1. Extract data from PDF using Claude
+    log('info', `Analizando PDF con Claude ${CLAUDE_MODEL}…`);
+    const extracted = await extractDataWithClaude(quarter, year);
+    setProgress(40);
+    log('ok', 'Extracción de datos completada');
+    log('accent', `Datos extraídos: ${Object.keys(extracted).length} secciones`);
+
+    // 2. Get current index.html from GitHub
+    log('info', 'Descargando index.html desde GitHub…');
+    const { content: currentHtml, sha } = await getFileFromGitHub('index.html');
+    setProgress(55);
+    log('ok', `index.html obtenido (SHA: ${sha.slice(0,8)}…)`);
+
+    // 3. Inject new data into HTML
+    log('info', 'Inyectando nuevos datos en el dashboard…');
+    const updatedHtml = injectData(currentHtml, extracted, quarter, year);
+    setProgress(70);
+    log('ok', 'Datos inyectados correctamente');
+    showDiff(currentHtml, updatedHtml, extracted);
+
+    // 4. Push to GitHub
+    log('info', 'Publicando en GitHub…');
+    const qLabel = quarter === 1 ? '1T' : quarter === 2 ? '2T' : quarter === 3 ? '3T' : '4T';
+    const commitMsg = `Update dashboard: IGFE ${qLabel} ${year}`;
+    await pushToGitHub('index.html', updatedHtml, sha, commitMsg);
+    setProgress(100);
+    log('ok', `Commit publicado: "${commitMsg}"`);
+    log('accent', `→ Dashboard actualizado en GitHub Pages`);
+
+    showResult(true, quarter, year);
+
+  } catch (err) {
+    log('err', 'Error: ' + err.message);
+    showResult(false, quarter, year, err.message);
+  }
+}
+
+/* ===== CLAUDE EXTRACTION ===== */
+async function extractDataWithClaude(quarter, year) {
+  const qName = quarter === 1 ? 'primer' : quarter === 2 ? 'segundo' : quarter === 3 ? 'tercer' : 'cuarto';
+  const prompt = `Eres un analista financiero experto en presupuesto público de Chile.
+Analiza este PDF del Informe de Gestión Financiera del Estado (IGFE) correspondiente al ${qName} trimestre de ${year} y extrae TODOS los datos numéricos.
+
+Responde ÚNICAMENTE con un objeto JSON válido con esta estructura exacta (sin texto adicional, sin markdown):
+
+{
+  "quarter": ${quarter},
+  "year": "${year}",
+  "kpis": {
+    "gastoTotal": "124,6",
+    "ingresoPublico": "89,0",
+    "entidades": "709",
+    "deudaPIB": "39,4",
+    "inversionesFinancieras": "40,0",
+    "utilidadesEmpresas": "967,3",
+    "entidadesDetalle": "299 Púb · 345 Mun · 32 Emp · 33 IES"
+  },
+  "cumplimiento": {
+    "sectorPublico": 99.0,
+    "municipal": 98.8,
+    "empresasEstado": 90.6,
+    "educacionSuperior": 84.9
+  },
+  "ejecucion": {
+    "sectorPublico": 75.1,
+    "municipal": 65.0,
+    "empresasEstado": 81.7,
+    "educacionSuperior": 63.3
+  },
+  "gastoSector": {
+    "publicoActual": 79.1,
+    "publicoAnterior": 77.8,
+    "municipalActual": 10.4,
+    "municipalAnterior": 10.2,
+    "empresasActual": 33.7,
+    "empresasAnterior": 29.8,
+    "educacionActual": 1.4,
+    "educacionAnterior": 1.4
+  },
+  "ingresosPublicos": {
+    "impuestosActual": 55.9, "impuestosAnterior": 51.7,
+    "endeudamientoActual": 19.0, "endeudamientoAnterior": 25.2,
+    "recuperacionActual": 3.1, "recuperacionAnterior": 3.1,
+    "otrosCorrActual": 2.7, "otrosCorrAnterior": 2.7,
+    "imposicionesActual": 2.7, "imposicionesAnterior": 2.5,
+    "ingOpActual": 3.1, "ingOpAnterior": 3.5,
+    "ventaActual": 1.1, "ventaAnterior": 1.1,
+    "otrosActual": 1.4, "otrosAnterior": 1.7
+  },
+  "gastosPublicos": {
+    "transferenciasActual": 24.4, "transferenciasAnterior": 22.6,
+    "segSocialActual": 12.3, "segSocialAnterior": 15.2,
+    "servicioDeudaActual": 11.7, "servicioDeudaAnterior": 18.4,
+    "bienesServiciosActual": 11.7, "bienesServiciosAnterior": 10.9,
+    "personalActual": 12.3, "personalAnterior": 11.6,
+    "activosFinActual": 5.1, "activosFinAnterior": 4.5,
+    "inversionActual": 3.5, "inversionAnterior": 2.3,
+    "otrosActual": 3.2, "otrosAnterior": 2.1
+  },
+  "rankingAlto": [
+    {"nombre": "Min. Bienes Nacionales", "pct": 97.3},
+    {"nombre": "Contraloría General", "pct": 90.8},
+    {"nombre": "Min. Interior y Seg. Pública", "pct": 85.0},
+    {"nombre": "Min. Mujer y Eq. Género", "pct": 84.9},
+    {"nombre": "Min. Hacienda", "pct": 82.6},
+    {"nombre": "Min. Salud", "pct": 81.8},
+    {"nombre": "Min. Justicia y DDHH", "pct": 81.2},
+    {"nombre": "Presidencia de la República", "pct": 80.2},
+    {"nombre": "Ministerio Público", "pct": 78.0},
+    {"nombre": "Poder Judicial", "pct": 77.1}
+  ],
+  "rankingBajo": [
+    {"nombre": "Min. Economía, Fomento y Turismo", "pct": 35.2},
+    {"nombre": "Servicio Electoral", "pct": 45.4},
+    {"nombre": "Min. Ciencia, Tec. y Conoc.", "pct": 58.8},
+    {"nombre": "Min. Medio Ambiente", "pct": 63.3},
+    {"nombre": "Min. Obras Públicas", "pct": 65.2},
+    {"nombre": "Min. Des. Social y Familia", "pct": 66.6},
+    {"nombre": "Min. Deporte", "pct": 68.7},
+    {"nombre": "Min. Vivienda y Urbanismo", "pct": 69.3},
+    {"nombre": "Min. Culturas y Patrimonio", "pct": 69.3},
+    {"nombre": "Min. Educación", "pct": 71.3}
+  ],
+  "ingresosMun": {
+    "propiosActual": 2846.9, "propiosAnterior": 2704.7,
+    "transferenciasActual": 2093.8, "transferenciasAnterior": 1891.5,
+    "minsalActual": 2218.7, "minsalAnterior": 2065.3,
+    "fcmActual": 1590.5, "fcmAnterior": 1811.1,
+    "minedActual": 1088.7, "minedAnterior": 1054.7,
+    "ingBfoActual": 1032.6, "ingBfoAnterior": 943.9,
+    "otrosActual": 959.3, "otrosAnterior": 928.7
+  },
+  "gastosMun": {
+    "personalActual": 4967.5, "personalAnterior": 4948.2,
+    "bienesActual": 2242.7, "bienesAnterior": 2126.3,
+    "transferenciasActual": 2155.7, "transferenciasAnterior": 2140.0,
+    "inversionActual": 427.1, "inversionAnterior": 419.3,
+    "deudaActual": 276.2, "deudaAnterior": 223.9,
+    "segSocialActual": 110.4, "segSocialAnterior": 110.2,
+    "actNFActual": 103.4, "actNFAnterior": 110.2,
+    "otrosActual": 124.8, "otrosAnterior": 109.4
+  },
+  "fcmRegiones": {
+    "Aysén": 44.9, "Atacama": 27.2, "Arica": 26.2, "Ñuble": 24.9,
+    "Magallanes": 23.9, "Los Ríos": 23.5, "O'Higgins": 21.5,
+    "Valparaíso": 21.4, "Araucanía": 21.1, "Coquimbo": 21.0,
+    "Biobío": 19.1, "Maule": 18.7, "Los Lagos": 18.4,
+    "Tarapacá": 14.8, "Antofagasta": 13.4, "Metropolitana": 12.3
+  },
+  "empresas": {
+    "enap2025": 485148, "enap2024": 293874,
+    "codelco2025": 109387, "codelco2024": 198324,
+    "enami2025": 46802, "enami2024": 42949,
+    "defensa2025": 11485, "defensa2024": -14432,
+    "banco2025": 5755, "banco2024": 2373,
+    "otras2025": 382547, "otras2024": 366103,
+    "portuarias2025": 42949, "portuarias2024": 137942,
+    "metro2025": -45526, "metro2024": -12368,
+    "efe2025": -129552, "efe2024": -75939,
+    "tvn2025": -16292, "tvn2024": -5889
+  },
+  "educacionIng": {
+    "ingOpActual": 772883, "ingOpAnterior": 700154,
+    "transferenciasActual": 364024, "transferenciasAnterior": 322460,
+    "financiamientoActual": 161621, "financiamientoAnterior": 160984,
+    "endeudamientoActual": 80854, "endeudamientoAnterior": 89572,
+    "ventaActual": 33010, "ventaAnterior": 24561,
+    "recuperacionActual": 11941, "recuperacionAnterior": 8119,
+    "otrosActual": 1753, "otrosAnterior": 3787
+  },
+  "gratuidad": {
+    "2021": {"total": 1.9, "pct": 62.7},
+    "2022": {"total": 2.1, "pct": 65.1},
+    "2023": {"total": 2.4, "pct": 68.4},
+    "2024": {"total": 2.8, "pct": 71.1},
+    "3T2025": {"total": 2.18, "pct": 74.6}
+  },
+  "deuda": {
+    "totalBillones": 130.3, "internaBillones": 85.9, "externaBillones": 44.3,
+    "totalPIB": 39.4, "internaPIB": 26.0, "externaPIB": 13.4,
+    "historico": [
+      {"anio":"2021","interna":23.5,"externa":12.3},
+      {"anio":"2022","interna":22.3,"externa":12.7},
+      {"anio":"2023","interna":23.4,"externa":13.0},
+      {"anio":"2024","interna":24.6,"externa":13.6},
+      {"anio":"3T${year}","interna":26.0,"externa":13.4}
+    ]
+  },
+  "inversiones": {
+    "totalBillones": 40.0, "pib": 12.1,
+    "historico": [
+      {"anio":"2021","pib":12.1},
+      {"anio":"2022","pib":13.6},
+      {"anio":"2023","pib":12.2},
+      {"anio":"2024","pib":11.7},
+      {"anio":"3T${year}","pib":12.1}
+    ]
+  },
+  "gobRegionalesIng": {
+    "transfCapActual": 1167858, "transfCapAnterior": 1052818,
+    "transfCorrActual": 124810, "transfCorrAnterior": 91510,
+    "otrosActual": 23842, "otrosAnterior": 23996
+  },
+  "gobRegionalesGas": {
+    "inversionActual": 383297, "inversionAnterior": 467332,
+    "transfCapActual": 219841, "transfCapAnterior": 133565,
+    "actNFActual": 74496, "actNFAnterior": 68861,
+    "personalActual": 67192, "personalAnterior": 62960,
+    "transfCorrActual": 160439, "transfCorrAnterior": 19181,
+    "servicioDeudaActual": 147888, "servicioDeudaAnterior": 16153,
+    "otrosActual": 72110, "otrosAnterior": 113636
+  }
+}
+
+Extrae TODOS los valores del PDF. Si un valor no aparece en el PDF, mantén el valor del ejemplo.`;
+
+  const response = await fetch(CLAUDE_API, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': config.claudeKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: CLAUDE_MODEL,
+      max_tokens: 4096,
+      messages: [{
+        role: 'user',
+        content: [
+          { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: pdfBase64 } },
+          { type: 'text', text: prompt }
+        ]
+      }]
+    })
+  });
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(`Claude API: ${err.error?.message || response.statusText}`);
+  }
+
+  const data = await response.json();
+  const text = data.content.find(b => b.type === 'text')?.text || '';
+  const clean = text.replace(/```json|```/g, '').trim();
+  return JSON.parse(clean);
+}
+
+/* ===== GITHUB API ===== */
+async function getFileFromGitHub(path) {
+  const url = `https://api.github.com/repos/${config.ghUser}/${config.ghRepo}/contents/${path}`;
+  const res = await fetch(url, {
+    headers: { 'Authorization': `Bearer ${config.ghToken}`, 'Accept': 'application/vnd.github.v3+json' }
+  });
+  if (!res.ok) throw new Error(`GitHub GET: ${res.status} ${res.statusText}`);
+  const data = await res.json();
+  const content = atob(data.content.replace(/\n/g,''));
+  return { content, sha: data.sha };
+}
+
+async function pushToGitHub(path, content, sha, message) {
+  const encoded = btoa(unescape(encodeURIComponent(content)));
+  const url = `https://api.github.com/repos/${config.ghUser}/${config.ghRepo}/contents/${path}`;
+  const body = { message, content: encoded, sha };
+  const res = await fetch(url, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${config.ghToken}`,
+      'Accept': 'application/vnd.github.v3+json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(`GitHub PUT: ${err.message || res.statusText}`);
+  }
+  return await res.json();
+}
+
+/* ===== DATA INJECTION ===== */
+function injectData(html, d, quarter, year) {
+  const qLabel  = quarter === 1 ? '1er' : quarter === 2 ? '2do' : quarter === 3 ? '3er' : '4to';
+  const periods = ['Ene–Mar','Ene–Jun','Ene–Sep','Ene–Dic'];
+  const period  = periods[quarter - 1];
+  const qSuffix = quarter === 1 ? '1T' : quarter === 2 ? '2T' : quarter === 3 ? '3T' : '4T';
+
+  /* --- Build KPI deltas vs previous year --- */
+  const kpiBlock = `  ${quarter}: {
+    period: "${period} ${year}",
+    kpis: [
+      { label: "Gasto total estado", value: "${d.kpis.gastoTotal}", unit: "B$", delta: "vs ${year-1}", up: true, accentColor: "var(--accent)" },
+      { label: "Ingreso sector público", value: "${d.kpis.ingresoPublico}", unit: "B$", delta: "${qSuffix} ${year}", up: null, accentColor: "var(--coral)" },
+      { label: "Entidades reportando", value: "${d.kpis.entidades}", unit: "", delta: "${d.kpis.entidadesDetalle}", up: null, accentColor: "var(--gold)" },
+      { label: "Deuda pública / PIB", value: "${d.kpis.deudaPIB}", unit: "%", delta: "${qSuffix} ${year}", up: false, accentColor: "var(--blue-mid)" },
+      { label: "Inversiones financieras", value: "${d.kpis.inversionesFinancieras}", unit: "B$", delta: "Total", up: true, accentColor: "var(--accent)" },
+      { label: "Utilidades emp. del estado", value: "${d.kpis.utilidadesEmpresas}", unit: "MM$", delta: "${qSuffix} ${year}", up: true, accentColor: "var(--gold)" },
+    ]
+  }`;
+
+  /* Replace the quarter block inside DATA = { ... } */
+  const dataStart = html.indexOf('const DATA = {');
+  const dataEnd   = html.indexOf('\n};\n\nlet currentQuarter');
+  const before    = html.slice(0, dataStart);
+  const after     = html.slice(dataEnd);
+  const dataSection = html.slice(dataStart, dataEnd);
+
+  /* Replace or insert the current quarter block */
+  const qRegex = new RegExp(`  ${quarter}:\\s*\\{[^}]+(?:\\{[^}]*\\}[^}]*)*\\}`, 's');
+  let newData;
+  if (qRegex.test(dataSection)) {
+    newData = dataSection.replace(qRegex, kpiBlock);
+  } else {
+    newData = dataSection.replace(/(\n};)$/, `,\n${kpiBlock}$1`);
+  }
+
+  /* Replace compliance data */
+  let result = before + newData + after;
+
+  result = replaceInJS(result, 'buildCompliance', d, 'compliance');
+  result = replaceInJS(result, 'buildGastoSector', d, 'gastoSector');
+  result = replaceInJS(result, 'buildIngresosSP', d, 'ingresosPublicos');
+  result = replaceInJS(result, 'buildGastosSP', d, 'gastosPublicos');
+  result = replaceInJS(result, 'buildIngresosMun', d, 'ingresosMun');
+  result = replaceInJS(result, 'buildGastosMun', d, 'gastosMun');
+  result = replaceInJS(result, 'buildFCM', d, 'fcmRegiones');
+  result = replaceInJS(result, 'buildEmpresas', d, 'empresas');
+  result = replaceInJS(result, 'buildEducacion', d, 'educacionIng');
+  result = replaceInJS(result, 'buildGratuidad', d, 'gratuidad');
+  result = replaceInJS(result, 'buildDeuda', d, 'deuda');
+  result = replaceInJS(result, 'buildInversiones', d, 'inversiones');
+  result = replaceInJS(result, 'buildGobRegIng', d, 'gobRegionalesIng');
+  result = replaceInJS(result, 'buildGobRegGas', d, 'gobRegionalesGas');
+  result = replaceInJS(result, 'buildRanking', d, 'ranking');
+
+  /* Update footer date */
+  result = result.replace(
+    /Datos extraídos en [a-záéíóúñ]+ \d{4}/i,
+    `Datos extraídos en ${getMonthName(quarter)} ${year}`
+  );
+
+  /* Update default active quarter */
+  result = result.replace(/let currentQuarter = \d;/, `let currentQuarter = ${quarter};`);
+  result = result.replace(
+    /document\.querySelectorAll\('\.q-btn'\)\[\d\]\.classList\.add\('active'\)/,
+    `document.querySelectorAll('.q-btn')[${quarter-1}].classList.add('active')`
+  );
+  result = result.replace(
+    /buildKPIs\(\d\);/,
+    `buildKPIs(${quarter});`
+  );
+  result = result.replace(
+    /if \(q !== \d\) showNotice/,
+    `if (q !== ${quarter}) showNotice`
+  );
+  result = result.replace(
+    /else hideNotice\(\);/,
+    `else hideNotice();`
+  );
+
+  return result;
+}
+
+function replaceInJS(html, fnName, d, key) {
+  /* For each build function, replace the data arrays with fresh values */
+  const fnStart = html.indexOf(`function ${fnName}()`);
+  if (fnStart === -1) return html;
+
+  const fnEnd = findFunctionEnd(html, fnStart);
+  const fnBody = html.slice(fnStart, fnEnd);
+  let newBody = fnBody;
+
+  if (key === 'compliance') {
+    newBody = rebuildCompliance(d.cumplimiento, d.ejecucion, fnBody);
+  } else if (key === 'gastoSector') {
+    newBody = replaceDataArrays(fnBody, [
+      [d.gastoSector.publicoAnterior, d.gastoSector.municipalAnterior, d.gastoSector.empresasAnterior, d.gastoSector.educacionAnterior],
+      [d.gastoSector.publicoActual, d.gastoSector.municipalActual, d.gastoSector.empresasActual, d.gastoSector.educacionActual]
+    ]);
+  } else if (key === 'ingresosPublicos') {
+    const p = d.ingresosPublicos;
+    newBody = replaceDataArrays(fnBody, [
+      [p.impuestosAnterior, p.endeudamientoAnterior, p.recuperacionAnterior, p.otrosCorrAnterior, p.imposicionesAnterior, p.ingOpAnterior, p.ventaAnterior, p.otrosAnterior],
+      [p.impuestosActual, p.endeudamientoActual, p.recuperacionActual, p.otrosCorrActual, p.imposicionesActual, p.ingOpActual, p.ventaActual, p.otrosActual]
+    ]);
+  } else if (key === 'gastosPublicos') {
+    const p = d.gastosPublicos;
+    newBody = replaceDataArrays(fnBody, [
+      [p.transferenciasAnterior, p.segSocialAnterior, p.servicioDeudaAnterior, p.bienesServiciosAnterior, p.personalAnterior, p.activosFinAnterior, p.inversionAnterior, p.otrosAnterior],
+      [p.transferenciasActual, p.segSocialActual, p.servicioDeudaActual, p.bienesServiciosActual, p.personalActual, p.activosFinActual, p.inversionActual, p.otrosActual]
+    ]);
+  } else if (key === 'ranking') {
+    newBody = rebuildRanking(d.rankingAlto, d.rankingBajo, fnBody);
+  } else if (key === 'fcmRegiones') {
+    const vals = Object.values(d.fcmRegiones);
+    newBody = replaceDataArrays(fnBody, [vals]);
+  } else if (key === 'empresas') {
+    const e = d.empresas;
+    const d24 = [e.enap2024,e.codelco2024,e.enami2024,e.defensa2024,e.banco2024,e.otras2024,e.portuarias2024,e.metro2024,e.efe2024,e.tvn2024];
+    const d25 = [e.enap2025,e.codelco2025,e.enami2025,e.defensa2025,e.banco2025,e.otras2025,e.portuarias2025,e.metro2025,e.efe2025,e.tvn2025];
+    newBody = replaceDataArrays(fnBody, [d24, d25]);
+  } else if (key === 'educacionIng') {
+    const e = d.educacionIng;
+    newBody = replaceDataArrays(fnBody, [
+      [e.ingOpAnterior, e.transferenciasAnterior, e.financiamientoAnterior, e.endeudamientoAnterior, e.ventaAnterior, e.recuperacionAnterior, e.otrosAnterior],
+      [e.ingOpActual, e.transferenciasActual, e.financiamientoActual, e.endeudamientoActual, e.ventaActual, e.recuperacionActual, e.otrosActual]
+    ]);
+  } else if (key === 'gratuidad') {
+    const g = d.gratuidad;
+    const years = Object.keys(g);
+    const totals = years.map(y => g[y].total);
+    const pcts   = years.map(y => g[y].pct);
+    newBody = replaceDataArrays(fnBody, [totals, pcts]);
+  } else if (key === 'deuda') {
+    const hist = d.deuda.historico;
+    newBody = replaceDataArrays(fnBody, [
+      hist.map(h => h.interna),
+      hist.map(h => h.externa)
+    ]);
+  } else if (key === 'inversiones') {
+    const hist = d.inversiones.historico;
+    newBody = replaceDataArrays(fnBody, [hist.map(h => h.pib)]);
+  } else if (key === 'gobRegionalesIng') {
+    const g = d.gobRegionalesIng;
+    newBody = replaceDataArrays(fnBody, [
+      [g.transfCapAnterior, g.transfCorrAnterior, g.otrosAnterior].map(v => v/1000),
+      [g.transfCapActual, g.transfCorrActual, g.otrosActual].map(v => v/1000)
+    ]);
+  } else if (key === 'gobRegionalesGas') {
+    const g = d.gobRegionalesGas;
+    newBody = replaceDataArrays(fnBody, [
+      [g.inversionAnterior,g.transfCapAnterior,g.actNFAnterior,g.personalAnterior,g.transfCorrAnterior,g.servicioDeudaAnterior,g.otrosAnterior].map(v=>v/1000),
+      [g.inversionActual,g.transfCapActual,g.actNFActual,g.personalActual,g.transfCorrActual,g.servicioDeudaActual,g.otrosActual].map(v=>v/1000)
+    ]);
+  } else if (key === 'ingresosMun') {
+    const m = d.ingresosMun;
+    newBody = replaceDataArrays(fnBody, [
+      [m.propiosAnterior,m.transferenciasAnterior,m.minsalAnterior,m.fcmAnterior,m.minedAnterior,m.ingBfoAnterior,m.otrosAnterior].map(v=>v/1000),
+      [m.propiosActual,m.transferenciasActual,m.minsalActual,m.fcmActual,m.minedActual,m.ingBfoActual,m.otrosActual].map(v=>v/1000)
+    ]);
+  } else if (key === 'gastosMun') {
+    const m = d.gastosMun;
+    newBody = replaceDataArrays(fnBody, [
+      [m.personalAnterior,m.bienesAnterior,m.transferenciasAnterior,m.inversionAnterior,m.deudaAnterior,m.segSocialAnterior,m.actNFAnterior,m.otrosAnterior].map(v=>v/1000),
+      [m.personalActual,m.bienesActual,m.transferenciasActual,m.inversionActual,m.deudaActual,m.segSocialActual,m.actNFActual,m.otrosActual].map(v=>v/1000)
+    ]);
+  }
+
+  return html.slice(0, fnStart) + newBody + html.slice(fnEnd);
+}
+
+function findFunctionEnd(html, fnStart) {
+  let depth = 0, i = fnStart;
+  while (i < html.length) {
+    if (html[i] === '{') depth++;
+    else if (html[i] === '}') { depth--; if (depth === 0) return i + 1; }
+    i++;
+  }
+  return html.length;
+}
+
+function replaceDataArrays(fnBody, newArrays) {
+  /* Find all `data: [...]` in dataset definitions and replace */
+  let result = fnBody;
+  const dataRegex = /data:\s*\[([^\]]+)\]/g;
+  let match, idx = 0;
+  let output = '';
+  let lastIdx = 0;
+  while ((match = dataRegex.exec(result)) !== null && idx < newArrays.length) {
+    const arr = newArrays[idx++];
+    const replacement = `data: [${arr.map(v => typeof v === 'number' ? v : parseFloat(v)).join(', ')}]`;
+    output += result.slice(lastIdx, match.index) + replacement;
+    lastIdx = match.index + match[0].length;
+  }
+  output += result.slice(lastIdx);
+  return output;
+}
+
+function rebuildCompliance(cumpl, ejec, fnBody) {
+  /* Replace numeric values in compliance arrays */
+  let result = fnBody;
+  const nums = [cumpl.sectorPublico, cumpl.municipal, cumpl.empresasEstado, cumpl.educacionSuperior,
+                 ejec.sectorPublico, ejec.municipal, ejec.empresasEstado, ejec.educacionSuperior];
+  let idx = 0;
+  result = result.replace(/pct:\s*([\d.]+)/g, (m) => `pct: ${nums[idx++] ?? m.slice(5)}`);
+  return result;
+}
+
+function rebuildRanking(high, low, fnBody) {
+  /* Replace ranking arrays */
+  let result = fnBody;
+  const highBlock = high.map(r => `    { name: '${r.nombre}', pct: ${r.pct} }`).join(',\n');
+  const lowBlock  = low.map(r => `    { name: '${r.nombre}', pct: ${r.pct} }`).join(',\n');
+
+  result = result.replace(
+    /const high = \[[\s\S]*?\];/,
+    `const high = [\n${highBlock}\n  ];`
+  );
+  result = result.replace(
+    /const low = \[[\s\S]*?\];/,
+    `const low = [\n${lowBlock}\n  ];`
+  );
+  return result;
+}
+
+/* ===== HELPERS ===== */
+function getMonthName(q) {
+  return q === 1 ? 'marzo' : q === 2 ? 'junio' : q === 3 ? 'septiembre' : 'diciembre';
+}
+
+/* ===== LOG ===== */
+function log(type, msg) {
+  const area = document.getElementById('log-area');
+  const now  = new Date().toLocaleTimeString('es-CL', { hour12: false });
+  const icons = { ok: '✓', err: '✗', info: '·', accent: '→', warn: '⚠' };
+  const line = document.createElement('div');
+  line.className = 'log-line';
+  line.innerHTML = `<span class="log-time">${now}</span><span class="log-${type}">${icons[type] || '·'} ${msg}</span>`;
+  area.appendChild(line);
+  area.scrollTop = area.scrollHeight;
+}
+
+function clearLog() { document.getElementById('log-area').innerHTML = ''; }
+
+function setProgress(pct) {
+  document.getElementById('progress-bar').style.width = pct + '%';
+}
+
+/* ===== DIFF DISPLAY ===== */
+function showDiff(oldHtml, newHtml, d) {
+  const sec = document.getElementById('diff-section');
+  const oldSize = (new Blob([oldHtml]).size / 1024).toFixed(1);
+  const newSize = (new Blob([newHtml]).size / 1024).toFixed(1);
+  const diff = (parseFloat(newSize) - parseFloat(oldHtml.length/1024)).toFixed(1);
+
+  sec.innerHTML = `
+    <div class="diff-label">Cambios detectados</div>
+    <div class="diff-chips">
+      <span class="chip chip-green">KPIs actualizados</span>
+      <span class="chip chip-green">Gráficos actualizados</span>
+      <span class="chip chip-green">Rankings actualizados</span>
+      <span class="chip chip-blue">Tamaño: ${newSize} KB (${diff > 0 ? '+' : ''}${diff} KB)</span>
+    </div>`;
+}
+
+/* ===== RESULT ===== */
+function showResult(ok, quarter, year, errMsg) {
+  const card = document.getElementById('result-card');
+  const qLabel = quarter === 1 ? '1T' : quarter === 2 ? '2T' : quarter === 3 ? '3T' : '4T';
+  card.className = 'result-card show' + (ok ? '' : ' error');
+
+  if (ok) {
+    document.getElementById('result-title').textContent = `✓ Dashboard actualizado: IGFE ${qLabel} ${year}`;
+    document.getElementById('result-body').innerHTML = `<p style="font-size:12px;color:var(--text-muted);margin-top:4px;">Los cambios se publicarán en GitHub Pages en 1–2 minutos.</p>`;
+    document.getElementById('result-url').innerHTML = `
+      <a href="https://${config.ghUser}.github.io/${config.ghRepo}/" target="_blank">
+        → Ver dashboard en vivo: ${config.ghUser}.github.io/${config.ghRepo}/
+      </a>`;
+    markDone(3);
+  } else {
+    document.getElementById('result-title').textContent = `✗ Error al actualizar`;
+    document.getElementById('result-body').innerHTML = `<p style="font-size:12px;color:var(--coral);margin-top:4px;">${errMsg}</p>`;
+    document.getElementById('result-url').innerHTML = '';
+  }
+}
+
+/* ===== STEP UI ===== */
+function enableStep(n) {
+  document.getElementById(`step${n}`).classList.remove('disabled');
+  document.getElementById(`step${n}`).classList.add('active');
+}
+
+function markDone(n) {
+  const el = document.getElementById(`step${n}`);
+  el.classList.remove('active');
+  el.classList.add('done');
+  document.getElementById(`num${n}`).textContent = '✓';
+}
+</script>
+</body>
+</html>
