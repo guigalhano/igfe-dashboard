@@ -703,7 +703,8 @@ function render(year, q) {
     return line+pill+txt;
   }
 
-  /* bidirectional: arrow A (from\u2192to, left side) + arrow B (to\u2192from, right side) */x*dx+dy*dy),nx=dx/d,ny=dy/d,px=-ny,py=nx,off=7;
+  function biArr(frm,rF,to,rT,lblAB,lblBA){
+    var dx=to.x-frm.x,dy=to.y-frm.y,d=Math.sqrt(dx*dx+dy*dy),nx=dx/d,ny=dy/d,px=-ny,py=nx,off=10;
     var fx=frm.x+nx*rF,fy=frm.y+ny*rF,tx=to.x-nx*rT,ty=to.y-ny*rT;
     var out='';
     /* arrow A: frm\u2192to, shifted +off perpendicular (left side), label on left */
