@@ -248,7 +248,7 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
         <span style="font-size:13px;font-weight:700;color:var(--navy)">Gastos Presupuestarios</span>
         <span style="font-size:12px;color:var(--muted)">Ejecutados por Sector y Transferencias de Recursos</span>
       </div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:.5rem" id="circ-subtitle">Transferencias entre Sectores 2025</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:.5rem" id="circ-subtitle">Transferencias entre Sectores <span id="circ-year"></span></div>
       <div id="circles-svg" style="width:100%;overflow:hidden"></div>
     </div>
     <div class="g2">
@@ -659,7 +659,8 @@ function render(year, q) {
 
 
   // Circles SVG diagram
-  document.getElementById('circ-subtitle').textContent = 'Transferencias entre Sectores ' + year;
+  document.getElementById('circ-subtitle').textContent = 'Transferencias entre Sectores ' + shortPer;
+  var circYearEl = document.getElementById('circ-year'); if(circYearEl) circYearEl.textContent = shortPer;
   var gs = d.gastoSector || {};
   var tr = TR[key] || {};
 
@@ -686,7 +687,7 @@ function render(year, q) {
   var lMUN_out = tr2.spToMun    ? '$ '+parseFloat(tr2.spToMun).toFixed(1)+' B'    : null;
   var lIES_out = tr2.spToIES    ? '$ '+parseFloat(tr2.spToIES).toFixed(1)+' B'    : null;
   var lZOFRI   = tr2.zofri      ? '$ '+parseFloat(tr2.zofri).toFixed(1)+' miles mill. (ZOFRI)' : null;
-  var perLabel = 'Transferencias entre Sectores '+year;
+  var perLabel = 'Transferencias entre Sectores '+shortPer;
 
   function fl(lbl,x,y,rot){
     if(!lbl||lbl==='s/d') return '';
