@@ -687,27 +687,27 @@ function render(year, q) {
   function arro(x1,y1,x2,y2,lbl,side){
     var dx=x2-x1,dy=y2-y1,d=Math.sqrt(dx*dx+dy*dy),nx=dx/d,ny=dy/d,px=-ny,py=nx;
     var ex=x2-nx*4,ey=y2-ny*4;
-    /* Place label at 40% along arrow, pushed 38px outward (away from other arrow) */
-    var t=0.40;
-    var lx=(x1+ex)*t+(1-t)*x1 + px*38*side;
-    var ly=(y1+ey)*t+(1-t)*y1 + py*38*side;
+    /* PDF style: label at midpoint, 16px perpendicular from arrow */
+    var mx=(x1+ex)/2 + px*18*side;
+    var my=(y1+ey)/2 + py*18*side;
+    /* rotation angle in degrees */
+    var ang=Math.atan2(dy,dx)*180/Math.PI;
     var nodata=(lbl==='s/d');
-    var lstyle=nodata?' stroke-dasharray="4,3" opacity="0.35"':'';
-    var sw=nodata?'1':'2';
-    var sc=nodata?'#ccc':'#8fa3bc';
-    var fc=nodata?'#bbb':'#1a2744';
-    var bg=nodata?'#f8f8f8':'#ffffff';
-    var bc=nodata?'#ddd':'#8fa3bc';
-    var line='<line x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+ex.toFixed(1)+'" y2="'+ey.toFixed(1)+'" stroke="'+sc+'" stroke-width="'+sw+'" marker-end="url(#ah)"'+lstyle+'/>';
+    var lstyle=nodata?' stroke-dasharray="5,4" opacity="0.4"':'';
+    var sc=nodata?'#bbb':'#555';
+    var fc=nodata?'#bbb':'#333';
+    var line='<line x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+ex.toFixed(1)+'" y2="'+ey.toFixed(1)+'" stroke="'+sc+'" stroke-width="1.2" marker-end="url(#ah)"'+lstyle+'/>';
     if(!lbl) return line;
-    var tw=lbl.length*7+16, th=20, rx=6;
-    var pill='<rect x="'+(lx-tw/2).toFixed(1)+'" y="'+(ly-th/2).toFixed(1)+'" width="'+tw.toFixed(1)+'" height="'+th+'" rx="'+rx+'" fill="'+bg+'" stroke="'+bc+'" stroke-width="1.2"/>';
-    var txt='<text x="'+lx.toFixed(1)+'" y="'+ly.toFixed(1)+'" text-anchor="middle" dominant-baseline="middle" font-family="Arial" font-size="12" font-weight="700" fill="'+fc+'">'+lbl+'</text>';
-    return line+pill+txt;
+    /* small italic text rotated along the arrow, like the PDF */
+    var txt='<text x="'+mx.toFixed(1)+'" y="'+my.toFixed(1)+'"'
+      +' transform="rotate('+ang.toFixed(1)+','+mx.toFixed(1)+','+my.toFixed(1)+')"'
+      +' text-anchor="middle" dominant-baseline="middle"'
+      +' font-family="Arial" font-size="11" font-style="italic" fill="'+fc+'">'+lbl+'</text>';
+    return line+txt;
   }
 
   function biArr(frm,rF,to,rT,lblAB,lblBA){
-    var dx=to.x-frm.x,dy=to.y-frm.y,d=Math.sqrt(dx*dx+dy*dy),nx=dx/d,ny=dy/d,px=-ny,py=nx,off=16;
+    var dx=to.x-frm.x,dy=to.y-frm.y,d=Math.sqrt(dx*dx+dy*dy),nx=dx/d,ny=dy/d,px=-ny,py=nx,off=8;
     var fx=frm.x+nx*rF,fy=frm.y+ny*rF,tx=to.x-nx*rT,ty=to.y-ny*rT;
     var out='';
     /* arrow A: frm\u2192to, shifted +off perpendicular (left side), label on left */
