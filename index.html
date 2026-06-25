@@ -669,80 +669,103 @@ function render(year, q) {
   var FC={sp:'#1a2744',cod:'#9aa8bc',ies:'#d9caba',oth:'#e8336e',mun:'#00b4a0'};
   var SK={sp:'#0f1a2e',cod:'#607080',ies:'#a09070',oth:'#b0003a',mun:'#007060'};
 
-  function fv(v){ return (v!=null)?'$\u00a0'+parseFloat(v).toFixed(1)+'B':null; }
+  function fv(v,dec){ return (v!=null)?'$ '+parseFloat(v).toFixed(dec!=null?dec:1)+' B':null; }
+  function fvM(v){ return (v!=null)?'$ '+parseFloat(v).toFixed(1)+' M':null; }
 
-  function circ(p,r,fc,sk,lines,val,dark){
-    var tc=dark?'#1a2744':'white',fs1=r>80?10:9,fs2=r>80?14:12,lh=fs1*1.35;
-    var ny=p.y-(lines.length*lh)/2+fs1*0.5;
-    var nm=lines.map(function(l,i){
-      return '<text x="'+p.x+'" y="'+(ny+i*lh)+'" text-anchor="middle" font-family="Arial" font-size="'+fs1+'" font-weight="700" fill="'+tc+'">'+l+'</text>';
-    }).join('');
-    return '<circle cx="'+p.x+'" cy="'+p.y+'" r="'+(r+11)+'" fill="'+fc+'" opacity="0.12"/>'
-          +'<circle cx="'+p.x+'" cy="'+p.y+'" r="'+r+'" fill="'+fc+'" stroke="'+sk+'" stroke-width="3.5"/>'
-          +nm
-          +'<text x="'+p.x+'" y="'+(p.y+r*0.32)+'" text-anchor="middle" font-family="Arial" font-size="'+fs2+'" font-weight="800" fill="'+tc+'">'+val+'</text>';
+  var tr2 = TR[key] || {};
+  var gs2 = d.gastoSector || {};
+
+  /* circle values */
+  var vSP  = fv(tr2.sp)        || fv(gs2['Sector P\u00fablico'])                      || '--';
+  var vCOD = fv(tr2.codelco)   || '--';
+  var vIES = fv(tr2.ies)       || fv(gs2['Instituciones de Educaci\u00f3n Superior']) || '--';
+  var vOTH = fv(tr2.otras)     || fv(gs2['Empresas del Estado'])                    || '--';
+  var vMUN = fv(tr2.municipal) || fv(gs2['Sector Municipal'])                       || '--';
+
+  /* arrow labels */
+  var lCOD_in  = tr2.codelcoToSP ? '$ '+parseFloat(tr2.codelcoToSP).toFixed(1)+' B' : 's/d';
+  var lCOD_out = tr2.spToCodelco ? '$ '+parseFloat(tr2.spToCodelco).toFixed(1)+' B' : 's/d';
+  var lOTH_in  = tr2.otrasToSP  ? '$ '+parseFloat(tr2.otrasToSP).toFixed(1)+' B'  : null;
+  var lOTH_out = tr2.spToOtras  ? '$ '+parseFloat(tr2.spToOtras).toFixed(1)+' B'  : null;
+  var lMUN_in  = tr2.munToSP    ? '$ '+parseFloat(tr2.munToSP).toFixed(1)+' B'    : null;
+  var lMUN_out = tr2.spToMun    ? '$ '+parseFloat(tr2.spToMun).toFixed(1)+' B'    : null;
+  var lIES_out = tr2.spToIES    ? '$ '+parseFloat(tr2.spToIES).toFixed(1)+' B'    : null;
+  var lZOFRI   = tr2.zofri      ? '$ '+parseFloat(tr2.zofri).toFixed(1)+' miles mill. (ZOFRI)' : null;
+  var perLabel = 'Transferencias entre Sectores '+year;
+
+  function fl(lbl,x,y,rot,anchor){
+    if(!lbl||lbl==='s/d') return '';
+    anchor=anchor||'middle';
+    return '<text x="'+x+'" y="'+y+'" transform="rotate('+rot+' '+x+' '+y+')" font-family="Arial" font-size="11" fill="#444" text-anchor="'+anchor+'">'+lbl+'</text>';
   }
 
-  /* one directed arrow with label */
-  function arro(x1,y1,x2,y2,lbl,side){
-    /* side=+1: arrow goes left of center, label sits between arrows (toward center)
-       side=-1: arrow goes right of center, label sits between arrows (toward center)
-       PDF style: label is BETWEEN the two parallel arrows */
-    var dx=x2-x1,dy=y2-y1,d=Math.sqrt(dx*dx+dy*dy),nx=dx/d,ny=dy/d,px=-ny,py=nx;
-    var ex=x2-nx*5,ey=y2-ny*5;
-    /* label at 40% along arrow, pushed 14px OUTWARD from center (same side as arrow) */
-    var t=0.38;
-    var bx=x1+dx*t, by=y1+dy*t;
-    var mx=bx + px*26*side;
-    var my=by + py*26*side;
-    var ang=Math.atan2(dy,dx)*180/Math.PI;
-    /* keep text readable: flip if arrow points left */
-    if(ang>90||ang<-90) ang+=180;
-    var nodata=(lbl==='s/d');
-    var lstyle=nodata?' stroke-dasharray="5,4" opacity="0.35"':'';
-    var sc=nodata?'#ccc':'#888';
-    var fc=nodata?'#ccc':'#444';
-    var line='<line x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+ex.toFixed(1)+'" y2="'+ey.toFixed(1)+'" stroke="'+sc+'" stroke-width="1.1" marker-end="url(#ah)"'+lstyle+'/>';
-    if(!lbl||nodata) return line;
-    var txt='<text'
-      +' transform="translate('+mx.toFixed(1)+','+my.toFixed(1)+') rotate('+ang.toFixed(1)+')"'
-      +' text-anchor="middle" dominant-baseline="middle"'
-      +' font-family="Arial" font-size="10.5" font-style="italic" fill="'+fc+'">'+lbl+'</text>';
-    return line+txt;
-  }
+  var svg = '<svg viewBox="0 0 744 340" xmlns="http://www.w3.org/2000/svg">'
 
-  function biArr(frm,rF,to,rT,lblAB,lblBA){
-    var dx=to.x-frm.x,dy=to.y-frm.y,d=Math.sqrt(dx*dx+dy*dy),nx=dx/d,ny=dy/d,px=-ny,py=nx,off=7;
-    var fx=frm.x+nx*rF,fy=frm.y+ny*rF,tx=to.x-nx*rT,ty=to.y-ny*rT;
-    var out='';
-    /* arrow A: frm\u2192to, shifted +off perpendicular (left side), label on left */
-    if(lblAB) out+=arro(fx+px*off,fy+py*off,tx+px*off,ty+py*off,lblAB,+1);
-    /* arrow B: to\u2192frm, shifted -off perpendicular (right side), label on right */
-    if(lblBA) out+=arro(tx-px*off,ty-py*off,fx-px*off,fy-py*off,lblBA,-1);
-    return out;
-  }
+  /* ── DEFS ── */
+  +'<defs><marker id="ah2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">'
+  +'<polygon points="0 0 6 3 0 6" fill="#7f7f7f"/></marker></defs>'
 
-  var empV  = gs['Empresas del Estado'];
-  var spVal = fv(gs['Sector P\u00fablico'])                          ||fv(tr.sp)       ||'--';
-  var cdVal = fv(tr.codelco)                                           ||fv(empV)        ||'--';
-  var otVal = fv(tr.otras)                                             ||fv(empV)        ||'--';
-  var mnVal = fv(gs['Sector Municipal'])                               ||fv(tr.municipal)||'--';
-  var ieVal = fv(gs['Instituciones de Educaci\u00f3n Superior'])      ||fv(tr.ies)      ||'--';
+  /* ── PERIOD LABEL ── */
+  +'<text x="372" y="18" font-family="Arial" font-size="11" fill="#888" text-anchor="middle">'+perLabel+'</text>'
 
-  var svg='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg">'
-    +'<defs><marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">'
-    +'<path d="M0,0 L8,4 L0,8 Z" fill="#555"/></marker></defs>'
-    +biArr(COD,R.cod,SP,R.sp, fv(tr.codelcoToSP)||'s/d', fv(tr.spToCodelco)||'s/d')
-    +biArr(OTH,R.oth,SP,R.sp, fv(tr.otrasToSP),   fv(tr.spToOtras))
-    +biArr(MUN,R.mun,SP,R.sp, fv(tr.munToSP),     fv(tr.spToMun))
-    +biArr(IES,R.ies,SP,R.sp, null,               fv(tr.spToIES))
-    +(tr.zofri?'<text x="'+OTH.x+'" y="'+(OTH.y+R.oth+24)+'" text-anchor="middle" font-family="Arial" font-size="9" fill="#888">\u2193 $\u00a0'+parseFloat(tr.zofri).toFixed(1)+' miles mill. (ZOFRI)</text>':'')
-    +circ(COD,R.cod,FC.cod,SK.cod,['CODELCO'],                              cdVal,true)
-    +circ(IES,R.ies,FC.ies,SK.ies,['INSTITUCIONES DE','EDUC. SUPERIOR','DEL ESTADO'],ieVal,true)
-    +circ(SP, R.sp, FC.sp, SK.sp, ['SECTOR P\u00daBLICO','(GOBIERNO CENTRAL)'],     spVal,false)
-    +circ(OTH,R.oth,FC.oth,SK.oth,['OTRAS EMPRESAS','DEL ESTADO'],          otVal,false)
-    +circ(MUN,R.mun,FC.mun,SK.mun,['SECTOR MUNICIPAL'],                     mnVal,false)
-    +'</svg>';
+  /* ── ARROWS COD ↔ SP ── */
+  +'<line x1="198" y1="90" x2="285" y2="143" stroke="#9a9a9a" stroke-width="1.5" marker-end="url(#ah2)"/>'
+  +fl(lCOD_in,  228, 100, 24)
+  +'<line x1="285" y1="177" x2="198" y2="132" stroke="#9a9a9a" stroke-width="1.5" marker-end="url(#ah2)"/>'
+  +fl(lCOD_out, 228, 152, -22)
+
+  /* ── ARROWS OTH ↔ SP ── */
+  +'<line x1="448" y1="143" x2="522" y2="90" stroke="#9a9a9a" stroke-width="1.5" marker-end="url(#ah2)"/>'
+  +fl(lOTH_in,  490, 107, -24)
+  +'<line x1="522" y1="115" x2="448" y2="168" stroke="#9a9a9a" stroke-width="1.5" marker-end="url(#ah2)"/>'
+  +fl(lOTH_out, 493, 143,  24)
+
+  /* ── ARROWS MUN ↔ SP ── */
+  +'<line x1="448" y1="207" x2="525" y2="250" stroke="#9a9a9a" stroke-width="1.5" marker-end="url(#ah2)"/>'
+  +fl(lMUN_out, 480, 213,  25)
+  +'<line x1="525" y1="225" x2="448" y2="192" stroke="#9a9a9a" stroke-width="1.5" marker-end="url(#ah2)"/>'
+  +fl(lMUN_in,  482, 245, -28)
+
+  /* ── ARROW IES ← SP ── */
+  +'<line x1="285" y1="207" x2="197" y2="233" stroke="#9a9a9a" stroke-width="1.5" marker-end="url(#ah2)"/>'
+  +fl(lIES_out, 224, 205, -16)
+
+  /* ── ZOFRI vertical ── */
+  +(lZOFRI ? '<line x1="590" y1="130" x2="590" y2="188" stroke="#9a9a9a" stroke-width="1.2" marker-end="url(#ah2)"/>'
+            +'<text x="600" y="158" font-family="Arial" font-size="10" fill="#888">'+lZOFRI+'</text>' : '')
+
+  /* ── CIRCLES (rings like PDF) ── */
+  /* CODELCO */
+  +'<circle cx="120" cy="80" r="52" fill="white" stroke="#959595" stroke-width="14"/>'
+  +'<text x="120" y="73" font-family="Arial" font-size="9" font-weight="700" text-anchor="middle" fill="#333">CODELCO</text>'
+  +'<text x="120" y="92" font-family="Arial" font-size="13" font-weight="800" text-anchor="middle" fill="#333">'+vCOD+'</text>'
+
+  /* IES */
+  +'<circle cx="120" cy="258" r="52" fill="white" stroke="#ddd1c5" stroke-width="14"/>'
+  +'<text x="120" y="242" font-family="Arial" font-size="8" font-weight="700" text-anchor="middle" fill="#666">INSTITUCIONES DE</text>'
+  +'<text x="120" y="254" font-family="Arial" font-size="8" font-weight="700" text-anchor="middle" fill="#666">EDUC. SUPERIOR</text>'
+  +'<text x="120" y="266" font-family="Arial" font-size="8" font-weight="700" text-anchor="middle" fill="#666">DEL ESTADO</text>'
+  +'<text x="120" y="284" font-family="Arial" font-size="13" font-weight="800" text-anchor="middle" fill="#666">'+vIES+'</text>'
+
+  /* SP CENTRO */
+  +'<circle cx="366" cy="165" r="62" fill="white" stroke="#16154d" stroke-width="18"/>'
+  +'<text x="366" y="154" font-family="Arial" font-size="10" font-weight="700" text-anchor="middle" fill="#1a2744">SECTOR P\u00daBLICO</text>'
+  +'<text x="366" y="168" font-family="Arial" font-size="9" text-anchor="middle" fill="#444">(GOBIERNO CENTRAL)</text>'
+  +'<text x="366" y="190" font-family="Arial" font-size="14" font-weight="800" text-anchor="middle" fill="#1a2744">'+vSP+'</text>'
+
+  /* OTRAS */
+  +'<circle cx="600" cy="80" r="52" fill="white" stroke="#ef4d79" stroke-width="14"/>'
+  +'<text x="600" y="68" font-family="Arial" font-size="8.5" font-weight="700" text-anchor="middle" fill="#b0003a">OTRAS EMPRESAS</text>'
+  +'<text x="600" y="80" font-family="Arial" font-size="8.5" font-weight="700" text-anchor="middle" fill="#b0003a">DEL ESTADO</text>'
+  +'<text x="600" y="99" font-family="Arial" font-size="13" font-weight="800" text-anchor="middle" fill="#b0003a">'+vOTH+'</text>'
+
+  /* MUNICIPAL */
+  +'<circle cx="600" cy="258" r="52" fill="white" stroke="#6ed1ca" stroke-width="14"/>'
+  +'<text x="600" y="253" font-family="Arial" font-size="8.5" font-weight="700" text-anchor="middle" fill="#007060">SECTOR MUNICIPAL</text>'
+  +'<text x="600" y="272" font-family="Arial" font-size="13" font-weight="800" text-anchor="middle" fill="#007060">'+vMUN+'</text>'
+
+  +'</svg>';
+
   document.getElementById('circles-svg').innerHTML=svg;
 
   // Auto-generate narrative texts from chart data
