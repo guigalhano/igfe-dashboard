@@ -690,11 +690,11 @@ function render(year, q) {
        PDF style: label is BETWEEN the two parallel arrows */
     var dx=x2-x1,dy=y2-y1,d=Math.sqrt(dx*dx+dy*dy),nx=dx/d,ny=dy/d,px=-ny,py=nx;
     var ex=x2-nx*5,ey=y2-ny*5;
-    /* label at 38% along arrow, pulled 10px toward center (opposite to side) */
-    var t=0.38;
+    /* label at 40% along arrow, pushed 14px OUTWARD from center (same side as arrow) */
+    var t=0.40;
     var bx=x1+dx*t, by=y1+dy*t;
-    var mx=bx - px*10*side;   /* -side pulls TOWARD center between arrows */
-    var my=by - py*10*side;
+    var mx=bx + px*14*side;   /* same side as the arrow = outside */
+    var my=by + py*14*side;
     var ang=Math.atan2(dy,dx)*180/Math.PI;
     /* keep text readable: flip if arrow points left */
     if(ang>90||ang<-90) ang+=180;
