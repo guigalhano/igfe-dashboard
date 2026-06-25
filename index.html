@@ -254,7 +254,7 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
     <div class="g2">
       <div class="card">
         <div class="ct-row"><div class="ct">Comparativo Gastos Presupuestarios Ejecutados</div>
-        <div class="cs">Billones de pesos · todos los sectores</div><button class="hist-btn" onclick="showHistoric('c-gsec','Gasto por Sector','gastoSector','B$')">📈 Histórico</button></div>
+        <div class="cs">Billones de pesos · todos los sectores</div><button class="hist-btn" data-chart="c-gsec" data-label="Gasto por Sector" data-key="gastoSector" data-unit="B$">📈 Histórico</button></div>
         <div class="cw"><canvas id="c-gsec"></canvas></div>
       </div>
       <div class="card">
@@ -271,13 +271,13 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
     <div class="g2">
       <div class="card">
         <div class="ct-row"><div class="ct">Ingresos Presupuestarios Ejecutados — Sector Público</div>
-        <div class="cs">Billones de pesos · comparativo año anterior</div><button class="hist-btn" onclick="showHistoric('c-isp','Ingresos SP','ingresosSP','B$')">📈 Histórico</button></div>
+        <div class="cs">Billones de pesos · comparativo año anterior</div><button class="hist-btn" data-chart="c-isp" data-label="Ingresos SP" data-key="ingresosSP" data-unit="B$">📈 Histórico</button></div>
         <div class="cw"><canvas id="c-isp"></canvas></div>
       <div class="narr" id="narr-isp"><span id="narr-isp-txt"></span></div>
       </div>
       <div class="card">
         <div class="ct-row"><div class="ct">Gastos Presupuestarios Ejecutados — Sector Público</div>
-        <div class="cs">Billones de pesos · comparativo año anterior</div><button class="hist-btn" onclick="showHistoric('c-gsp','Gastos SP','gastosSP','B$')">📈 Histórico</button></div>
+        <div class="cs">Billones de pesos · comparativo año anterior</div><button class="hist-btn" data-chart="c-gsp" data-label="Gastos SP" data-key="gastosSP" data-unit="B$">📈 Histórico</button></div>
         <div class="cw"><canvas id="c-gsp"></canvas></div>
       <div class="narr" id="narr-gsp"><span id="narr-gsp-txt"></span></div>
       </div>
@@ -303,13 +303,13 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
       <div class="card">
         <div class="ct-row"><div class="ct">Evolución de la Deuda Pública / PIB</div>
         <div class="cs">Porcentaje del PIB</div>
-        <div class="debt-g" id="debt-g"></div><button class="hist-btn" onclick="showHistoric('c-deuda','Deuda Pública','deuda','%')">📈 Histórico</button></div>
+        <div class="debt-g" id="debt-g"></div><button class="hist-btn" data-chart="c-deuda" data-label="Deuda Pública" data-key="deuda" data-unit="%">📈 Histórico</button></div>
         <div class="cw" style="height:180px"><canvas id="c-deuda"></canvas></div>
       <div class="narr" id="narr-deuda"><span id="narr-deuda-txt"></span></div>
       </div>
       <div class="card">
         <div class="ct-row"><div class="ct">Evolución de las Inversiones Financieras / PIB</div>
-        <div class="cs">Porcentaje del PIB</div><button class="hist-btn" onclick="showHistoric('c-inv','Inversiones/PIB','inversiones','%')">📈 Histórico</button></div>
+        <div class="cs">Porcentaje del PIB</div><button class="hist-btn" data-chart="c-inv" data-label="Inversiones/PIB" data-key="inversiones" data-unit="%">📈 Histórico</button></div>
         <div class="cw"><canvas id="c-inv"></canvas></div>
       <div class="narr" id="narr-inv"><span id="narr-inv-txt"></span></div>
       </div>
@@ -322,13 +322,13 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
     <div class="g2">
       <div class="card">
         <div class="ct-row"><div class="ct">Ingresos Presupuestarios — Gobiernos Regionales</div>
-        <div class="cs">Millones de pesos</div><button class="hist-btn" onclick="showHistoric('c-ging','Ing. Gob. Regionales','gobIng','MM$')">📈 Histórico</button></div>
+        <div class="cs">Millones de pesos</div><button class="hist-btn" data-chart="c-ging" data-label="Ing. Gob. Regionales" data-key="gobIng" data-unit="MM$">📈 Histórico</button></div>
         <div class="cw"><canvas id="c-ging"></canvas></div>
       <div class="narr" id="narr-gores_ing"><span id="narr-gores_ing-txt"></span></div>
       </div>
       <div class="card">
         <div class="ct-row"><div class="ct">Gastos Presupuestarios — Gobiernos Regionales</div>
-        <div class="cs">Millones de pesos</div><button class="hist-btn" onclick="showHistoric('c-ggas','Gas. Gob. Regionales','gobGas','MM$')">📈 Histórico</button></div>
+        <div class="cs">Millones de pesos</div><button class="hist-btn" data-chart="c-ggas" data-label="Gas. Gob. Regionales" data-key="gobGas" data-unit="MM$">📈 Histórico</button></div>
         <div class="cw"><canvas id="c-ggas"></canvas></div>
       <div class="narr" id="narr-gores_gas"><span id="narr-gores_gas-txt"></span></div>
       </div>
@@ -341,13 +341,13 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
     <div class="g2">
       <div class="card">
         <div class="ct-row"><div class="ct">Ingresos Presupuestarios — Sector Municipal</div>
-        <div class="cs">Millones de pesos</div><button class="hist-btn" onclick="showHistoric('c-ming','Ingresos Municipal','munIng','M$')">📈 Histórico</button></div>
+        <div class="cs">Millones de pesos</div><button class="hist-btn" data-chart="c-ming" data-label="Ingresos Municipal" data-key="munIng" data-unit="M$">📈 Histórico</button></div>
         <div class="cw"><canvas id="c-ming"></canvas></div>
       <div class="narr" id="narr-mun_ing"><span id="narr-mun_ing-txt"></span></div>
       </div>
       <div class="card">
         <div class="ct-row"><div class="ct">Gastos Presupuestarios — Sector Municipal</div>
-        <div class="cs">Millones de pesos</div><button class="hist-btn" onclick="showHistoric('c-mgas','Gastos Municipal','munGas','M$')">📈 Histórico</button></div>
+        <div class="cs">Millones de pesos</div><button class="hist-btn" data-chart="c-mgas" data-label="Gastos Municipal" data-key="munGas" data-unit="M$">📈 Histórico</button></div>
         <div class="cw"><canvas id="c-mgas"></canvas></div>
       <div class="narr" id="narr-mun_gas"><span id="narr-mun_gas-txt"></span></div>
       </div>
@@ -384,13 +384,13 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
     <div class="g2">
       <div class="card">
         <div class="ct-row"><div class="ct">Utilidades / Pérdidas — Empresas del Estado</div>
-        <div class="cs">Millones de pesos</div><button class="hist-btn" onclick="showHistoric('c-emp','Empresas del Estado','empresas','MM$')">📈 Histórico</button></div>
+        <div class="cs">Millones de pesos</div><button class="hist-btn" data-chart="c-emp" data-label="Empresas del Estado" data-key="empresas" data-unit="MM$">📈 Histórico</button></div>
         <div class="cw" style="height:240px"><canvas id="c-emp"></canvas></div>
       <div class="narr" id="narr-emp"><span id="narr-emp-txt"></span></div>
       </div>
       <div class="card">
         <div class="ct-row"><div class="ct">Ingresos — Instituciones Educación Superior</div>
-        <div class="cs">Millones de pesos</div><button class="hist-btn" onclick="showHistoric('c-edu','Ingresos IES','eduIng','MM$')">📈 Histórico</button></div>
+        <div class="cs">Millones de pesos</div><button class="hist-btn" data-chart="c-edu" data-label="Ingresos IES" data-key="eduIng" data-unit="MM$">📈 Histórico</button></div>
         <div class="cw"><canvas id="c-edu"></canvas></div>
       <div class="narr" id="narr-edu_ing"><span id="narr-edu_ing-txt"></span></div>
       </div>
@@ -398,12 +398,12 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
     <div class="g2">
       <div class="card">
         <div class="ct-row"><div class="ct">Gastos — Instituciones Educación Superior</div>
-        <div class="cs">Millones de pesos</div><button class="hist-btn" onclick="showHistoric('c-edug','Gastos IES','eduGas','MM$')">📈 Histórico</button></div>
+        <div class="cs">Millones de pesos</div><button class="hist-btn" data-chart="c-edug" data-label="Gastos IES" data-key="eduGas" data-unit="MM$">📈 Histórico</button></div>
         <div class="cw"><canvas id="c-edug"></canvas></div>
       <div class="narr" id="narr-edu_gas"><span id="narr-edu_gas-txt"></span></div>
       </div>
       <div class="card">
-        <div class="ct-row"><div class="ct">Transferencias MINEDUC a Educación Superior · % Gratuidad</div><button class="hist-btn" onclick="showHistoric('c-grat','Gratuidad MINEDUC','grat','B$')">📈 Histórico</button></div>
+        <div class="ct-row"><div class="ct">Transferencias MINEDUC a Educación Superior · % Gratuidad</div><button class="hist-btn" data-chart="c-grat" data-label="Gratuidad MINEDUC" data-key="grat" data-unit="B$">📈 Histórico</button></div>
         <div class="cs">Billones de pesos y porcentaje destinado a gratuidad</div>
         <div class="cw"><canvas id="c-grat"></canvas></div>
       <div class="narr" id="narr-grat"><span id="narr-grat-txt"></span></div>
