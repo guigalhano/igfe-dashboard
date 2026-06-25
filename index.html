@@ -589,11 +589,11 @@ function render(year, q) {
 
   // KPIs
   const kd = [
-    {l:'Gasto total', v:km[0], u:'B$', c:'#00b4a0'},
-    {l:'Ingreso SP', v:km[1], u:'B$', c:'#e8336e'},
+    {l:'Gasto total', v:(km[0]&&km[0]!=='—'?parseFloat(km[0]).toLocaleString('es-CL',{maximumFractionDigits:1}):'—'), u:'B$', c:'#00b4a0'},
+    {l:'Ingreso SP', v:(km[1]&&km[1]!=='—'?parseFloat(km[1]).toLocaleString('es-CL',{maximumFractionDigits:1}):'—'), u:'B$', c:'#e8336e'},
     {l:'Deuda / PIB', v:deu.total||'—', u:'%', c:'#f0a500'},
     {l:'Inversiones / PIB', v:d.inversiones||'—', u:'%', c:'#2e5fa3'},
-    {l:'Util. Emp. Estado', v:km[2], u:'MM$', c:'#1ab05a'},
+    {l:'Util. Emp. Estado', v:(km[2]&&km[2]!=='—'?parseFloat(km[2]).toLocaleString('es-CL',{maximumFractionDigits:0}):'—'), u:'MM$', c:'#1ab05a'},
     {l:'Entidades', v:'709', u:'', c:'#8e44ad'},
   ];
   document.getElementById('kpis').innerHTML = kd.map(k =>
