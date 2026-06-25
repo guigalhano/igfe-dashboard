@@ -663,12 +663,7 @@ function render(year, q) {
   var gs = d.gastoSector || {};
   var tr = TR[key] || {};
 
-  var W=960,H=500;
-  var SP={x:450,y:225},COD={x:150,y:125},IES={x:155,y:355},OTH={x:745,y:125},MUN={x:740,y:355};
-  var R={sp:92,cod:76,ies:64,oth:76,mun:74};
-  var FC={sp:'#1a2744',cod:'#9aa8bc',ies:'#d9caba',oth:'#e8336e',mun:'#00b4a0'};
-  var SK={sp:'#0f1a2e',cod:'#607080',ies:'#a09070',oth:'#b0003a',mun:'#007060'};
-
+  
   function fv(v,dec){ return (v!=null)?'$ '+parseFloat(v).toFixed(dec!=null?dec:1)+' B':null; }
   function fvM(v){ return (v!=null)?'$ '+parseFloat(v).toFixed(1)+' M':null; }
 
