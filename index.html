@@ -88,7 +88,6 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
 .ct{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:2px}
 .cs{font-size:11px;color:var(--muted);margin-bottom:.75rem}
 .cw{position:relative;width:100%;height:220px}
-.print-chart-snapshot{position:absolute;top:0;left:0;object-fit:contain}
 .cw canvas{position:absolute;inset:0;width:100%!important;height:100%!important}
 
 /* KPI */
@@ -618,20 +617,15 @@ const PFULL = {
    CHART SETUP
    ==================================================== */
 Chart.defaults.font.family = 'Segoe UI,Arial,sans-serif';
-Chart.defaults.animation = false;
 Chart.defaults.font.size = 11;
 Chart.defaults.color = '#555';
 const GC = 'rgba(0,0,0,0.06)';
 const C1 = '#2e5fa3', C2 = '#00b4a0', CP = '#e8336e', CG = '#f0a500';
 let CH = [];
 
-/* Show data-point values on top of bars/points — only while printing/exporting to PDF,
-   so the screen view stays clean but the exported PDF shows the numbers (PDF-style). */
-let PRINTING = false;
 let _kpisOrigParent = null, _kpisOrigNext = null;
 
 function _onBeforePrint() {
-  PRINTING = true;
   /* Move the KPI cards onto the cover page (page 1) so the first content page isn't wasted on them.
      Hooked here (not just the export button) so it also works with native browser Print/Ctrl+P. */
   var kpisEl = document.getElementById('kpis');
@@ -643,55 +637,17 @@ function _onBeforePrint() {
   }
   document.getElementById('print-date') &&
     (document.getElementById('print-date').textContent = 'Generado: ' + new Date().toLocaleDateString('es-CL'));
-  CH.forEach(function(c){ try{ c.resize(); }catch(e){} });
 }
 function _onAfterPrint() {
-  PRINTING = false;
   var kpisEl = document.getElementById('kpis');
   if (kpisEl && _kpisOrigParent) {
     if (_kpisOrigNext) _kpisOrigParent.insertBefore(kpisEl, _kpisOrigNext);
     else _kpisOrigParent.appendChild(kpisEl);
     _kpisOrigParent = null; _kpisOrigNext = null;
   }
-  CH.forEach(function(c){ try{ c.resize(); }catch(e){} });
 }
 window.addEventListener('beforeprint', _onBeforePrint);
 window.addEventListener('afterprint',  _onAfterPrint);
-const valueLabelsPlugin = {
-  id: 'valueLabels',
-  afterDatasetsDraw: function(chart) {
-    try {
-      const opts = chart.options && chart.options.plugins && chart.options.plugins.valueLabels;
-      if (!opts || opts.enabled === false) return;
-      const fmt = opts.formatter || (v => v);
-      const ctx = chart.ctx;
-      ctx.save();
-      try {
-        ctx.font = '700 9px Segoe UI,Arial,sans-serif';
-        ctx.textAlign = 'center';
-        chart.data.datasets.forEach(function(dset, dsi) {
-          const meta = chart.getDatasetMeta(dsi);
-          if (!meta || meta.hidden) return;
-          (meta.data || []).forEach(function(el, i) {
-            if (!el) return;
-            const raw = dset.data[i];
-            if (raw === null || raw === undefined) return;
-            const pos = (typeof el.tooltipPosition === 'function') ? el.tooltipPosition() : el;
-            if (!pos || typeof pos.x !== 'number' || typeof pos.y !== 'number') return;
-            const isLine = chart.config.type === 'line';
-            const up = raw >= 0;
-            const yOff = isLine ? -8 : (up ? -4 : 12);
-            ctx.fillStyle = isLine ? (dset.borderColor || '#333') : '#333';
-            ctx.fillText(fmt(raw), pos.x, pos.y + yOff);
-          });
-        });
-      } finally {
-        ctx.restore();
-      }
-    } catch (e) { /* never let a label glitch break the chart render */ }
-  }
-};
-// Chart.register(valueLabelsPlugin); // TEMPORARILY DISABLED — was breaking chart rendering
 
 function destroyCharts() {
   CH.forEach(c => { try { c.destroy(); } catch(e) {} });
@@ -707,7 +663,6 @@ function mkChart(id, type, labels, datasets, opts) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      layout: { padding: { top: 14 } },
       plugins: {
         legend: { display: datasets.length > 1, labels: { boxWidth: 9, font: { size: 10 }, color: '#555' } },
         tooltip: {
@@ -718,8 +673,7 @@ function mkChart(id, type, labels, datasets, opts) {
             },
             label: ctx => ' ' + (ctx.dataset.label || '') + ': ' + (opts.fmt ? opts.fmt(ctx.parsed.y) : ctx.parsed.y)
           }
-        },
-        valueLabels: { enabled: opts.noLabels !== true, formatter: opts.fmt || (v => v) }
+        }
       },
       scales: {
         x: { grid: { color: GC }, ticks: { color: '#555', maxRotation: opts.rot || 35, font: { size: opts.xs || 10 } } },
