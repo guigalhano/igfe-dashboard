@@ -1192,7 +1192,7 @@ function render(year, q) {
       '<div class="rr"><span class="rn">' + (i+1) + '</span>' +
       '<span class="rname" title="' + r.name + '">' + r.name + '</span>' +
       '<div class="rbw"><div class="rb" style="width:' + r.pct + '%;background:' + color + '"></div></div>' +
-      '<span class="rp" style="color:' + color + '">' + r.pct + '%</span></div>'
+      '<span class="rp" style="color:' + color + '">' + r.pct.toFixed(1) + '%</span></div>'
     ).join('');
   }
   document.getElementById('r-may').innerHTML = rankHTML(d.rankingMay, C1);
