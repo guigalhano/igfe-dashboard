@@ -1406,12 +1406,15 @@ function render(year, q) {
     const cg = new Chart(elG, {
       type: 'bar',
       data: { labels: gL, datasets: [
-        {label:'Transferencias (B$)', data:gT, backgroundColor:'rgba(46,95,163,.5)', borderColor:C1, borderWidth:1, yAxisID:'y'},
-        {type:'line', label:'% Gratuidad', data:gP, borderColor:CG, backgroundColor:'rgba(240,165,0,.1)', borderWidth:2, pointRadius:4, pointBackgroundColor:CG, fill:false, yAxisID:'y2', tension:.3}
+        {label:'Transferencias (B$)', data:gT, backgroundColor:'rgba(46,95,163,.5)', borderColor:C1, borderWidth:1, yAxisID:'y',
+          datalabels:{display:true, anchor:'end', align:'end', offset:2, font:{size:8,weight:'700'}, color:'#333', formatter:v=>'$'+v+'B'}},
+        {type:'line', label:'% Gratuidad', data:gP, borderColor:CG, backgroundColor:'rgba(240,165,0,.1)', borderWidth:2, pointRadius:4, pointBackgroundColor:CG, fill:false, yAxisID:'y2', tension:.3,
+          datalabels:{display:false}}
       ]},
       options: {
         responsive:true, maintainAspectRatio:false,
-        plugins:{legend:{display:true,labels:{boxWidth:9,font:{size:10}}},tooltip:{mode:'index',intersect:false},datalabels:{display:false}},
+        layout:{padding:{top:16}},
+        plugins:{legend:{display:true,labels:{boxWidth:9,font:{size:10}}},tooltip:{mode:'index',intersect:false}},
         scales:{
           x:{grid:{color:GC},ticks:{color:'#555',font:{size:9}}},
           y:{grid:{color:GC},ticks:{color:'#555',callback:v=>'$'+v+'B'},position:'left'},
