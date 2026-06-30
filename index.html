@@ -691,7 +691,7 @@ const valueLabelsPlugin = {
     } catch (e) { /* never let a label glitch break the chart render */ }
   }
 };
-Chart.register(valueLabelsPlugin);
+// Chart.register(valueLabelsPlugin); // TEMPORARILY DISABLED — was breaking chart rendering
 
 function destroyCharts() {
   CH.forEach(c => { try { c.destroy(); } catch(e) {} });
