@@ -712,10 +712,11 @@ function mkChart(id, type, labels, datasets, opts) {
           }
         },
         datalabels: opts.noLabels ? { display: false } : {
+          display: function(ctx){ return ctx.datasetIndex === 0; },
           anchor: 'end',
           align: function(ctx){ var v = ctx.dataset.data[ctx.dataIndex]; return (v != null && v < 0) ? 'start' : 'end'; },
           offset: 2,
-          font: { size: 9, weight: '700' },
+          font: { size: 8, weight: '700' },
           color: '#333',
           formatter: v => (v === null || v === undefined) ? '' : (opts.fmt ? opts.fmt(v) : v)
         }
