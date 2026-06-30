@@ -708,13 +708,18 @@ function render(year, q) {
 
   const km = KPI_MAP[key] || ['—','—','—'];
   const deu = d.deuda || {};
-  document.getElementById('cover-val').textContent = km[0] !== '—' ? '$' + km[0] + ' billones' : 'Pendiente';
+  const gs0 = d.gastoSector || {};
+  const gsVals = ['Sector Público','Sector Municipal','Empresas del Estado','Instituciones de Educación Superior'].map(function(k){return gs0[k];});
+  const hasGS = gsVals.every(function(v){return v!=null;});
+  const totalEjecStr = hasGS ? gsVals.reduce(function(a,b){return a+b;},0).toFixed(1) : (km[0]!=='—'?parseFloat(km[0]).toFixed(1):'—');
+  const gastosSPStr = gs0['Sector Público']!=null ? gs0['Sector Público'].toFixed(1) : (km[1]!=='—'?parseFloat(km[1]).toFixed(1):'—');
+  document.getElementById('cover-val').textContent = totalEjecStr !== '—' ? '$' + totalEjecStr.replace('.',',') + ' billones' : 'Pendiente';
   var yp = document.getElementById('cover-year-print'); if (yp) yp.textContent = year;
 
   // KPIs
   const kd = [
-    {l:'Gasto Total Todos los Sectores', v:(km[0]&&km[0]!=='—'?parseFloat(km[0]).toLocaleString('es-CL',{maximumFractionDigits:1}):'—'), u:'B$', c:'#00b4a0'},
-    {l:'Gastos Sector Público', v:(km[1]&&km[1]!=='—'?parseFloat(km[1]).toLocaleString('es-CL',{maximumFractionDigits:1}):'—'), u:'B$', c:'#e8336e'},
+    {l:'Gasto Total Todos los Sectores', v:(totalEjecStr!=='—'?totalEjecStr.replace('.',','):'—'), u:'B$', c:'#00b4a0'},
+    {l:'Gastos Sector Público', v:(gastosSPStr!=='—'?gastosSPStr.replace('.',','):'—'), u:'B$', c:'#e8336e'},
     {l:'Deuda / PIB', v:deu.total||'—', u:'%', c:'#f0a500'},
     {l:'Inversiones / PIB', v:d.inversiones||'—', u:'%', c:'#2e5fa3'},
     {l:'Util. Emp. Estado', v:(km[2]&&km[2]!=='—'?parseFloat(km[2]).toLocaleString('es-CL',{maximumFractionDigits:0}):'—'), u:'MM$', c:'#1ab05a'},
