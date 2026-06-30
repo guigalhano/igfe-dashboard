@@ -1369,8 +1369,8 @@ function render(year, q) {
     const empBC = empCur.map(v => v >= 0 ? C2 : CP);
     const dsEmp = [];
     var empTotal = empCur.reduce(function(a,b){return a+(b||0);},0);
-    dsEmp.push({label:shortPer+'  $'+Math.round(empTotal).toLocaleString('es-CL')+'MM', data:empCur, backgroundColor:empBG, borderColor:empBC, borderWidth:1})
-    if (empPrev) { var pET=empPrev.reduce(function(a,b){return a+(b||0);},0); dsEmp.push(ds(qname(parseInt(prev.split('-')[1]))+' '+prev.split('-')[0]+'  $'+Math.round(Math.abs(pET)).toLocaleString('es-CL')+'MM', empPrev, 'rgba(46,95,163,.35)', C1)); };
+    dsEmp.push({label:shortPer+'  $'+Math.round(empTotal).toLocaleString('es-CL'), data:empCur, backgroundColor:empBG, borderColor:empBC, borderWidth:1})
+    if (empPrev) { var pET=empPrev.reduce(function(a,b){return a+(b||0);},0); dsEmp.push(ds(qname(parseInt(prev.split('-')[1]))+' '+prev.split('-')[0]+'  $'+Math.round(Math.abs(pET)).toLocaleString('es-CL'), empPrev, 'rgba(46,95,163,.35)', C1)); };
     bar('c-emp', empL, dsEmp, {fmt: v => '$'+Math.round(v).toLocaleString('es-CL'), ytick: function(v){return '$ '+Math.round(v).toLocaleString('es-CL');}, rot:40, xs:9});
   }
 
