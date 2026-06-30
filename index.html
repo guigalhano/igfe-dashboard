@@ -819,7 +819,7 @@ function render(year, q) {
     {l:'Gastos Sector Público', v:(gastosSPStr!=='—'?gastosSPStr.replace('.',','):'—'), u:'B$', c:'#e8336e'},
     {l:'Deuda Pública / PIB', v:deu.total||'—', u:'%', c:'#f0a500'},
     {l:'Inversiones Financieras / PIB', v:d.inversiones||'—', u:'%', c:'#2e5fa3'},
-    {l:'Utilidades Empresas del Estado', v:(km[2]&&km[2]!=='—'?parseFloat(km[2]).toLocaleString('es-CL',{maximumFractionDigits:0}):'—'), u:'MM$', c:'#1ab05a'},
+    {l:'Utilidades Empresas del Estado', v:(km[2]&&km[2]!=='—'?parseFloat(km[2]).toLocaleString('es-CL',{maximumFractionDigits:0}):'—'), u:'M$', c:'#1ab05a'},
     {l:'Entidades', v:String((function(){var cb0=COB_MAP[key]||{pub:299,mun:345,emp:32,ies:33};return (cb0.pub||0)+(cb0.mun||0)+(cb0.emp||0)+(cb0.ies||0)+(cb0.bc||0);})()), u:'', c:'#8e44ad'},
   ];
   document.getElementById('kpis').innerHTML = kd.map(k =>
