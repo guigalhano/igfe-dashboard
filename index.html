@@ -192,7 +192,7 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
 
   /* Page setup */
   @page { size:A4 portrait; margin:8mm 10mm; }
-  body { background:white !important; font-size:9pt; color:#000; }
+  body { background:white !important; font-size:9.5pt; color:#000; }
   * { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
 
   /* Hide the on-screen slim header entirely in print — the cover page replaces it */
@@ -237,10 +237,10 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
   /* Group sections onto pages the way the official PDF does, so charts don't split mid-section */
   /* No forced breaks — let sections flow and pack the page naturally;
      break-inside:avoid (below) ensures a section never splits mid-content. */
-  .sec-lbl { font-size:9pt !important; font-weight:700 !important;
+  .sec-lbl { font-size:10.5pt !important; font-weight:700 !important;
               color:#fff !important; background:#1a2744 !important;
               border-bottom:none !important; border-radius:2px !important;
-              padding:4px 10px !important; margin-bottom:5px !important;
+              padding:5px 10px !important; margin-bottom:5px !important;
               text-transform:uppercase !important; letter-spacing:1px !important; }
   .sec-lbl::after{ display:none !important; }
 
@@ -249,7 +249,7 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
   .narr.show{ display:block !important; background:none !important; border-left:none !important;
     border-bottom:1.5px solid #1a2744 !important; border-radius:0 !important;
     padding:0 0 4px 0 !important; margin:0 0 6px 0 !important;
-    font-size:7.5pt !important; line-height:1.42 !important; color:#222 !important; }
+    font-size:8.5pt !important; line-height:1.42 !important; color:#222 !important; }
 
   /* Cards */
   .g2,.g3 { display:grid !important; gap:6px !important; align-items:start !important; }
@@ -263,25 +263,25 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
   .card { break-inside:avoid !important; border:1px solid #ccc !important;
           border-radius:4px !important; padding:6px !important;
           background:white !important; margin-bottom:0 !important; }
-  .ct { font-size:8pt !important; font-weight:700 !important; color:#1a2744 !important; margin-bottom:1px !important; }
-  .cs { font-size:7pt !important; color:#888 !important; }
+  .ct { font-size:9.5pt !important; font-weight:700 !important; color:#1a2744 !important; margin-bottom:1px !important; }
+  .cs { font-size:8pt !important; color:#888 !important; }
   .ct-row { margin-bottom:2px !important; }
 
   /* Cobertura bars */
   .cbr { margin-bottom:3px !important; gap:5px !important; }
-  .cbr-lbl { font-size:6.5pt !important; width:75px !important; }
-  .cbr-track { height:9px !important; border-radius:2px !important; }
+  .cbr-lbl { font-size:7.5pt !important; width:80px !important; }
+  .cbr-track { height:10px !important; border-radius:2px !important; }
   .cbr-bar { border-radius:2px !important; }
-  .cbr-pct { font-size:7.5pt !important; width:30px !important; }
+  .cbr-pct { font-size:9pt !important; width:34px !important; }
 
   /* KPI cards */
   .kpi { padding:6px 8px !important; border-radius:4px !important; }
-  .kpi-l { font-size:7pt !important; }
-  .kpi-v { font-size:11pt !important; }
+  .kpi-l { font-size:8pt !important; }
+  .kpi-v { font-size:12.5pt !important; }
 
   /* Charts — resize for print */
-  .cw { height:108px !important; }
-  canvas { max-width:100% !important; max-height:108px !important; }
+  .cw { height:165px !important; }
+  canvas { max-width:100% !important; max-height:165px !important; }
 
   /* SVG circles */
   #circles-svg svg { max-height:175px !important; max-width:100% !important; }
@@ -458,13 +458,13 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
     <div class="g1">
       <div class="card">
         <div class="ct-row"><div class="ct">Ingresos Presupuestarios — Gobiernos Regionales</div>
-        <div class="cs">Millones de pesos</div><button class="hist-btn" data-chart="c-ging" data-label="Ing. Gob. Regionales" data-key="gobIng" data-unit="MM$">📈 Histórico</button></div>
+        <div class="cs">Miles de millones de pesos</div><button class="hist-btn" data-chart="c-ging" data-label="Ing. Gob. Regionales" data-key="gobIng" data-unit="MM$">📈 Histórico</button></div>
         <div class="cw"><canvas id="c-ging"></canvas></div>
       <div class="narr" id="narr-gores_ing"><span id="narr-gores_ing-txt"></span></div>
       </div>
       <div class="card">
         <div class="ct-row"><div class="ct">Gastos Presupuestarios — Gobiernos Regionales</div>
-        <div class="cs">Millones de pesos</div><button class="hist-btn" data-chart="c-ggas" data-label="Gas. Gob. Regionales" data-key="gobGas" data-unit="MM$">📈 Histórico</button></div>
+        <div class="cs">Miles de millones de pesos</div><button class="hist-btn" data-chart="c-ggas" data-label="Gas. Gob. Regionales" data-key="gobGas" data-unit="MM$">📈 Histórico</button></div>
         <div class="cw"><canvas id="c-ggas"></canvas></div>
       <div class="narr" id="narr-gores_gas"><span id="narr-gores_gas-txt"></span></div>
       </div>
@@ -704,7 +704,7 @@ function mkChart(id, type, labels, datasets, opts) {
       maintainAspectRatio: false,
       layout: { padding: { top: 16 } },
       plugins: {
-        legend: { display: datasets.length > 1, labels: { boxWidth: 9, font: { size: 10 }, color: '#555' } },
+        legend: { display: datasets.length > 1, labels: { boxWidth: 10, font: { size: 11 }, color: '#555' } },
         tooltip: {
           callbacks: {
             title: function(items) {
@@ -719,13 +719,13 @@ function mkChart(id, type, labels, datasets, opts) {
           anchor: 'end',
           align: function(ctx){ var v = ctx.dataset.data[ctx.dataIndex]; return (v != null && v < 0) ? 'start' : 'end'; },
           offset: 2,
-          font: { size: 8, weight: '700' },
+          font: { size: 9, weight: '700' },
           color: '#333',
           formatter: v => (v === null || v === undefined) ? '' : (opts.fmt ? opts.fmt(v) : v)
         }
       },
       scales: {
-        x: { grid: { color: GC }, ticks: { color: '#555', maxRotation: opts.rot || 35, font: { size: opts.xs || 10 } } },
+        x: { grid: { color: GC }, ticks: { color: '#555', maxRotation: opts.rot || 35, font: { size: opts.xs || 11 } } },
         y: { grid: { color: GC }, ticks: { display: false } }
       }
     }
