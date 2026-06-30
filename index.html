@@ -116,9 +116,9 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
 .cumpl-title{font-size:13px;font-weight:700;color:var(--navy);text-align:center;margin-bottom:1rem;line-height:1.4}
 .cbr{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .cbr-lbl{font-size:10px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.5px;width:100px;flex-shrink:0;text-align:right;line-height:1.35}
-.cbr-track{flex:1;background:#f0f0f0;border-radius:4px;overflow:hidden;height:32px}
-.cbr-bar{height:100%;border-radius:0 4px 4px 0;display:flex;align-items:center;justify-content:flex-end;padding-right:10px;min-width:50px;transition:width 0.8s ease}
-.cbr-pct{font-size:14px;font-weight:800}
+.cbr-track{flex:1;background:#f0f0f0;border-radius:4px;overflow:hidden;height:24px}
+.cbr-bar{height:100%;border-radius:0 4px 4px 0;min-width:6px;transition:width 0.8s ease}
+.cbr-pct{font-size:14px;font-weight:800;width:54px;flex-shrink:0;text-align:left}
 .cbr-baseline{font-size:9px;color:#aaa;text-align:right;margin-top:2px;padding-right:4px}
 
 /* BARS */
@@ -266,10 +266,11 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
   .ct-row { margin-bottom:2px !important; }
 
   /* Cobertura bars */
-  .cbr-wrap { margin-bottom:4px !important; }
-  .cbr-lbl { font-size:7pt !important; }
-  .cbr-track { height:8px !important; border-radius:3px !important; }
-  .cbr-bar { border-radius:3px !important; }
+  .cbr { margin-bottom:3px !important; gap:5px !important; }
+  .cbr-lbl { font-size:6.5pt !important; width:75px !important; }
+  .cbr-track { height:9px !important; border-radius:2px !important; }
+  .cbr-bar { border-radius:2px !important; }
+  .cbr-pct { font-size:7.5pt !important; width:30px !important; }
 
   /* KPI cards */
   .kpi { padding:6px 8px !important; border-radius:4px !important; }
@@ -861,10 +862,9 @@ function render(year, q) {
     return '<div class="cbr">' +
       '<div class="cbr-lbl">' + (CBLBL[s]||s) + '</div>' +
       '<div class="cbr-track">' +
-        '<div class="cbr-bar" style="width:' + barW + '%;background:' + bg + '">' +
-          '<span class="cbr-pct" style="color:' + tc + '">' + p.toFixed(1) + '%</span>' +
-        '</div>' +
+        '<div class="cbr-bar" style="width:' + barW + '%;background:' + bg + '"></div>' +
       '</div>' +
+      '<span class="cbr-pct" style="color:' + bg + '">' + p.toFixed(1) + '%</span>' +
     '</div>';
   }).join('') + (baseline>0?'<div class="cbr-baseline">Escala desde ' + baseline + '%</div>':'')
     || '<div style="color:#aaa;font-size:11px;padding:8px">Sin datos</div>';
