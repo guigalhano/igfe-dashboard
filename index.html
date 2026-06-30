@@ -986,7 +986,7 @@ function render(year, q) {
 
   // Auto-generate narrative texts from chart data
   function fmt(v,dec){ if(v==null) return '--'; return '$\u00a0'+parseFloat(v).toFixed(dec!=null?dec:1); }
-  function fmtM(v){ return v==null?'--':'$\u00a0'+(v/1000).toFixed(0)+'\u00a0mil millones'; }
+  function fmtM(v){ return v==null?'--':'$\u00a0'+Math.round(v/1000).toLocaleString('es-CL')+'\u00a0mil millones'; }
   function pct(a,b){ if(!a||!b) return null; return (((a-b)/Math.abs(b))*100).toFixed(1); }
   function dir(v){ return v>0?'aumento':'disminuci\u00f3n'; }
   function dirv(v){ return v>0?'aument\u00f3':'disminuy\u00f3'; }
