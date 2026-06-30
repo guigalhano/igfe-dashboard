@@ -229,7 +229,14 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
 
   /* Layout */
   main { padding:0 !important; }
-  .sec { margin-bottom:10px !important; break-before:auto; }
+  .sec { margin-bottom:10px !important; break-inside:avoid !important; page-break-inside:avoid !important; }
+  /* Group sections onto pages the way the official PDF does, so charts don't split mid-section */
+  main > .sec:nth-of-type(3),  /* Sector Público · Ingresos y Gastos */
+  main > .sec:nth-of-type(4),  /* Deuda Pública e Inversiones Financieras */
+  main > .sec:nth-of-type(6),  /* Sector Municipal */
+  main > .sec:nth-of-type(8) { /* Empresas del Estado y Educación Superior */
+    page-break-before:always !important; break-before:page !important;
+  }
   .sec-lbl { font-size:9pt !important; font-weight:700 !important;
               color:#fff !important; background:#1a2744 !important;
               border-bottom:none !important; border-radius:2px !important;
@@ -267,11 +274,11 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
   .kpi-v { font-size:11pt !important; }
 
   /* Charts — resize for print */
-  .cw { height:120px !important; }
-  canvas { max-width:100% !important; max-height:120px !important; }
+  .cw { height:145px !important; }
+  canvas { max-width:100% !important; max-height:145px !important; }
 
   /* SVG circles */
-  #circles-svg svg { max-height:200px !important; }
+  #circles-svg svg { max-height:230px !important; }
 
   /* Rankings */
   .rank-col { break-inside:avoid !important; }
