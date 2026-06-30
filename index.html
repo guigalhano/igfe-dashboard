@@ -231,14 +231,14 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
 
   /* Layout */
   main { padding:0 !important; }
-  .sec { margin-bottom:10px !important; break-inside:avoid !important; page-break-inside:avoid !important; }
+  .sec { margin-bottom:6px !important; break-inside:avoid !important; page-break-inside:avoid !important; }
   /* Group sections onto pages the way the official PDF does, so charts don't split mid-section */
   /* No forced breaks — let sections flow and pack the page naturally;
      break-inside:avoid (below) ensures a section never splits mid-content. */
   .sec-lbl { font-size:9pt !important; font-weight:700 !important;
               color:#fff !important; background:#1a2744 !important;
               border-bottom:none !important; border-radius:2px !important;
-              padding:5px 10px !important; margin-bottom:8px !important;
+              padding:4px 10px !important; margin-bottom:5px !important;
               text-transform:uppercase !important; letter-spacing:1px !important; }
   .sec-lbl::after{ display:none !important; }
 
@@ -255,11 +255,11 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
   .g3 { grid-template-columns:1fr 1fr !important; }
   #cob-grid { grid-template-columns:1fr 1fr 1fr !important; }
   .card { break-inside:avoid !important; border:1px solid #ccc !important;
-          border-radius:4px !important; padding:8px !important;
+          border-radius:4px !important; padding:6px !important;
           background:white !important; margin-bottom:0 !important; }
-  .ct { font-size:8pt !important; font-weight:700 !important; color:#1a2744 !important; margin-bottom:2px !important; }
+  .ct { font-size:8pt !important; font-weight:700 !important; color:#1a2744 !important; margin-bottom:1px !important; }
   .cs { font-size:7pt !important; color:#888 !important; }
-  .ct-row { margin-bottom:4px !important; }
+  .ct-row { margin-bottom:2px !important; }
 
   /* Cobertura bars */
   .cbr-wrap { margin-bottom:4px !important; }
@@ -273,11 +273,11 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
   .kpi-v { font-size:11pt !important; }
 
   /* Charts — resize for print */
-  .cw { height:130px !important; }
-  canvas { max-width:100% !important; max-height:130px !important; }
+  .cw { height:108px !important; }
+  canvas { max-width:100% !important; max-height:108px !important; }
 
   /* SVG circles */
-  #circles-svg svg { max-height:210px !important; max-width:100% !important; }
+  #circles-svg svg { max-height:175px !important; max-width:100% !important; }
 
   /* Rankings */
   .rank-col { break-inside:avoid !important; }
