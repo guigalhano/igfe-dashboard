@@ -1245,7 +1245,7 @@ function render(year, q) {
   document.getElementById('r-men').innerHTML = rankHTML(d.rankingMen, CP);
 
   // Municipal Ingresos
-  const miL = ['Ing.Propios','MINSAL','FCM','Transf.','MINEDUC','Ing.Bfo FCM','Otros'];
+  const miL = ['Ing.Propios','Transf.MINSAL','Transf.MINEDUC','FCM','Otros Ing.','Ing.Percibir','Ing.Bfo.FCM'];
   if (d.munIng) {
     const dsMI = [];
     var mIngTotal = d.munIng.reduce(function(a,b){return a+(b||0);},0);
@@ -1255,7 +1255,7 @@ function render(year, q) {
   }
 
   // Municipal Gastos
-  const mgL = ['Personal','Transf.Corr.','Bs.Serv.','Ini.Inv.','Serv.Deuda','Prest.SS','Act.NF','Otros'];
+  const mgL = ['Personal','Bs.Serv.','Transf.Corr.','Ini.Inv.','Serv.Deuda','Prest.SS','Act.NF','Otros'];
   if (d.munGas) {
     const dsMG = [];
     var mGasTotal = d.munGas.reduce(function(a,b){return a+(b||0);},0);
@@ -1428,7 +1428,7 @@ function render(year, q) {
     bar('c-ging', gIngL, dsGI, {fmt: v => '$'+(v/1000).toFixed(0)+'MM', ytick: function(v){return '$ '+(v/1000).toLocaleString('es-CL',{maximumFractionDigits:0})+'MM';}});
   }
 
-  const gGasL = ['Ini.Inversion','Transf.Cap.','Adq.Act.','Personal','Transf.Corr.','Serv.Deuda','Otros'];
+  const gGasL = ['Ini.Inversion','Transf.Cap.','Adq.Act.','Personal','Serv.Deuda','Transf.Corr.','Otros'];
   if (d.gobGas) {
     const dsGG = [];
     var gobGasT = d.gobGas.reduce(function(a,b){return a+(b||0);},0);
