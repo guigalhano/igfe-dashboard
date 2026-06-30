@@ -85,6 +85,7 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
 .sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--blue);margin-bottom:.75rem;display:flex;align-items:center;gap:8px}
 .sec-lbl::after{content:'';flex:1;height:1px;background:var(--border)}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.g1{display:flex;flex-direction:column;gap:10px;margin-bottom:10px}
 .card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:1rem}
 .ct{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:2px}
 .cs{font-size:11px;color:var(--muted);margin-bottom:.75rem}
@@ -252,6 +253,7 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
 
   /* Cards */
   .g2,.g3 { display:grid !important; gap:6px !important; align-items:start !important; }
+  .g1 { gap:6px !important; }
   .cob-wrap { align-items:start !important; }
   .cob-box { height:auto !important; align-self:start !important; }
   .cumpl-wrap { height:auto !important; align-self:start !important; }
@@ -385,7 +387,7 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
       <div style="font-size:11px;color:var(--muted);margin-bottom:.5rem" id="circ-subtitle">Transferencias entre Sectores <span id="circ-year"></span></div>
       <div id="circles-svg" style="width:100%;overflow:hidden"></div>
     </div>
-    <div class="g2">
+    <div class="g1">
       <div class="card">
         <div class="ct-row"><div class="ct">Comparativo Gastos Presupuestarios Ejecutados</div>
         <div class="cs">Billones de pesos · todos los sectores</div><button class="hist-btn" data-chart="c-gsec" data-label="Gasto por Sector" data-key="gastoSector" data-unit="B$">📈 Histórico</button></div>
@@ -402,7 +404,7 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
   <!-- 3. SECTOR PÚBLICO: INGRESOS Y GASTOS -->
   <div class="sec">
     <div class="sec-lbl">Sector Público · Ingresos y Gastos</div>
-    <div class="g2">
+    <div class="g1">
       <div class="card">
         <div class="ct-row"><div class="ct">Ingresos Presupuestarios Ejecutados — Sector Público</div>
         <div class="cs">Billones de pesos · comparativo año anterior</div><button class="hist-btn" data-chart="c-isp" data-label="Ingresos SP" data-key="ingresosSP" data-unit="B$">📈 Histórico</button></div>
@@ -453,7 +455,7 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
   <!-- 5. GOBIERNOS REGIONALES -->
   <div class="sec">
     <div class="sec-lbl">Gobiernos Regionales</div>
-    <div class="g2">
+    <div class="g1">
       <div class="card">
         <div class="ct-row"><div class="ct">Ingresos Presupuestarios — Gobiernos Regionales</div>
         <div class="cs">Millones de pesos</div><button class="hist-btn" data-chart="c-ging" data-label="Ing. Gob. Regionales" data-key="gobIng" data-unit="MM$">📈 Histórico</button></div>
@@ -501,7 +503,7 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
   <!-- 6. SECTOR MUNICIPAL -->
   <div class="sec">
     <div class="sec-lbl">Sector Municipal</div>
-    <div class="g2">
+    <div class="g1">
       <div class="card">
         <div class="ct-row"><div class="ct">Ingresos Presupuestarios — Sector Municipal</div>
         <div class="cs">Millones de pesos</div><button class="hist-btn" data-chart="c-ming" data-label="Ingresos Municipal" data-key="munIng" data-unit="M$">📈 Histórico</button></div>
@@ -544,7 +546,7 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
   <!-- 7. EMPRESAS DEL ESTADO Y EDUCACIÓN SUPERIOR -->
   <div class="sec">
     <div class="sec-lbl">Empresas del Estado y Educación Superior</div>
-    <div class="g2">
+    <div class="g1">
       <div class="card">
         <div class="ct-row"><div class="ct">Utilidades / Pérdidas — Empresas del Estado</div>
         <div class="cs">Millones de pesos</div><button class="hist-btn" data-chart="c-emp" data-label="Empresas del Estado" data-key="empresas" data-unit="MM$">📈 Histórico</button></div>
@@ -558,7 +560,7 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
       <div class="narr" id="narr-edu_ing"><span id="narr-edu_ing-txt"></span></div>
       </div>
     </div>
-    <div class="g2">
+    <div class="g1">
       <div class="card">
         <div class="ct-row"><div class="ct">Gastos — Instituciones Educación Superior</div>
         <div class="cs">Millones de pesos</div><button class="hist-btn" data-chart="c-edug" data-label="Gastos IES" data-key="eduGas" data-unit="MM$">📈 Histórico</button></div>
