@@ -218,6 +218,8 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
     letter-spacing:1px; color:rgba(255,255,255,.5);
   }
   .cover{ position:relative; }
+  .cover-kpis-slot{ margin-top:16px; }
+  .cover-kpis-slot .kpis{ margin-bottom:0 !important; }
 
   /* Period banner — show simplified */
   .period-banner { display:block !important; background:#f5f7fa !important;
@@ -320,6 +322,7 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
       <div class="cover-val" id="cover-val">—</div>
     </div>
   </div>
+  <div class="cover-kpis-slot" id="cover-kpis-slot"></div>
 </div>
 
 <div class="period-banner">
@@ -1861,6 +1864,13 @@ function exportPDF() {
   if(expBar) expBar.style.display = 'none';
   histBtns.forEach(function(b){ b.style.display='none'; });
 
+  /* Move the KPI cards onto the cover page (page 1) so the first content page isn't wasted on them */
+  var kpisEl = document.getElementById('kpis');
+  var kpisSlot = document.getElementById('cover-kpis-slot');
+  var kpisOrigParent = kpisEl && kpisEl.parentNode;
+  var kpisOrigNext = kpisEl && kpisEl.nextSibling;
+  if (kpisEl && kpisSlot) kpisSlot.appendChild(kpisEl);
+
   /* Print dialog = PDF in modern browsers */
   document.getElementById('print-date') && 
     (document.getElementById('print-date').textContent = 'Generado: ' + new Date().toLocaleDateString('es-CL'));
@@ -1871,6 +1881,10 @@ function exportPDF() {
     if(expBar) expBar.style.display = '';
     histBtns.forEach(function(b){ b.style.display=''; });
     document.title = origTitle;
+    if (kpisEl && kpisOrigParent) {
+      if (kpisOrigNext) kpisOrigParent.insertBefore(kpisEl, kpisOrigNext);
+      else kpisOrigParent.appendChild(kpisEl);
+    }
   }, 1000);
 }
 
