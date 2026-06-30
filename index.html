@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>IGFE — Gestión Financiera del Estado</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
 <style>
 :root{
   --navy:#1a2744;--dark:#0f1a2e;--teal:#00b4a0;--pink:#e8336e;
@@ -649,6 +650,9 @@ const PFULL = {
    CHART SETUP
    ==================================================== */
 Chart.defaults.font.family = 'Segoe UI,Arial,sans-serif';
+if (typeof ChartDataLabels !== 'undefined') {
+  try { Chart.register(ChartDataLabels); } catch(e) {}
+}
 Chart.defaults.font.size = 11;
 Chart.defaults.color = '#555';
 const GC = 'rgba(0,0,0,0.06)';
@@ -695,6 +699,7 @@ function mkChart(id, type, labels, datasets, opts) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      layout: { padding: { top: 16 } },
       plugins: {
         legend: { display: datasets.length > 1, labels: { boxWidth: 9, font: { size: 10 }, color: '#555' } },
         tooltip: {
@@ -705,11 +710,19 @@ function mkChart(id, type, labels, datasets, opts) {
             },
             label: ctx => ' ' + (ctx.dataset.label || '') + ': ' + (opts.fmt ? opts.fmt(ctx.parsed.y) : ctx.parsed.y)
           }
+        },
+        datalabels: opts.noLabels ? { display: false } : {
+          anchor: 'end',
+          align: function(ctx){ var v = ctx.dataset.data[ctx.dataIndex]; return (v != null && v < 0) ? 'start' : 'end'; },
+          offset: 2,
+          font: { size: 9, weight: '700' },
+          color: '#333',
+          formatter: v => (v === null || v === undefined) ? '' : (opts.fmt ? opts.fmt(v) : v)
         }
       },
       scales: {
         x: { grid: { color: GC }, ticks: { color: '#555', maxRotation: opts.rot || 35, font: { size: opts.xs || 10 } } },
-        y: { grid: { color: GC }, ticks: { color: '#555', callback: opts.ytick || (v => v) } }
+        y: { grid: { color: GC }, ticks: { display: false } }
       }
     }
   });
@@ -1397,7 +1410,7 @@ function render(year, q) {
       ]},
       options: {
         responsive:true, maintainAspectRatio:false,
-        plugins:{legend:{display:true,labels:{boxWidth:9,font:{size:10}}},tooltip:{mode:'index',intersect:false}},
+        plugins:{legend:{display:true,labels:{boxWidth:9,font:{size:10}}},tooltip:{mode:'index',intersect:false},datalabels:{display:false}},
         scales:{
           x:{grid:{color:GC},ticks:{color:'#555',font:{size:9}}},
           y:{grid:{color:GC},ticks:{color:'#555',callback:v=>'$'+v+'B'},position:'left'},
@@ -1432,7 +1445,7 @@ function render(year, q) {
         yAxisID: 'y',
         order: 0
       }
-    ], {fmt: v => v+'%', ytick: v => v+'%'});
+    ], {fmt: v => v+'%', ytick: v => v+'%', noLabels: true});
   }
 
   // Inversiones — history
@@ -1450,7 +1463,7 @@ function render(year, q) {
       }]},
       options:{
         responsive:true, maintainAspectRatio:false,
-        plugins:{legend:{display:true,labels:{boxWidth:9,font:{size:10}}},tooltip:{callbacks:{label:ctx=>' '+ctx.parsed.y+'%'}}},
+        plugins:{legend:{display:true,labels:{boxWidth:9,font:{size:10}}},tooltip:{callbacks:{label:ctx=>' '+ctx.parsed.y+'%'}},datalabels:{display:false}},
         scales:{x:{grid:{color:GC},ticks:{color:'#555',font:{size:9}}},y:{grid:{color:GC},ticks:{color:'#555',callback:v=>v+'%'},min:8,max:16}}
       }
     });
@@ -1623,6 +1636,7 @@ function buildHistoric(dbKey, unit, mode) {
           position: 'bottom',
           labels: { boxWidth: 11, font: { size: 10 }, padding: 10 }
         },
+        datalabels: { display: false },
         tooltip: {
           callbacks: {
             label: function(c) {
