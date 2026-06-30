@@ -632,24 +632,6 @@ let _kpisOrigParent = null, _kpisOrigNext = null;
 
 function _onBeforePrint() {
   PRINTING = true;
-  /* Force a synchronous redraw with labels, then snapshot each canvas as a static <img>.
-     Chrome has long-standing bugs rendering <canvas> in print output (blank/stale frames);
-     swapping to a PNG snapshot sidesteps that entirely. */
-  CH.forEach(function(c){
-    try{
-      c.resize(); c.update('none'); c.draw();
-      var canvas = c.canvas;
-      var img = document.createElement('img');
-      img.src = canvas.toDataURL('image/png');
-      img.className = 'print-chart-snapshot';
-      img.style.width = '100%';
-      img.style.height = '100%';
-      img.style.display = 'block';
-      canvas.style.display = 'none';
-      canvas.parentNode.insertBefore(img, canvas.nextSibling);
-      canvas._printImg = img;
-    }catch(e){}
-  });
   /* Move the KPI cards onto the cover page (page 1) so the first content page isn't wasted on them.
      Hooked here (not just the export button) so it also works with native browser Print/Ctrl+P. */
   var kpisEl = document.getElementById('kpis');
@@ -661,36 +643,29 @@ function _onBeforePrint() {
   }
   document.getElementById('print-date') &&
     (document.getElementById('print-date').textContent = 'Generado: ' + new Date().toLocaleDateString('es-CL'));
+  CH.forEach(function(c){ try{ c.resize(); }catch(e){} });
 }
 function _onAfterPrint() {
   PRINTING = false;
-  CH.forEach(function(c){
-    try{
-      var canvas = c.canvas;
-      if (canvas._printImg) { canvas._printImg.remove(); canvas._printImg = null; }
-      canvas.style.display = '';
-      c.update('none');
-    }catch(e){}
-  });
   var kpisEl = document.getElementById('kpis');
   if (kpisEl && _kpisOrigParent) {
     if (_kpisOrigNext) _kpisOrigParent.insertBefore(kpisEl, _kpisOrigNext);
     else _kpisOrigParent.appendChild(kpisEl);
     _kpisOrigParent = null; _kpisOrigNext = null;
   }
+  CH.forEach(function(c){ try{ c.resize(); }catch(e){} });
 }
 window.addEventListener('beforeprint', _onBeforePrint);
 window.addEventListener('afterprint',  _onAfterPrint);
 const valueLabelsPlugin = {
   id: 'valueLabels',
   afterDatasetsDraw: function(chart) {
-    if (!PRINTING) return;
     const opts = chart.options.plugins && chart.options.plugins.valueLabels;
     if (!opts || opts.enabled === false) return;
     const fmt = opts.formatter || (v => v);
     const ctx = chart.ctx;
     ctx.save();
-    ctx.font = '700 8px Segoe UI,Arial,sans-serif';
+    ctx.font = '700 9px Segoe UI,Arial,sans-serif';
     ctx.textAlign = 'center';
     chart.data.datasets.forEach(function(dset, dsi) {
       const meta = chart.getDatasetMeta(dsi);
