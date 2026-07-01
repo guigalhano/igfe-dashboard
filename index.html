@@ -1469,7 +1469,7 @@ function render(year, q) {
       }]},
       options:{
         responsive:true, maintainAspectRatio:false,
-        plugins:{legend:{display:true,labels:{boxWidth:10,font:{size:11}}},tooltip:{callbacks:{label:ctx=>' '+ctx.parsed.y+'%'}},datalabels:{display:false}},
+        plugins:{legend:{display:true,labels:{boxWidth:10,font:{size:11}}},tooltip:{callbacks:{label:ctx=>' '+ctx.parsed.y+'%'}},datalabels:{display:true, align:'top', anchor:'end', offset:6, font:{size:10,weight:'700'}, color:'#0a6e63', formatter:v=>v+'%'}},
         scales:{x:{grid:{color:GC},ticks:{color:'#555',font:{size:10}}},y:{grid:{color:GC},ticks:{color:'#555',callback:v=>v+'%'},min:8,max:16}}
       }
     });
