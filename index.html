@@ -715,7 +715,7 @@ function mkChart(id, type, labels, datasets, opts) {
           }
         },
         datalabels: opts.noLabels ? { display: false } : {
-          display: function(ctx){ return ctx.datasetIndex === 0; },
+          display: function(ctx){ return opts.allLabels ? true : ctx.datasetIndex === 0; },
           anchor: 'end',
           align: function(ctx){ var v = ctx.dataset.data[ctx.dataIndex]; return (v != null && v < 0) ? 'start' : 'end'; },
           offset: 2,
@@ -1207,7 +1207,7 @@ function render(year, q) {
   var prevSecTotal = prevV ? prevV.reduce(function(a,b){return a+(b||0);},0) : null;
   dsSec.push(ds(shortPer+'  $'+secTotal.toFixed(1)+'B', secV, 'rgba(0,180,160,.65)', C2));
   if (prevV) dsSec.push(ds(qname(parseInt(prev.split('-')[1]))+' '+prev.split('-')[0]+'  $'+prevSecTotal.toFixed(1)+'B', prevV, 'rgba(46,95,163,.35)', C1));
-  bar('c-gsec', secL, dsSec, {fmt: v => '$'+v+'B'});
+  bar('c-gsec', secL, dsSec, {fmt: v => '$'+v+'B', allLabels: true});
 
   // Chart: Ingresos SP — always sorted largest to smallest for the selected period
   const ispLOrig = ['Impuestos','Endeudam.','Otros Corr.','Vta.Activos','Impos.Prev.','Recup.','Otros'];
