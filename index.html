@@ -1485,7 +1485,7 @@ function render(year, q) {
     var gobIngT = giCur.reduce(function(a,b){return a+(b||0);},0);
     dsGI.push(ds(shortPer+'  $'+(gobIngT/1000).toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1}), giCur, 'rgba(0,180,160,.65)', C2));
     if (giPrev) { var pGIT=giPrev.reduce(function(a,b){return a+(b||0);},0); dsGI.push(ds(qname(parseInt(prev.split('-')[1]))+' '+prev.split('-')[0]+'  $'+(pGIT/1000).toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1}), giPrev, 'rgba(46,95,163,.35)', C1)); }
-    bar('c-ging', gIngL, dsGI, {fmt: v => '$'+(v/1000).toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1}), ytick: function(v){return '$ '+(v/1000).toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1});}});
+    bar('c-ging', gIngL, dsGI, {fmt: v => '$'+(v/1000).toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1}), ytick: function(v){return '$ '+(v/1000).toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1});}, allLabels: true});
   }
 
   const gGasLOrig = ['Ini.Inversion','Transf.Cap.','Adq.Act.','Personal','Serv.Deuda','Transf.Corr.','Otros'];
@@ -1496,7 +1496,7 @@ function render(year, q) {
     var gobGasT = ggCur.reduce(function(a,b){return a+(b||0);},0);
     dsGG.push(ds(shortPer+'  $'+(gobGasT/1000).toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1}), ggCur, 'rgba(0,180,160,.65)', C2));
     if (ggPrev) { var pGGT=ggPrev.reduce(function(a,b){return a+(b||0);},0); dsGG.push(ds(qname(parseInt(prev.split('-')[1]))+' '+prev.split('-')[0]+'  $'+(pGGT/1000).toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1}), ggPrev, 'rgba(46,95,163,.35)', C1)); }
-    bar('c-ggas', gGasL, dsGG, {fmt: v => '$'+(v/1000).toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1}), ytick: function(v){return '$ '+(v/1000).toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1});}, rot:40});
+    bar('c-ggas', gGasL, dsGG, {fmt: v => '$'+(v/1000).toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1}), ytick: function(v){return '$ '+(v/1000).toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1});}, rot:40, allLabels: true});
   }
 }
 
