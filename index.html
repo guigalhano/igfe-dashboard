@@ -988,7 +988,7 @@ function render(year, q) {
 
   // Auto-generate narrative texts from chart data
   function fmt(v,dec){ if(v==null) return '--'; return '$\u00a0'+parseFloat(v).toFixed(dec!=null?dec:1); }
-  function fmtM(v){ return v==null?'--':'$\u00a0'+Math.round(v).toLocaleString('es-CL')+'\u00a0mil millones'; }
+  function fmtM(v){ return v==null?'--':'$\u00a0'+(v/1000).toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1})+'\u00a0mil millones'; }
   function pct(a,b){ if(!a||!b) return null; return (((a-b)/Math.abs(b))*100).toFixed(1); }
   function dir(v){ return v>0?'aumento':'disminuci\u00f3n'; }
   function dirv(v){ return v>0?'aument\u00f3':'disminuy\u00f3'; }
@@ -1483,9 +1483,9 @@ function render(year, q) {
     const gIngL = giSrt.labels, giCur = giSrt.cur, giPrev = giSrt.prev;
     const dsGI = [];
     var gobIngT = giCur.reduce(function(a,b){return a+(b||0);},0);
-    dsGI.push(ds(shortPer+'  $'+gobIngT.toLocaleString('es-CL',{maximumFractionDigits:0}), giCur, 'rgba(0,180,160,.65)', C2));
-    if (giPrev) { var pGIT=giPrev.reduce(function(a,b){return a+(b||0);},0); dsGI.push(ds(qname(parseInt(prev.split('-')[1]))+' '+prev.split('-')[0]+'  $'+pGIT.toLocaleString('es-CL',{maximumFractionDigits:0}), giPrev, 'rgba(46,95,163,.35)', C1)); }
-    bar('c-ging', gIngL, dsGI, {fmt: v => '$'+Math.round(v).toLocaleString('es-CL'), ytick: function(v){return '$ '+v.toLocaleString('es-CL',{maximumFractionDigits:0});}});
+    dsGI.push(ds(shortPer+'  $'+(gobIngT/1000).toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1}), giCur, 'rgba(0,180,160,.65)', C2));
+    if (giPrev) { var pGIT=giPrev.reduce(function(a,b){return a+(b||0);},0); dsGI.push(ds(qname(parseInt(prev.split('-')[1]))+' '+prev.split('-')[0]+'  $'+(pGIT/1000).toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1}), giPrev, 'rgba(46,95,163,.35)', C1)); }
+    bar('c-ging', gIngL, dsGI, {fmt: v => '$'+(v/1000).toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1}), ytick: function(v){return '$ '+(v/1000).toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1});}});
   }
 
   const gGasLOrig = ['Ini.Inversion','Transf.Cap.','Adq.Act.','Personal','Serv.Deuda','Transf.Corr.','Otros'];
@@ -1494,9 +1494,9 @@ function render(year, q) {
     const gGasL = ggSrt.labels, ggCur = ggSrt.cur, ggPrev = ggSrt.prev;
     const dsGG = [];
     var gobGasT = ggCur.reduce(function(a,b){return a+(b||0);},0);
-    dsGG.push(ds(shortPer+'  $'+gobGasT.toLocaleString('es-CL',{maximumFractionDigits:0}), ggCur, 'rgba(0,180,160,.65)', C2));
-    if (ggPrev) { var pGGT=ggPrev.reduce(function(a,b){return a+(b||0);},0); dsGG.push(ds(qname(parseInt(prev.split('-')[1]))+' '+prev.split('-')[0]+'  $'+pGGT.toLocaleString('es-CL',{maximumFractionDigits:0}), ggPrev, 'rgba(46,95,163,.35)', C1)); }
-    bar('c-ggas', gGasL, dsGG, {fmt: v => '$'+Math.round(v).toLocaleString('es-CL'), ytick: function(v){return '$ '+v.toLocaleString('es-CL',{maximumFractionDigits:0});}, rot:40});
+    dsGG.push(ds(shortPer+'  $'+(gobGasT/1000).toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1}), ggCur, 'rgba(0,180,160,.65)', C2));
+    if (ggPrev) { var pGGT=ggPrev.reduce(function(a,b){return a+(b||0);},0); dsGG.push(ds(qname(parseInt(prev.split('-')[1]))+' '+prev.split('-')[0]+'  $'+(pGGT/1000).toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1}), ggPrev, 'rgba(46,95,163,.35)', C1)); }
+    bar('c-ggas', gGasL, dsGG, {fmt: v => '$'+(v/1000).toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1}), ytick: function(v){return '$ '+(v/1000).toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1});}, rot:40});
   }
 }
 
