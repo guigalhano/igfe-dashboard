@@ -1136,10 +1136,10 @@ function render(year, q) {
     var op=ei[0], transf=ei[1], fiscal=ei[2];
     var dOp = pei ? pct(op,pei[0]) : null;
     var dTransf = pei ? pct(transf,pei[1]) : null;
-    var t = 'Al '+curPer+', los ingresos de las Instituciones de Educaci\u00f3n Superior alcanzaron $\u00a0'+Math.round(total).toLocaleString('es-CL')+' mil millones.'
-      +' Los Ingresos de Operaci\u00f3n fueron el principal componente con $\u00a0'+Math.round(op).toLocaleString('es-CL')+' millones'
+    var t = 'Al '+curPer+', los ingresos de las Instituciones de Educaci\u00f3n Superior alcanzaron $\u00a0'+total.toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1})+' mil millones.'
+      +' Los Ingresos de Operaci\u00f3n fueron el principal componente con $\u00a0'+op.toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1})+' mil millones'
       +(dOp!=null?' ('+dirv(parseFloat(dOp))+' un '+Math.abs(dOp)+'% respecto al '+pPer+')':'')+'. '
-      +'Las Transferencias alcanzaron $\u00a0'+Math.round(transf).toLocaleString('es-CL')+' millones'
+      +'Las Transferencias alcanzaron $\u00a0'+transf.toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1})+' mil millones'
       +(dTransf!=null?' ('+dirv(parseFloat(dTransf))+' un '+Math.abs(dTransf)+'%)':'')+'.';
     showNarr('edu_ing',t);
   })();
@@ -1152,10 +1152,10 @@ function render(year, q) {
     var ptotal = peg ? peg.reduce(function(a,b){return a+(b||0);},0) : null;
     var pers=eg[0], bs=eg[1], transf=eg[2];
     var dPers = peg ? pct(pers,peg[0]) : null;
-    var t = 'Al '+curPer+', los gastos de las Instituciones de Educaci\u00f3n Superior alcanzaron $\u00a0'+Math.round(total).toLocaleString('es-CL')+' mil millones.'
-      +' Los Gastos en Personal representaron el principal componente con $\u00a0'+Math.round(pers).toLocaleString('es-CL')+' millones'
+    var t = 'Al '+curPer+', los gastos de las Instituciones de Educaci\u00f3n Superior alcanzaron $\u00a0'+total.toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1})+' mil millones.'
+      +' Los Gastos en Personal representaron el principal componente con $\u00a0'+pers.toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1})+' mil millones'
       +(dPers!=null?' ('+dirv(parseFloat(dPers))+' un '+Math.abs(dPers)+'% respecto al '+pPer+')':'')+'. '
-      +'La Compra de Bienes y Servicios alcanz\u00f3 $\u00a0'+Math.round(bs).toLocaleString('es-CL')+' millones.';
+      +'La Compra de Bienes y Servicios alcanz\u00f3 $\u00a0'+bs.toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1})+' mil millones.';
     showNarr('edu_gas',t);
   })();
 
@@ -1381,9 +1381,9 @@ function render(year, q) {
     const eduL = eduSrt.labels, eduCur = eduSrt.cur, eduPrev = eduSrt.prev;
     const dsEdu = [];
     var eduIngT = eduCur.reduce(function(a,b){return a+(b||0);},0);
-    dsEdu.push(ds(shortPer+'  $'+Math.round(eduIngT).toLocaleString('es-CL'), eduCur, 'rgba(0,180,160,.65)', C2));
-    if (eduPrev) { var pEIT=eduPrev.reduce(function(a,b){return a+(b||0);},0); dsEdu.push(ds(qname(parseInt(prev.split('-')[1]))+' '+prev.split('-')[0]+'  $'+Math.round(pEIT).toLocaleString('es-CL'), eduPrev, 'rgba(46,95,163,.35)', C1)); }
-    bar('c-edu', eduL, dsEdu, {fmt: v => '$'+Math.round(v).toLocaleString('es-CL'), ytick: function(v){return '$ '+Math.round(v).toLocaleString('es-CL');}, rot:35});
+    dsEdu.push(ds(shortPer+'  $'+eduIngT.toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1}), eduCur, 'rgba(0,180,160,.65)', C2));
+    if (eduPrev) { var pEIT=eduPrev.reduce(function(a,b){return a+(b||0);},0); dsEdu.push(ds(qname(parseInt(prev.split('-')[1]))+' '+prev.split('-')[0]+'  $'+pEIT.toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1}), eduPrev, 'rgba(46,95,163,.35)', C1)); }
+    bar('c-edu', eduL, dsEdu, {fmt: v => '$'+v.toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1}), ytick: function(v){return '$ '+v.toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1});}, rot:35});
   }
 
   // Gastos IES chart — always sorted largest to smallest for the selected period
@@ -1393,9 +1393,9 @@ function render(year, q) {
     var gasIES_L = eguSrt.labels, eguCur = eguSrt.cur, eguPrev = eguSrt.prev;
     var dsEdug = [];
     var eduGasT = eguCur.reduce(function(a,b){return a+(b||0);},0);
-    dsEdug.push(ds(shortPer+'  $'+Math.round(eduGasT).toLocaleString('es-CL'), eguCur, 'rgba(0,180,160,.65)', C2));
-    if (eguPrev) { var pEGT=eguPrev.reduce(function(a,b){return a+(b||0);},0); dsEdug.push(ds(qname(parseInt(prev.split('-')[1]))+' '+prev.split('-')[0]+'  $'+Math.round(pEGT).toLocaleString('es-CL'), eguPrev, 'rgba(46,95,163,.35)', C1)); }
-    bar('c-edug', gasIES_L, dsEdug, {fmt: v => '$'+Math.round(v).toLocaleString('es-CL'), ytick: function(v){return '$ '+Math.round(v).toLocaleString('es-CL');}, rot:35});
+    dsEdug.push(ds(shortPer+'  $'+eduGasT.toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1}), eguCur, 'rgba(0,180,160,.65)', C2));
+    if (eguPrev) { var pEGT=eguPrev.reduce(function(a,b){return a+(b||0);},0); dsEdug.push(ds(qname(parseInt(prev.split('-')[1]))+' '+prev.split('-')[0]+'  $'+pEGT.toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1}), eguPrev, 'rgba(46,95,163,.35)', C1)); }
+    bar('c-edug', gasIES_L, dsEdug, {fmt: v => '$'+v.toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1}), ytick: function(v){return '$ '+v.toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1});}, rot:35});
   }
 
   // Gratuidad — ALL periods
