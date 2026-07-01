@@ -1257,7 +1257,7 @@ function render(year, q) {
     var mIngTotal = miCur.reduce(function(a,b){return a+(b||0);},0);
     dsMI.push(ds(shortPer+'  $'+(mIngTotal/1000).toLocaleString('es-CL',{maximumFractionDigits:0}), miCur, 'rgba(0,180,160,.65)', C2));
     if (miPrev) { var pMIT=miPrev.reduce(function(a,b){return a+(b||0);},0); dsMI.push(ds(qname(parseInt(prev.split('-')[1]))+' '+prev.split('-')[0]+'  $'+(pMIT/1000).toLocaleString('es-CL',{maximumFractionDigits:0}), miPrev, 'rgba(46,95,163,.35)', C1)); }
-    bar('c-ming', miL, dsMI, {fmt: v => '$'+Math.round(v/1000).toLocaleString('es-CL'), ytick: function(v){return '$ '+(v/1000).toLocaleString('es-CL',{maximumFractionDigits:0});}, rot:40});
+    bar('c-ming', miL, dsMI, {fmt: v => '$'+Math.round(v/1000).toLocaleString('es-CL'), ytick: function(v){return '$ '+(v/1000).toLocaleString('es-CL',{maximumFractionDigits:0});}, rot:40, allLabels: true});
   }
 
   // Municipal Gastos — always sorted largest to smallest for the selected period
@@ -1269,7 +1269,7 @@ function render(year, q) {
     var mGasTotal = mgCur.reduce(function(a,b){return a+(b||0);},0);
     dsMG.push(ds(shortPer+'  $'+(mGasTotal/1000).toLocaleString('es-CL',{maximumFractionDigits:0}), mgCur, 'rgba(0,180,160,.65)', C2));
     if (mgPrev) { var pMGT=mgPrev.reduce(function(a,b){return a+(b||0);},0); dsMG.push(ds(qname(parseInt(prev.split('-')[1]))+' '+prev.split('-')[0]+'  $'+(pMGT/1000).toLocaleString('es-CL',{maximumFractionDigits:0}), mgPrev, 'rgba(46,95,163,.35)', C1)); }
-    bar('c-mgas', mgL, dsMG, {fmt: v => '$'+Math.round(v/1000).toLocaleString('es-CL'), ytick: function(v){return '$ '+(v/1000).toLocaleString('es-CL',{maximumFractionDigits:0});}, rot:40});
+    bar('c-mgas', mgL, dsMG, {fmt: v => '$'+Math.round(v/1000).toLocaleString('es-CL'), ytick: function(v){return '$ '+(v/1000).toLocaleString('es-CL',{maximumFractionDigits:0});}, rot:40, allLabels: true});
   }
 
   // Municipal ranking
