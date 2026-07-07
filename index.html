@@ -133,6 +133,9 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
 
 /* CIRCLES SVG diagram */
 #circles-svg svg{display:block;width:100%;height:auto}
+@media(min-width:1400px){
+  #circ-card{max-width:1700px;width:94vw;margin-left:calc(50% - 47vw)}
+}
 
 /* RANK */
 .mun-row{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:5px;margin-bottom:3px;background:var(--light)}
@@ -379,7 +382,7 @@ main{max-width:1300px;margin:0 auto;padding:1.25rem 1.5rem}
   <!-- 2. TRANSFERENCIAS Y GASTO POR SECTOR -->
   <div class="sec">
     <div class="sec-lbl">Transferencias y Gasto por Sector</div>
-    <div class="card" style="margin-bottom:10px;padding:1rem 1rem .5rem">
+    <div class="card" id="circ-card" style="margin-bottom:10px;padding:1rem 1rem .5rem">
       <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:2px">
         <span style="font-size:15px;font-weight:700;color:var(--navy)">Gastos Presupuestarios</span>
         <span style="font-size:14px;color:var(--muted)">Ejecutados por Sector y Transferencias de Recursos</span>
