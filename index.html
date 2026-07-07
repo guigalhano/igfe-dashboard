@@ -1166,8 +1166,8 @@ function render(year, q) {
   (function(){
     var gr = d.grat; if(!gr) return;
     var pgr = prevD&&prevD.grat;
-    var t = 'Al '+curPer+', las transferencias del MINEDUC a la Educaci\u00f3n Superior alcanzaron $\u00a0'+Math.round(gr.t*1000).toLocaleString('es-CL')+' millones.'
-      +' De dicho monto, un '+gr.p+'% se destin\u00f3 al financiamiento de la Gratuidad ($\u00a0'+Math.round(gr.g*1000).toLocaleString('es-CL')+' millones).'
+    var t = 'Al '+curPer+', las transferencias del MINEDUC a la Educaci\u00f3n Superior alcanzaron $\u00a0'+gr.t.toLocaleString('es-CL',{minimumFractionDigits:3,maximumFractionDigits:3})+' billones.'
+      +' De dicho monto, un '+gr.p+'% se destin\u00f3 al financiamiento de la Gratuidad ($\u00a0'+gr.g.toLocaleString('es-CL',{minimumFractionDigits:3,maximumFractionDigits:3})+' billones).'
       +(pgr?' En el periodo anterior el porcentaje de Gratuidad fue del '+pgr.p+'%.':'');
     showNarr('grat',t);
   })();
